@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from .signals import new_member_user_created
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Member(models.Model):
@@ -10,6 +11,14 @@ class Member(models.Model):
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("user"))
     notes = models.TextField(_("notes"), blank=True)
+
+    birth_date = models.DateField(_("birth date"), blank=True, null=True)
+    license = models.TextField(_("license"), blank=True, null=True, max_length=250)
+
+    phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     @property
     def first_name(self) -> str:
@@ -34,6 +43,7 @@ class Member(models.Model):
     class Meta:
         verbose_name = _("member")
         verbose_name_plural = _("members")
+        ordering = ["user__last_name", "user__first_name", "user__username"]
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.username})"

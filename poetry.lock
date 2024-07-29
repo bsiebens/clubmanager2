@@ -99,6 +99,22 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-phonenumber-field"
+version = "8.0.0"
+description = "An international phone number field for django models."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+Django = ">=3.2"
+phonenumbers = {version = ">=7.0.2", optional = true, markers = "extra == \"phonenumbers\""}
+
+[package.extras]
+phonenumbers = ["phonenumbers (>=7.0.2)"]
+phonenumberslite = ["phonenumberslite (>=7.0.2)"]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.2"
 description = "Backport of PEP 654 (exception groups)"
@@ -181,6 +197,14 @@ description = "Utility library for gitignore style pattern matching of file path
 category = "dev"
 optional = false
 python-versions = ">=3.8"
+
+[[package]]
+name = "phonenumbers"
+version = "8.13.40"
+description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "platformdirs"
@@ -312,7 +336,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "87dacb13d0f477d8da451e6006fd8878e806d5b7d486dc60810ff7ee0339d735"
+content-hash = "89fcaa810c374cdfdc89947ac49edba7e5b70d448ec6ee285db91b85bc7f5f8a"
 
 [metadata.files]
 asgiref = []
@@ -322,6 +346,7 @@ click = []
 colorama = []
 coverage = []
 django = []
+django-phonenumber-field = []
 exceptiongroup = []
 flake8 = []
 flake8-django = []
@@ -331,6 +356,7 @@ mccabe = []
 mypy-extensions = []
 packaging = []
 pathspec = []
+phonenumbers = []
 platformdirs = []
 pluggy = []
 pycodestyle = []
