@@ -13,9 +13,11 @@ class Member(models.Model):
     notes = models.TextField(_("notes"), blank=True)
 
     birth_date = models.DateField(_("birth date"), blank=True, null=True)
-    license = models.TextField(_("license"), blank=True, null=True, max_length=250)
+    license = models.CharField(_("license"), blank=True, null=True, max_length=250)
 
     phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)
+    emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"))
+    emergency_phone_secondary = PhoneNumberField(verbose_name=_("second emergency phone"), blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
