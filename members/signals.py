@@ -12,8 +12,8 @@ def create_and_set_initial_password(sender, *args, **kwargs):
     alphabet = string.ascii_letters + string.digits
     password = "".join(secrets.choice(alphabet) for i in range(20))
 
-    sender.notes = "Initial password: {password}".format(password=password)
-    sender.save(updated_fields=["notes"])
+    sender.notes = f"Initial password: {password}"
+    sender.save(update_fields=["notes"])
 
     sender.user.set_password(password)
     sender.user.save()

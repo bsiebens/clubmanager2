@@ -8,7 +8,7 @@ from .models import Member
 
 class MemberTest(TestCase):
     def test_member_creation(self):
-        member = Member.obejcts.create(first_name="First Name", last_name="Last Name", email="firstName.lastName@test.com")
+        member = Member.create_member(first_name="First Name", last_name="Last Name", email="firstName.lastName@test.com", username="test")
 
         self.assertIsNotNone(member.user)
 
