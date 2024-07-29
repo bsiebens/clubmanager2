@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "clubmanager"
+version = "0.0.1"
+description = "Club Management software"
+authors = ["Bernard Siebens <bernard@siebens.org>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^5.0.7"
+
+[tool.poetry.dev-dependencies]
+black = "^24.4.2"
+flake8-django = "^1.4"
+pytest = "^8.3.2"
+coverage = "^7.6.0"
+pytest-django = "^4.8.0"
+teamcity-messages = "^1.32"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
