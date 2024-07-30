@@ -9,6 +9,7 @@ license = "MIT"
 python = "^3.10"
 Django = "^5.0.7"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^8.0.0"}
+django-auditlog = "^3.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^24.4.2"

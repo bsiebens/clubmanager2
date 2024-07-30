@@ -99,6 +99,18 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-auditlog"
+version = "3.0.0"
+description = "Audit log app for Django"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+Django = ">=3.2"
+python-dateutil = ">=2.7.0"
+
+[[package]]
 name = "django-phonenumber-field"
 version = "8.0.0"
 description = "An international phone number field for django models."
@@ -282,6 +294,25 @@ docs = ["sphinx", "sphinx-rtd-theme"]
 testing = ["django", "django-configurations (>=2.0)"]
 
 [[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+description = "Extensions to the standard Python datetime module"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "sqlparse"
 version = "0.5.1"
 description = "A non-validating SQL parser."
@@ -336,7 +367,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "89fcaa810c374cdfdc89947ac49edba7e5b70d448ec6ee285db91b85bc7f5f8a"
+content-hash = "8b2993158fafaecc29b52f5000f74b3097e03664079769c981e93e665aeb597f"
 
 [metadata.files]
 asgiref = []
@@ -346,6 +377,7 @@ click = []
 colorama = []
 coverage = []
 django = []
+django-auditlog = []
 django-phonenumber-field = []
 exceptiongroup = []
 flake8 = []
@@ -363,6 +395,8 @@ pycodestyle = []
 pyflakes = []
 pytest = []
 pytest-django = []
+python-dateutil = []
+six = []
 sqlparse = []
 teamcity-messages = []
 tomli = []
