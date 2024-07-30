@@ -13,7 +13,7 @@ msgstr "gebruiker"
 
 #: members/models.py:14
 msgid "notes"
-msgstr "Opmerkingen"
+msgstr "opmerkingen"
 
 #: members/models.py:16
 msgid "birth date"
