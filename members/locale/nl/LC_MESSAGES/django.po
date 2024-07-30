@@ -1,23 +1,11 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-30 23:35+0200\n"
-"PO-Revision-Date: 2024-07-30 23:37+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: clubmanager\n"
+"Language: nl\n"
 
 #: members/models.py:13
 msgid "user"
@@ -25,7 +13,7 @@ msgstr "gebruiker"
 
 #: members/models.py:14
 msgid "notes"
-msgstr "notities"
+msgstr "Opmerkingen"
 
 #: members/models.py:16
 msgid "birth date"
@@ -37,7 +25,7 @@ msgstr "licentie"
 
 #: members/models.py:19
 msgid "phone"
-msgstr "telefoonnummer"
+msgstr "telefoon"
 
 #: members/models.py:20
 msgid "first emergency phone"
@@ -52,12 +40,8 @@ msgid "password change needed"
 msgstr "wachtwoordwijziging nodig"
 
 #: members/models.py:23
-msgid ""
-"If flagged signals that this users will need to reset their password at the "
-"next login."
-msgstr ""
-"Als dit is gemarkeerd, betekent dit dat gebruikers hun wachtwoord opnieuw "
-"moeten instellen bij de volgende aanmelding."
+msgid "If flagged signals that this users will need to reset their password at the next login."
+msgstr "Als dit is gemarkeerd, betekent dit dat gebruikers hun wachtwoord opnieuw moeten instellen bij de volgende aanmelding."
 
 #: members/models.py:49
 msgid "member"
@@ -77,4 +61,5 @@ msgstr "familie"
 
 #: members/models.py:94
 msgid "families"
-msgstr "families"
+msgstr "gezinnen"
+
