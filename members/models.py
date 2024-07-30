@@ -1,9 +1,10 @@
-from django.db import models
+from auditlog.registry import auditlog
 from django.contrib.auth import get_user_model
-from django.conf import settings
+from django.db import models
 from django.utils.translation import gettext_lazy as _
-from .signals import new_member_user_created
 from phonenumber_field.modelfields import PhoneNumberField
+
+from .signals import new_member_user_created
 
 
 class Member(models.Model):
@@ -91,3 +92,8 @@ class Family(models.Model):
     class Meta:
         verbose_name = _("family")
         verbose_name_plural = _("families")
+
+
+# Log both models into the audit log to maintain track of changes and who made them.
+auditlog.register(Member)
+auditlog.register(Family)
