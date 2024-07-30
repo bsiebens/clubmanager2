@@ -7,10 +7,15 @@ from .models import Member
 
 
 class MemberTest(TestCase):
-    def test_member_creation(self):
+    def test_member_creation_no_password(self):
         member = Member.create_member(first_name="First Name", last_name="Last Name", email="firstName.lastName@test.com", username="test")
 
         self.assertIsNotNone(member.user)
+        self.assertTrue(member.password_change_required)
 
-        password = re.match(r"^Initial password: ([a-zA-Z0-9]+)$", member.notes).groups()[0]
-        self.assertTrue(check_password(password, member.user.password))
+    def test_member_creation_with_password(self):
+        member = Member.create_member(first_name="First Name", last_name="Last Name", email="firstName.lastName@test.com", username="test", password="TestPassword")
+
+        self.assertIsNotNone(member.user)
+        self.assertFalse(member.password_change_required)
+        self.assertTrue(check_password("TestPassword", member.user.password))

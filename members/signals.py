@@ -12,8 +12,11 @@ def create_and_set_initial_password(sender, *args, **kwargs):
     alphabet = string.ascii_letters + string.digits
     password = "".join(secrets.choice(alphabet) for i in range(20))
 
-    sender.notes = f"Initial password: {password}"
-    sender.save(update_fields=["notes"])
+    if kwargs["password"] is not None:
+        password = kwargs["password"]
+
+    sender.password_change_required = kwargs["password"] is None
+    sender.save(update_fields=["password_change_required"])
 
     sender.user.set_password(password)
     sender.user.save()
