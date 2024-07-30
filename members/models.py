@@ -19,6 +19,8 @@ class Member(models.Model):
     emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"))
     emergency_phone_secondary = PhoneNumberField(verbose_name=_("second emergency phone"), blank=True, null=True)
 
+    password_change_required = models.BooleanField(_("password change needed"), default=False, help_text=_("If flagged signals that this users will need to reset their password at the next login."))
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -51,7 +53,7 @@ class Member(models.Model):
         return f"{self.first_name} {self.last_name} ({self.username})"
 
     @classmethod
-    def create_member(cls, first_name: str, last_name: str, email: str, username: str) -> "Member":
+    def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None) -> "Member":
         """Creates a new member and user."""
 
         member = cls()
@@ -69,7 +71,7 @@ class Member(models.Model):
         member.save()
 
         if send_signal:
-            new_member_user_created.send(member)
+            new_member_user_created.send(member, password=password)
 
         return member
 
