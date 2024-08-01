@@ -1,6 +1,7 @@
 {% load compress %}
 {% load static %}
 {% load initials_avatar %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en" data-theme="light" class="h-full">
@@ -19,12 +20,30 @@
     </head>
 
     <body>
-        <div class="navbar bg-gray-200 dark:bg-gray-700">
+        <div class="navbar h-20 bg-gray-200 dark:bg-gray-700">
             <div class="flex-1">
                 <a class="btn btn-ghost text-xl">ClubManager</a>
             </div>
 
-            <div class="flex-none">
+            <div class="flex-none gap-x-4 mr-4">
+                {% if request.user.is_staff %}
+                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin view" %}">
+                        <a class="btn btn-neutral">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            {% translate "Admin" %}
+                        </a>
+                    </div>
+                {% endif %}
+
+                {% if request.user.is_superuser %}
+                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                        <a class="btn btn-neutral">
+                            <i class="fa-solid fa-shield"></i>
+                            {% translate "Django Admin" %}
+                        </a>
+                    </div>
+                {% endif %}
+
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
                         <div class="w-10 rounded-full">
@@ -46,7 +65,7 @@
 
         <div class="drawer lg:drawer-open">
             <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col items-center justify-center">
+            <div class="drawer-content flex p-4">
                 <!-- Page content here -->
                 <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
                     Open drawer
