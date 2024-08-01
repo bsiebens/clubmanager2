@@ -18,10 +18,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from members import views as members_views
+from . import views as clubmanager_admin_views
 
 urlpatterns = [
-    path("test/", members_views.index),
+    path("clubmanager/admin/", clubmanager_admin_views.index, name="clubmanager.index"),
     path("initials-avatar/", include("django_initials_avatar.urls")),
     path("admin/", admin.site.urls),
 ]
