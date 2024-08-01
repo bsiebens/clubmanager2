@@ -19,6 +19,49 @@
     </head>
 
     <body>
-        // BODY GOES HERE
+        <div class="navbar bg-gray-200 dark:bg-gray-700">
+            <div class="flex-1">
+                <a class="btn btn-ghost text-xl">ClubManager</a>
+            </div>
+
+            <div class="flex-none">
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img alt="{{ request.user.get_full_name }} avatar" src="{% render_initials_avatar request.user.get_full_name %}" />
+                        </div>
+                    </div>
+
+                    <ul tabindex="0" class="menu menu-sm dropdown-content bg-gray-100 dark:bg-gray-800 border border-gray-800 dark:border-gray-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>
+                            <a class="justify-between">
+                                Profile <span class="badge badge-info">new</span>
+                            </a>
+                        </li>
+                        <li><a>Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="drawer lg:drawer-open">
+            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content flex flex-col items-center justify-center">
+                <!-- Page content here -->
+                <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+                    Open drawer
+                </label>
+
+                {% block content %}PAGE CONTENT GOES HERE{% endblock content %}
+            </div>
+            <div class="drawer-side">
+                <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+                <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+                    <!-- Sidebar content here -->
+                    <li><a>Sidebar Item 1</a></li>
+                    <li><a>Sidebar Item 2</a></li>
+                </ul>
+            </div>
+        </div>
     </body>
 </html>
