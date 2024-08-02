@@ -3,12 +3,12 @@
 {% load i18n %}
 
 {% block content %}
-    <div class="w-full flex flex-row items-center justify-center mt-2 mb-4 gap-x-4">
-        <img class="w-1/5 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% static site_logo %}" />
+    <div class="w-full flex flex-col lg:flex-row items-center justify-center mt-2 mb-4 gap-x-4">
+        <img class="w-48 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% static site_logo %}" />
 
-        <div class="flex flex-col">
-            <h1 class="text-5xl font-bold">{{ site_name }}</h1>
-            <p class="mt-1 text-xl">{{ welcome }} {{ request.user.first_name }}!</p>
+        <div class="flex flex-col items-center lg:items-start">
+            <h1 class="text-3xl lg:text-5xl font-bold">{{ site_name }}</h1>
+            <p class="mt-1 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</p>
         </div>
     </div>
 

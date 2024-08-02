@@ -3,29 +3,6 @@
 
 {% block title %}Admin Dashboard{% endblock title %}
 
-{% block navbar_buttons %}
-    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member view" %}">
-        <a class="btn btn-neutral" href={% url "clubmanager.index" %}>
-            <i class="fa-solid fa-user"></i>
-            {% translate "Member Dashboard" %}
-        </a>
-    </div>
-    
-    {% if request.user.is_superuser %}
-        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
-            <a class="btn btn-neutral" href="{% url "admin:index" %}">
-                <i class="fa-solid fa-shield"></i>
-                {% translate "Django Admin" %}
-            </a>
-        </div>
-    {% endif %}
-{% endblock navbar_buttons %}
-
-{% block sidebar_menu %}
-    <li><a>Sidebar Item 1</a></li>
-    <li><a>Sidebar Item 2</a></li>
-{% endblock sidebar_menu %}
-
 {% block content %}
     ADMIN CONTENT 
 {% endblock content %}

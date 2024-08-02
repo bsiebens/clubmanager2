@@ -20,7 +20,170 @@
     </head>
 
     <body>
-        <div class="navbar h-20 bg-gray-200 dark:bg-gray-700">
+        <div class="navbar bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+            <div class="navbar-start">
+                <div class="dropdown">
+                    <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
+                    <ul tabindex="0" class="menu menu-lg dropdown-content bg-gray-100 dark:bg-gray-800 border border-gray-800 dark:border-gray-100 rounded-box z-[1] mt-3 w-80 p-2 shadow">
+                        {% if "admin" in request.path %}
+                            {% include "clubmanager/menu_admin.html" %}
+
+                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member view" %}">
+                                <a class="btn btn-neutral mt-4" href={% url "clubmanager.index" %}>
+                                    <i class="fa-solid fa-user"></i>
+                                    {% translate "Member Dashboard" %}
+                                </a>
+                            </div>
+                            
+                            {% if request.user.is_superuser %}
+                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                                    <a class="btn btn-neutral mt-4" href="{% url "admin:index" %}">
+                                        <i class="fa-solid fa-shield"></i>
+                                        {% translate "Django Admin" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {% include "clubmanager/menu_user.html" %}
+
+                            {% if request.user.is_staff %}
+                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin view" %}">
+                                    <a class="btn btn-neutral mt-4" href={% url "clubmanager.index" %}>
+                                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                                        {% translate "Admin" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+
+                            {% if request.user.is_superuser %}
+                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                                    <a class="btn btn-neutral mt-4" href="{% url "admin:index" %}">
+                                        <i class="fa-solid fa-shield"></i>
+                                        {% translate "Django Admin" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </div>
+                <a href="{% url "clubmanager.index" %}" class="font-bold text-xl mx-4">ClubManager</a>
+            </div>
+
+            <div class="navbar-end gap-x-2 lg:mr-4">
+                <div class="hidden lg:flex gap-x-2 mr-8">
+                    {% if "admin" in request.path %}
+                        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member view" %}">
+                            <a class="btn btn-outline" href={% url "clubmanager.index" %}>
+                                <i class="fa-solid fa-user"></i>
+                                {% translate "Member Dashboard" %}
+                            </a>
+                        </div>
+                        
+                        {% if request.user.is_superuser %}
+                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                                <a class="btn btn-outline" href="{% url "admin:index" %}">
+                                    <i class="fa-solid fa-shield"></i>
+                                    {% translate "Django Admin" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if request.user.is_staff %}
+                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin view" %}">
+                                <a class="btn btn-outline" href={% url "clubmanager.index" %}>
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    {% translate "Admin" %}
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        {% if request.user.is_superuser %}
+                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                                <a class="btn btn-outline" href="{% url "admin:index" %}">
+                                    <i class="fa-solid fa-shield"></i>
+                                    {% translate "Django Admin" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% comment %} <div class="dropdown dropdown-end mr-2">
+                    <div class="indicator">
+                        <span class="indicator-item badge badge-error badge-xs"></span>
+                        <div tabindex="0" role="button" class="btn btn-circle btn-ghost btn-xs">
+                            <i class="fa-solid fa-bell text-xl"></i>
+                        </div>
+                    </div>
+                    <div tabindex="0" class="card compact dropdown-content bg-gray-100 dark:bg-gray-800 border border-gray-800 dark:border-gray-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <h2 class="card-title">ALERTS</h2>
+                        <p>We have many of those!</p>
+                    </div>
+                </div> {% endcomment %}
+ 
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                        <div class="w-10 rounded-full">
+                            <img alt="{{ request.user.get_full_name }} avatar" src="{% render_initials_avatar request.user.get_full_name %}" />
+                        </div>
+                    </div>
+
+                    <ul tabindex="0" class="menu menu-sm dropdown-content bg-gray-100 dark:bg-gray-800 border border-gray-800 dark:border-gray-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>
+                            <a class="justify-between">
+                                Profile <span class="badge badge-info">new</span>
+                            </a>
+                        </li>
+                        <li><a>Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex flex-row">
+            <div class="hidden lg:flex flex-row">
+                <ul class="menu bg-base-200 text-base-content w-80 p-4">
+                    {% if "admin" in request.path %}
+                        {% include "clubmanager/menu_admin.html" %}
+                    {% else %}
+                        {% include "clubmanager/menu_user.html" %}
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="flex flex-grow flex-col p-4">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+
+        <footer class="footer footer-center bg-gray-200 dark:bg-gray-700 text-base-content p-4">
+            <aside>
+                <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - MIT License</p>
+            </aside>
+        </footer>
+
+        
+        {% comment %} <div class="flex flex-row">
+            <div class="flex flex-row">
+                <ul class="menu bg-base-200 text-base-content w-80 p-4">
+                    {% block sidebar_menu %}{% endblock sidebar_menu %}
+                </ul>
+            </div>
+            
+            <div class="flex flex-grow flex-col p-4">
+                {% block content %}PAGE CONTENT GOES HERE{% endblock content %} 
+            </div>
+        </div>
+
+        <footer class="footer footer-center bg-gray-200 dark:bg-gray-700 text-base-content p-4">
+            <aside>
+                <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - Licensed using an MIT license</p>
+            </aside>
+        </footer> {% endcomment %}
+
+        {% comment %} <div class="navbar h-20 bg-gray-200 dark:bg-gray-700">
             <div class="flex-1">
                 <a class="btn btn-ghost text-xl">ClubManager</a>
             </div>
@@ -65,22 +228,22 @@
             </div>
         </div>
 
-        <div class="drawer lg:drawer-open">
-            <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-content flex flex-col p-4">
-                <!-- Page content here -->
-                <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
-                    Open drawer
-                </label>
-
-                {% block content %}PAGE CONTENT GOES HERE{% endblock content %}
-            </div>
-            <div class="drawer-side">
-                <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-                <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
+        <div class="flex flex-row">
+            <div class="flex flex-row">
+                <ul class="menu bg-base-200 text-base-content w-80 p-4">
                     {% block sidebar_menu %}{% endblock sidebar_menu %}
                 </ul>
             </div>
+            
+            <div class="flex flex-grow flex-col p-4">
+                {% block content %}PAGE CONTENT GOES HERE{% endblock content %} 
+            </div>
         </div>
+
+        <footer class="footer footer-center bg-gray-200 dark:bg-gray-700 text-base-content p-4">
+            <aside>
+                <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - Licensed using an MIT license</p>
+            </aside>
+        </footer> {% endcomment %}
     </body>
 </html>
