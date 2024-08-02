@@ -26,23 +26,25 @@
             </div>
 
             <div class="flex-none gap-x-4 mr-4">
-                {% if request.user.is_staff %}
-                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin view" %}">
-                        <a class="btn btn-neutral" href={% url "clubmanager.index" %}>
-                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                            {% translate "Admin" %}
-                        </a>
-                    </div>
-                {% endif %}
+                {% block navbar_buttons %}
+                    {% if request.user.is_staff %}
+                        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin view" %}">
+                            <a class="btn btn-neutral" href={% url "clubmanager.index" %}>
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                {% translate "Admin" %}
+                            </a>
+                        </div>
+                    {% endif %}
 
-                {% if request.user.is_superuser %}
-                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
-                        <a class="btn btn-neutral" href="{% url "admin:index" %}">
-                            <i class="fa-solid fa-shield"></i>
-                            {% translate "Django Admin" %}
-                        </a>
-                    </div>
-                {% endif %}
+                    {% if request.user.is_superuser %}
+                        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin view" %}">
+                            <a class="btn btn-neutral" href="{% url "admin:index" %}">
+                                <i class="fa-solid fa-shield"></i>
+                                {% translate "Django Admin" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endblock navbar_buttons %}
 
                 <div class="dropdown dropdown-end">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
@@ -76,9 +78,7 @@
             <div class="drawer-side">
                 <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
                 <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                    <!-- Sidebar content here -->
-                    <li><a>Sidebar Item 1</a></li>
-                    <li><a>Sidebar Item 2</a></li>
+                    {% block sidebar_menu %}{% endblock sidebar_menu %}
                 </ul>
             </div>
         </div>
