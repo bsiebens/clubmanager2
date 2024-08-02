@@ -16,12 +16,12 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import include, path
 
-from . import views as clubmanager_admin_views
+from . import views as clubmanager_views
 
 urlpatterns = [
-    path("clubmanager/admin/", clubmanager_admin_views.index, name="clubmanager.index"),
+    path("clubmanager/", clubmanager_views.index, name="clubmanager.index"),
     path("initials-avatar/", include("django_initials_avatar.urls")),
     path("admin/", admin.site.urls),
 ]
