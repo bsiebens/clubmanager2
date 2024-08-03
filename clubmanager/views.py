@@ -17,3 +17,17 @@ def index(request: HttpRequest) -> HttpResponse:
         welcome_string = _("Good evening")
 
     return render(request, "clubmanager/index.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO})
+
+
+def index_admin(request: HttpRequest) -> HttpResponse:
+    """The main admin index page."""
+
+    welcome_string = _("Good morning")
+    if timezone.now().hour > 12 and timezone.now().hour < 18:
+        welcome_string = _("Good afternoon")
+    elif timezone.now().hour > 18:
+        welcome_string = _("Good evening")
+
+    return render(
+        request, "clubmanager/index_admin.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO}
+    )
