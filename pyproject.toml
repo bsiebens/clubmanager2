@@ -12,6 +12,7 @@ django-phonenumber-field = {extras = ["phonenumbers"], version = "^8.0.0"}
 django-auditlog = "^3.0.0"
 django-compressor = "^4.5.1"
 django-initials-avatar = "^0.0.7"
+django-extensions = "^3.2.3"
 
 [tool.poetry.dev-dependencies]
 black = "^24.4.2"

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_initials_avatar",
+    "django_extensions",
     "compressor",
     "auditlog",
     "members",

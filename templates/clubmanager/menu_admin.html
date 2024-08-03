@@ -1,8 +1,8 @@
-<li><a>Sidebar Item 1</a></li>
-<li><a>Sidebar Item 2</a></li>
-<li><a>Sidebar Item 1</a></li>
-<li><a>Sidebar Item 2</a></li>
-<li><a>Sidebar Item 1</a></li>
-<li><a>Sidebar Item 2</a></li>
-<li><a>Sidebar Item 1</a></li>
-<li><a>Sidebar Item 2</a></li>
+{% load i18n %}
+
+<li>
+    {% url "clubmanager_admin:members:index" as members_index %}
+    <a href="{{ members_index }}" {% if members_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-users mr-2"></i>{% translate "Users" %}
+    </a>
+</li>

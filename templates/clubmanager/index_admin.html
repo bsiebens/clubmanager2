@@ -14,13 +14,4 @@
             <div class="mt-2 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</div>
         </div>
     </div>
-
-    <div class="m-2 flex flex-col gap-y-2">
-        <h2 class="text-2xl font-bold mt-4 border-b border-base-content">{% translate "Latest news from the club" %}</h2>
-        {% if newsitems %}
-            ... 
-        {% else %}
-            {% translate "No news found" %}
-        {% endif %}
-    </div>
 {% endblock content %}

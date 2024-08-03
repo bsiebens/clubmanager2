@@ -1,0 +1,11 @@
+{% extends "_base.html" %}
+
+{% block content %}
+    <h1>Members</h1>
+
+    <ul>
+        {% for member in object_list %}
+            <li>{{ member.first_name }} - {{ member.last_name }} - {{ member.email }}</li>
+        {% endfor %}
+    </ul>
+{% endblock content %}
