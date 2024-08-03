@@ -8,7 +8,10 @@
 
         <div class="flex flex-col items-center lg:items-start">
             <h1 class="text-3xl lg:text-5xl font-bold">{{ site_name }}</h1>
-            <p class="mt-1 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</p>
+            <div class="mt-1 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</div>
+            <div>
+                <a class="btn mt-2 btn-info btn-outline btn-sm" href="#"><i class="fa-solid fa-user"></i>{% translate "Access your profile" %}</a>
+            </div>
         </div>
     </div>
 
