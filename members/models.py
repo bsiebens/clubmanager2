@@ -20,7 +20,15 @@ class Member(models.Model):
     emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"))
     emergency_phone_secondary = PhoneNumberField(verbose_name=_("second emergency phone"), blank=True, null=True)
 
-    password_change_required = models.BooleanField(_("password change needed"), default=False, help_text=_("If flagged signals that this users will need to reset their password at the next login."))
+    password_change_required = models.BooleanField(
+        _("password change needed"),
+        default=False,
+        help_text=_("If flagged signals that this users will need to reset their password at the next login."),
+    )
+
+    is_organization_admin = models.BooleanField(
+        _("Organization admin"), default=False, help_text=_("An organization admin will have advanced access rights into the system.")
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
