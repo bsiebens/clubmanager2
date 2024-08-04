@@ -1,42 +1,138 @@
 {% extends "_base.html" %}
 
-{% load pagination_tags %}    
+{% load pagination_tags %}
+{% load initials_avatar %}
+{% load i18n %}
+{% load form_tags %}    
 
 {% block content %}
-    <h1>Members</h1>
+    <h1 class="text-3xl font-bold"><i class="fa-solid fa-users mr-2"></i>{% translate "Members" %}</h1>
+    
+    <div class="flex flex-row mt-10">
+        <div class="grow">
+            <form class="flex flex-row gap-x-2 items-center">
+                <i class="fa-solid fa-filter text-xs"></i>
 
-    <br /><br />
+                {% for field in filter.form %}
+                    {% display_field field display_label=False %}
+                {% endfor %}
 
-    <form method="get">
-        {{ filter.form.as_p }}
-        <input type="submit">
-    </form>
+                <button class="btn btn-outline btn-xs" type="submit">filter</button>
+            </form>
+        </div>
 
-    <br /><br />
-
-    <ul>
-        {% for member in object_list %}
-            <li>{{ member.first_name }} - {{ member.last_name }} - {{ member.email }}</li>
-        {% endfor %}
-    </ul>
-
-    <br /><br />
-
-    <div class="pagination">
-        <span class="step-links">
-            {% if page_obj.has_previous %}
-                <a href="?{% url_replace request "page" 1 %}">&laquo; first</a>
-                <a href="?{% url_replace request "page" page_obj.previous_page_number %}">previous</a>
-            {% endif %}
-
-            <span class="current">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-
-            {% if page_obj.has_next %}
-                <a href="?{% url_replace request "page" page_obj.next_page_number %}">next</a>
-                <a href="??{% url_replace request "page" page_obj.paginator.num_pages %}">last &raquo;</a>
-            {% endif %}
-        </span>
+        <div>
+            <a class="btn">
+                <i class="fa-solid fa-plus"></i>{% translate "Add" %}
+            </a>
+        </div>
     </div>
+
+    <div class="mt-0">
+        <table class="table table-zebra">
+            <thead>
+                <tr>
+                    <th>
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-sm" />
+                        </label>
+                    </th>
+                    <th>{% translate "Name" %}</th>
+                    <th>{% translate "Birthday" %}</th>
+                    <th>{% translate "License" %}</th>
+                    <th>{% translate "Phone Number" %}</th>
+                    <th>{% translate "Emergency Contact" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in object_list %}
+                    <tr class="hover">
+                        <th>
+                            <label>
+                                <input type="checkbox" class="checkbox checkbox-sm" />
+                            </label>
+                        </th>
+                        <td>
+                            <a href="#">
+                                <div class="flex flex-row items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="mask mask-squircle h-12 w-12">
+                                            <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">{{ member.user.get_full_name }}</div>
+                                        <div class="text-sm opacity-50">{{ member.email }}</div>
+                                    </div>
+
+                                    {% if member.is_organization_admin %}
+                                        <div class="badge badge-accent">{% translate "Admin" %}</div>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </td>
+                        <td>{{ member.birthday|date:"d M Y" }}</td>
+                        <td>{{ member.license|default:"-" }}</td>
+                        <td>
+                            {% if member.phone %}
+                                <a class="border-b border-info hover:border-b-2" href="{{ member.phone.as_rfc3966 }}">
+                                    <i class="fa-solid fa-phone mr-2"></i>
+                                    {{ member.phone }}
+                                </a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="flex flex-col gap-2">
+                                <div>
+                                    <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
+                                        <i class="fa-solid fa-phone mr-2"></i>
+                                        {{ member.emergency_phone_primary }}
+                                    </a>
+                                </div>
+                                    
+                                {% if member.emergency_phone_secondary %}
+                                    <div>
+                                        <a class="mt-2 border-b border-info hover:border-b-2" href="{{ member.emergency_phone_secondary.as_rfc3966 }}">
+                                            <i class="fa-solid fa-phone mr-2"></i>
+                                            {{ member.emergency_phone_secondary }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline btn-sm mr-2">
+                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                            </a>
+                            <a class="btn btn-outline btn-error btn-sm">
+                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+        <div class="mt-4 flex justify-center">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo; {% translate "first" %}</a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.previous_page_number %}">{% translate "previous" %}</a>
+                {% endif %}
+
+                <button class="join-item btn btn-disabled">{% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }} of {{ num_pages }}{% endblocktranslate %}</button>
+
+                {% if page_obj.has_next %}
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}">{% translate "next" %}</a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}">{% translate "last" %} &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}

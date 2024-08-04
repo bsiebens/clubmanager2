@@ -10,4 +10,4 @@ from django_filters.views import FilterView
 
 class MemberList(FilterView):
     filterset_class = MemberFilter
-    paginate_by = 5
+    paginate_by = 50

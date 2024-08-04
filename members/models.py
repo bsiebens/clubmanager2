@@ -18,7 +18,7 @@ class Member(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("user"))
     notes = models.TextField(_("notes"), blank=True)
 
-    birth_date = models.DateField(_("birth date"), blank=True, null=True)
+    birthday = models.DateField(_("birth date"), blank=True, null=True)
     license = models.CharField(_("license"), blank=True, null=True, max_length=250)
 
     phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)

@@ -3,6 +3,6 @@
 <li>
     {% url "clubmanager_admin:members:index" as members_index %}
     <a href="{{ members_index }}" {% if members_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-users mr-2"></i>{% translate "Users" %}
+        <i class="fa-solid fa-users mr-2"></i>{% translate "Members" %}
     </a>
 </li>
