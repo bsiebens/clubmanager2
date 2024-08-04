@@ -7,6 +7,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .signals import new_member_user_created
 
 
+class UserManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super().get_queryset().select_related("user")
+
+
 class Member(models.Model):
     """User profile for a given member."""
 
@@ -29,6 +34,8 @@ class Member(models.Model):
     is_organization_admin = models.BooleanField(
         _("Organization admin"), default=False, help_text=_("An organization admin will have advanced access rights into the system.")
     )
+
+    objects = UserManager()
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

@@ -39,12 +39,17 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_initials_avatar",
     "django_extensions",
+    "django_filters",
     "compressor",
     "auditlog",
     "members",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -141,3 +146,5 @@ STATICFILES_FINDERS = [
 
 SITE_NAME = "Cold Play Mechelen"
 SITE_LOGO = "media/logo_cold_play_sharks.png"
+
+INTERNAL_IPS = ["127.0.0.1"]
