@@ -1,4 +1,4 @@
-<label class="form-control">
+<label class="form-control w-full lg:w-fit">
     {% if display_label %}
         <div class="label">
             <span class="label-text">{{ field.label }}</span>
@@ -6,6 +6,16 @@
     {% endif %}
 
     {% if type == "text" %}
-        <input name="{{ field.name }}" type="text" placeholder="{% if display_placeholder %}{{ field.label }}{% endif %}" class="input input-xs input-bordered" value="{{ field.value }}" />
+        <input
+            name="{{ field.name }}"
+            type="text"
+
+            {% if display_placeholder %}
+                placeholder="{{ field.label }}"
+            {% endif %}
+
+            class="input input-bordered {{ input_classes }}"
+            value="{{ field.value|default:"" }}"
+        />
     {% endif %}
 </label>
