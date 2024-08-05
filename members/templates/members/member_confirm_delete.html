@@ -5,14 +5,18 @@
 {% block content %}
     <h1 class="text-3xl font-bold"><i class="fa-solid fa-users mr-2"></i>{% translate "Members" %}</h1>
 
-    <div class="mt-10">Are you sure you want to delete <span class="font-bold">{{ object.user.get_full_name }}</span>?</div>
+        <div class="mt-10">
+            {% blocktranslate with name=object.user.get_full_name %}    
+                Are you sure you want to delete <span class="font-bold">{{ name }}</span>?
+            {% endblocktranslate %}
+        </div>
 
     <form method="post" action="{% url "clubmanager_admin:members:delete" object.id %}">
         {% csrf_token %}
 
         <div class="flex flex-row gap-2 mt-4">
-            <a href="{% url "clubmanager_admin:members:index" %}" class="btn">Cancel</a>
-            <button type="submit" class="btn btn-error">Delete</button>
+            <a href="{% url "clubmanager_admin:members:index" %}" class="btn">{% translate "Cancel" %}</a>
+            <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
         </div>
     </form>
 {% endblock content %}
