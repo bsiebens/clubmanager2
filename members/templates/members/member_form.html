@@ -8,7 +8,7 @@
 
     {{ form.errors }}
 
-    <form method="post" action="{% url "clubmanager_admin:members:add" %}">
+    <form method="post">
         {% csrf_token %}
 
         <h2 class="subtitle">{% translate "Personal information" %}</h2>

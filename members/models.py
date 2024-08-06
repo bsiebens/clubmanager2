@@ -85,6 +85,9 @@ class Member(models.Model):
         send_signal = False
 
         if users.count() == 1:
+            if users.first().member is not None:
+                return users.first().member
+
             member.user = users.first()
 
             if not member.user.is_active:

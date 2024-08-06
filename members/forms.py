@@ -29,4 +29,12 @@ class MemberForm(forms.ModelForm):
             commit=commit,
         )
 
+        member.phone = self.cleaned_data["phone"]
+        member.emergency_phone_primary = self.cleaned_data["emergency_phone_primary"]
+        member.emergency_phone_secondary = self.cleaned_data["emergency_phone_secondary"]
+        member.is_organization_admin = self.cleaned_data["is_organization_admin"]
+        member.license = self.cleaned_data["license"]
+        member.birthday = self.cleaned_data["birthday"]
+        member.save(update_fields=self.Meta.fields)
+
         return member

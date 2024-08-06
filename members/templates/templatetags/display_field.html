@@ -15,7 +15,7 @@
                     class="grow {{ input_classes }}"
                     {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}
                     {% if field.field.required %}required="required"{% endif %}
-                    value="{{ field.value|default:"" }}"
+                    value="{% if type == "date" %}{{ field.value|date:"Y-m-d"|default:"" }}{% else %}{{ field.value|default:"" }}{% endif %}"
                     name="{{ field.html_name }}"
                 />
 
@@ -26,7 +26,7 @@
         {% elif type == "checkbox" %}
             <div class="form-control">
                 <label class="label cursor-pointer" id="{{ field.id_for_label }}">
-                    <input type="checkbox" class="checkbox" name="{{ field.html_name }}" />
+                    <input type="checkbox" class="checkbox" name="{{ field.html_name }}" {% if field.value %}checked{% endif %}/>
                     <span class="ml-2 label-text">{{ field.help_text }}</span>
                 </label>
             </div>

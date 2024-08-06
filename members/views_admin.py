@@ -1,7 +1,8 @@
+from typing import Any
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.edit import CreateView, DeleteView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django_filters.views import FilterView
 
 from .filters import MemberFilter
@@ -28,3 +29,22 @@ class MemberAddView(SuccessMessageMixin, CreateView):
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
+
+
+class MemberEditView(SuccessMessageMixin, UpdateView):
+    model = Member
+    form_class = MemberForm
+    success_url = reverse_lazy("clubmanager_admin:members:index")
+    success_message = _("Member %(name)s was updated succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
+
+    def get_initial(self) -> dict[str, Any]:
+        initial_data = super(MemberEditView, self).get_initial()
+
+        initial_data["first_name"] = self.object.first_name
+        initial_data["last_name"] = self.object.last_name
+        initial_data["email"] = self.object.email
+
+        return initial_data
