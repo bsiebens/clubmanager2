@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+
+    {{ form.errors }}
+
+    <form method="post" action="{% url "clubmanager_admin:members:add" %}">
+        {% csrf_token %}
+
+        <h2 class="subtitle">{% translate "Personal information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% display_field form.first_name display_size="full" %}
+            {% display_field form.last_name display_size="full" %}
+            {% display_field form.email display_size="full" %}
+            {% display_field form.phone display_size="full" %}
+            {% display_field form.birthday display_size="full" %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Emergency contacts" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% display_field form.emergency_phone_primary display_size="full" %}
+            {% display_field form.emergency_phone_secondary display_size="full" %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Club information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% display_field form.license display_size="full" %}
+            {% display_field form.is_organization_admin %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Password" %}</h2>
+        <div class="text-sm text-gray-500">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% display_field form.password display_size="full" %}
+            {% display_field form.password_confirmation display_size="full" %}
+        </div>
+
+        <button class="btn btn-primary mt-8" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+{% endblock content %}

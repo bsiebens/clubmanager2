@@ -1,21 +1,35 @@
-<label class="form-control w-full lg:w-fit">
-    {% if display_label %}
-        <div class="label">
-            <span class="label-text">{{ field.label }}</span>
-        </div>
-    {% endif %}
+{% load i18n %}
 
-    {% if type == "text" %}
-        <input
-            name="{{ field.name }}"
-            type="text"
+<div class="{{ width_classes }}">
+    <label class="form-control" id="{{ field.id_for_label }}">
+        {% if display_label %}
+            <div class="label">
+                <span class="label-text">{% blocktranslate with label=field.label %}{{ label }}{% endblocktranslate %}</span>
+            </div>
+        {% endif %}
 
-            {% if display_placeholder %}
-                placeholder="{{ field.label }}"
-            {% endif %}
+        {% if type == "text" or type == "email" or type == "password" or type == "regionalphonenumber" or type == "date" %}
+            <div class="input input-bordered flex items-center gap-2 {{ input_classes }}">
+                <input 
+                    type="{% if type == "regionalphonenumber" %}tel{% else %}{{ type }}{% endif %}" 
+                    class="grow {{ input_classes }}"
+                    {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}
+                    {% if field.field.required %}required="required"{% endif %}
+                    value="{{ field.value|default:"" }}"
+                    name="{{ field.html_name }}"
+                />
 
-            class="input input-bordered {{ input_classes }}"
-            value="{{ field.value|default:"" }}"
-        />
-    {% endif %}
-</label>
+                {% if field.field.required %}
+                    <span class="badge badge-error">{% translate "required" %}</span>
+                {% endif %}
+            </div>
+        {% elif type == "checkbox" %}
+            <div class="form-control">
+                <label class="label cursor-pointer" id="{{ field.id_for_label }}">
+                    <input type="checkbox" class="checkbox" name="{{ field.html_name }}" />
+                    <span class="ml-2 label-text">{{ field.help_text }}</span>
+                </label>
+            </div>
+        {% endif %}
+    </label>
+</div>

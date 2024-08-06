@@ -137,9 +137,9 @@
                         {% endif %}
                     </ul>
 
-                    <div>
+                    <div class="mt-4">
                         {% if "admin" in request.path %}
-                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
+                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
                                 <a class="btn btn-sm btn-scroll-m-7 btn-outline mr-2" href="{% url "clubmanager:index" %}">
                                     <i class="fa-solid fa-user"></i>
                                     {% translate "Member area" %}
@@ -147,7 +147,7 @@
                             </div>
                         {% else %}
                             {% if request.user.member.is_organization_admin %}
-                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
+                                <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
                                     <a class="btn btn-sm btn-outline mr-2" href="{% url "clubmanager_admin:index" %}">
                                         <i class="fa-solid fa-screwdriver-wrench"></i>
                                         {% translate "Admin area" %}
@@ -157,7 +157,7 @@
                         {% endif %}
 
                         {% if request.user.is_superuser %}
-                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
+                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
                                 <a class="btn btn-sm btn-outline mr-2" href="{% url "admin:index" %}">
                                     <i class="fa-solid fa-shield"></i>
                                     {% translate "Django admin" %}

@@ -23,9 +23,12 @@ def display_field(
         field.label = alternate_label
 
     input_classes = ""
+    width_classes = "w-full lg:w-fit"
     match display_size:
         case "xs":
             input_classes = "input-xs"
+        case "full":
+            width_classes = "w-full"
         case _:
             input_classes = ""
 
@@ -35,4 +38,5 @@ def display_field(
         "display_label": display_label,
         "display_placeholder": display_placeholder,
         "input_classes": input_classes,
+        "width_classes": width_classes,
     }

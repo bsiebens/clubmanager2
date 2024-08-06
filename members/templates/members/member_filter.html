@@ -6,10 +6,10 @@
 {% load form_tags %}    
 
 {% block content %}
-    <h1 class="text-3xl font-bold"><i class="fa-solid fa-users mr-2"></i>{% translate "Members" %}</h1>
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
     
-    <div class="flex flex-col lg:flex-row mt-10">
-        <div class="grow">
+    <div class="flex flex-col lg:flex-row items-center">
+        <div class="grow w-full">
             <form class="flex flex-col lg:flex-row gap-2 items-center">
                 <i class="fa-solid fa-filter text-xs hidden lg:inline"></i>
 
@@ -21,8 +21,8 @@
             </form>
         </div>
 
-        <div class="mt-2 lg:mt-0">
-            <a class="btn w-full lg:w-fit">
+        <div class="mt-2 lg:mt-0 w-full lg:w-fit shrink-0">
+            <a class="btn w-full lg:w-fit" href="{% url "clubmanager_admin:members:add" %}">
                 <i class="fa-solid fa-plus"></i>{% translate "Add" %}
             </a>
         </div>
@@ -73,7 +73,7 @@
                                 </div>
                             </a>
                         </td>
-                        <td>{{ member.birthday|date:"d M Y" }}</td>
+                        <td>{{ member.birthday|date:"d M Y"|default:"-" }}</td>
                         <td>{{ member.license|default:"-" }}</td>
                         <td>
                             {% if member.phone %}
@@ -87,12 +87,16 @@
                         </td>
                         <td>
                             <div class="flex flex-col gap-2">
-                                <div>
-                                    <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
-                                        <i class="fa-solid fa-phone mr-2"></i>
-                                        {{ member.emergency_phone_primary }}
-                                    </a>
-                                </div>
+                                {% if member.emergency_phone_primary %}
+                                    <div>
+                                        <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
+                                            <i class="fa-solid fa-phone mr-2"></i>
+                                            {{ member.emergency_phone_primary }}
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    -
+                                {% endif %}
                                     
                                 {% if member.emergency_phone_secondary %}
                                     <div>

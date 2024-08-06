@@ -1,8 +1,10 @@
+from typing import Any
 from auditlog.registry import auditlog
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from django.db import DEFAULT_DB_ALIAS
 
 from .signals import new_member_user_created
 
@@ -18,11 +20,11 @@ class Member(models.Model):
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("user"))
     notes = models.TextField(_("notes"), blank=True)
 
-    birthday = models.DateField(_("birth date"), blank=True, null=True)
+    birthday = models.DateField(_("birthday"), blank=True, null=True)
     license = models.CharField(_("license"), blank=True, null=True, max_length=250)
 
     phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)
-    emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"))
+    emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"), blank=True, null=True)
     emergency_phone_secondary = PhoneNumberField(verbose_name=_("second emergency phone"), blank=True, null=True)
 
     password_change_required = models.BooleanField(
@@ -60,6 +62,12 @@ class Member(models.Model):
         """Return the first_name plus the last_name, with a space in between."""
         return self.user.get_full_name()
 
+    def delete(self, using: Any = DEFAULT_DB_ALIAS, keep_parents: bool = False) -> tuple[int, dict[str, int]]:
+        self.user.is_active = False
+        self.user.save(update_fields=["is_active"])
+
+        return super(Member, self).delete(using, keep_parents)
+
     class Meta:
         verbose_name = _("member")
         verbose_name_plural = _("members")
@@ -69,7 +77,7 @@ class Member(models.Model):
         return f"{self.first_name} {self.last_name} ({self.username})"
 
     @classmethod
-    def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None) -> "Member":
+    def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True) -> "Member":
         """Creates a new member and user."""
 
         member = cls()
@@ -79,15 +87,20 @@ class Member(models.Model):
         if users.count() == 1:
             member.user = users.first()
 
+            if not member.user.is_active:
+                member.user.is_active = True
+                member.user.save(update_fields=["is_active"])
+
         else:
             user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, username=username, is_active=True)
             member.user = user
             send_signal = True
 
-        member.save()
+        if commit:
+            member.save()
 
-        if send_signal:
-            new_member_user_created.send(member, password=password)
+            if send_signal:
+                new_member_user_created.send(member, password=password)
 
         return member
 
