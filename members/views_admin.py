@@ -1,16 +1,12 @@
-from typing import Any
-from django.forms import BaseForm
-from django.http import HttpRequest
-from django.http.response import HttpResponse
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic.edit import CreateView, DeleteView
 from django_filters.views import FilterView
-from django.views.generic.edit import DeleteView, CreateView, UpdateView
 
 from .filters import MemberFilter
-from .models import Member
-from django.urls import reverse_lazy
-from django.contrib.messages.views import SuccessMessageMixin
-from django.utils.translation import gettext_lazy as _
 from .forms import MemberForm
+from .models import Member
 
 
 class MemberListView(FilterView):

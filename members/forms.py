@@ -1,8 +1,7 @@
-from typing import Any
 from django import forms
-from django.contrib.auth import get_user_model
-from .models import Member
 from django.utils.translation import gettext_lazy as _
+
+from .models import Member
 
 
 class MemberForm(forms.ModelForm):
@@ -18,7 +17,7 @@ class MemberForm(forms.ModelForm):
         fields = ["phone", "emergency_phone_primary", "emergency_phone_secondary", "is_organization_admin", "license", "birthday"]
         localized_fields = fields
 
-    def save(self, commit: bool = ...) -> Any:
+    def save(self, commit: bool = True) -> Member:
         password = self.cleaned_data["password"] and self.cleaned_data["password"] == self.cleaned_data["password_confirmation"]
 
         member = Member.create_member(
