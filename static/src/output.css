@@ -2287,14 +2287,6 @@ html{
   border-top-width: 4px;
 }
 
-.btn-xs{
-  height: 1.5rem;
-  min-height: 1.5rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  font-size: 0.75rem;
-}
-
 .btn-sm{
   height: 2rem;
   min-height: 2rem;
@@ -2324,13 +2316,6 @@ html{
 .btn-square:where(.btn-lg){
   height: 4rem;
   width: 4rem;
-  padding: 0px;
-}
-
-.btn-circle:where(.btn-xs){
-  height: 1.5rem;
-  width: 1.5rem;
-  border-radius: 9999px;
   padding: 0px;
 }
 
@@ -2653,6 +2638,10 @@ html:has(.drawer-toggle:checked){
   margin-bottom: 1rem;
 }
 
+.mb-6{
+  margin-bottom: 1.5rem;
+}
+
 .ml-2{
   margin-left: 0.5rem;
 }
@@ -2675,6 +2664,10 @@ html:has(.drawer-toggle:checked){
 
 .mt-4{
   margin-top: 1rem;
+}
+
+.mt-6{
+  margin-top: 1.5rem;
 }
 
 .mt-8{
@@ -2872,11 +2865,6 @@ html:has(.drawer-toggle:checked){
   line-height: 1.75rem;
 }
 
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
-}
-
 .font-bold{
   font-weight: 700;
 }
@@ -2908,6 +2896,10 @@ html:has(.drawer-toggle:checked){
 }
 
 @media (min-width: 1024px){
+  .lg\:mb-0{
+    margin-bottom: 0px;
+  }
+
   .lg\:mt-0{
     margin-top: 0px;
   }

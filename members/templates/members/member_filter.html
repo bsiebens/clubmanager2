@@ -11,17 +11,15 @@
     <div class="flex flex-col lg:flex-row items-center">
         <div class="grow w-full">
             <form class="flex flex-col lg:flex-row gap-2 items-center">
-                <i class="fa-solid fa-filter text-xs hidden lg:inline"></i>
-
                 {% for field in filter.form %}
-                    {% display_field field display_label=False display_size="xs" %}
+                    {% display_field field display_label=False %}
                 {% endfor %}
 
-                <button class="btn btn-outline btn-xs w-full lg:w-fit" type="submit">filter</button>
+                <button class="btn btn-outline w-full lg:w-fit" type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
             </form>
         </div>
 
-        <div class="mt-2 lg:mt-0 w-full lg:w-fit shrink-0">
+        <div class="mt-6 lg:mt-0 w-full lg:w-fit shrink-0 mb-6 lg:mb-0">
             <a class="btn w-full lg:w-fit" href="{% url "clubmanager_admin:members:add" %}">
                 <i class="fa-solid fa-plus"></i>{% translate "Add" %}
             </a>
