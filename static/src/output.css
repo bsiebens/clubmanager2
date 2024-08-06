@@ -2604,8 +2604,8 @@ html:has(.drawer-toggle:checked){
 }
 
 .subtitle{
-  font-size: 1.5rem;
-  line-height: 2rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
   font-weight: 700;
   margin-top: 2rem;
   border-bottom-width: 1px;
@@ -2615,6 +2615,10 @@ html:has(.drawer-toggle:checked){
 
 .static{
   position: static;
+}
+
+.col-span-2{
+  grid-column: span 2 / span 2;
 }
 
 .m-2{
@@ -2672,6 +2676,10 @@ html:has(.drawer-toggle:checked){
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.mt-0{
+  margin-top: 0px;
 }
 
 .block{
@@ -2755,6 +2763,10 @@ html:has(.drawer-toggle:checked){
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.grid-cols-2{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .flex-row{
   flex-direction: row;
 }
@@ -2802,6 +2814,10 @@ html:has(.drawer-toggle:checked){
 
 .border-b{
   border-bottom-width: 1px;
+}
+
+.border-b-0{
+  border-bottom-width: 0px;
 }
 
 .border-l-4{
@@ -2865,6 +2881,11 @@ html:has(.drawer-toggle:checked){
   line-height: 1.75rem;
 }
 
+.text-2xl{
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
 .font-bold{
   font-weight: 700;
 }
@@ -2896,6 +2917,10 @@ html:has(.drawer-toggle:checked){
 }
 
 @media (min-width: 1024px){
+  .lg\:col-span-1{
+    grid-column: span 1 / span 1;
+  }
+
   .lg\:mb-0{
     margin-bottom: 0px;
   }
@@ -2927,6 +2952,10 @@ html:has(.drawer-toggle:checked){
 
   .lg\:grid-cols-2{
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3{
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .lg\:flex-row{

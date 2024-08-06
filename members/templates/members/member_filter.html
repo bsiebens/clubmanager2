@@ -30,11 +30,11 @@
         <table class="table table-zebra">
             <thead>
                 <tr>
-                    <th>
+                    {% comment %} <th>
                         <label>
                             <input type="checkbox" class="checkbox checkbox-sm" />
                         </label>
-                    </th>
+                    </th> {% endcomment %}
                     <th>{% translate "Name" %}</th>
                     <th>{% translate "Birthday" %}</th>
                     <th>{% translate "License" %}</th>
@@ -46,11 +46,11 @@
             <tbody>
                 {% for member in object_list %}
                     <tr class="hover">
-                        <th>
+                        {% comment %} <th>
                             <label>
                                 <input type="checkbox" class="checkbox checkbox-sm" />
                             </label>
-                        </th>
+                        </th> {% endcomment %}
                         <td>
                             <a href="{% url "clubmanager_admin:members:edit" member.id %}">
                                 <div class="flex flex-row items-center gap-3">

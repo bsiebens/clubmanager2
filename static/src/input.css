@@ -16,7 +16,7 @@
     }
     
     .subtitle {
-        @apply text-2xl; 
+        @apply text-xl; 
         @apply font-bold; 
         @apply mt-8;
         @apply border-b border-base-content;
