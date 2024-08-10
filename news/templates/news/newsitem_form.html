@@ -2,14 +2,42 @@
 
 {% load i18n %}
 {% load form_tags %}
+{% load rules %}
 
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-newspaper"></i>{% translate "News Items" %}</h1>
 
+    {% has_perm 'news.release_newsitem' request.user as has_release_rights %}
+
     {% if newsitem %}
         <div class="flex flex-row gap-2 mt-8 items-center">
-            <h2 class="subtitle border-b-0 text-2xl">{{ newsitem.title }}</h2>
-            <div class="grow flex justify-end">
+            {% if newsitem.status == 0 %}
+                <div class="badge badge-error min-w-fit">
+            {% elif newsitem.status == 1 %}
+                <div class="badge badge-warning min-w-fit">
+            {% else %}
+                <div class="badge badge-success min-w-fit">
+            {% endif %}
+            {{ newsitem.get_status_display }}</div>
+            <h2 class="subtitle mt-0 border-b-0 text-2xl">{{ newsitem.title }}</h2>
+
+            <div class="grow flex flex-row gap-2 justify-end">
+                {% if newsitem.status == 0 %}
+                    <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "in_review" %}" class="hidden lg:flex btn btn-warning">
+                        <i class="fa-solid fa-arrow-right mr-1"></i>{% translate "In Review" %}
+                    </a>
+                {% else %}
+                    <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "draft" %}" class="hidden lg:flex btn btn-error">
+                        <i class="fa-solid fa-times mr-1"></i>{% translate "Draft" %}
+                    </a>
+                {% endif %}
+
+                {% if has_release_rights and newsitem.status != 2 %}
+                    <a href="{% url "clubmanager_admin:news:news_release" newsitem.id %}" class="hidden lg:flex btn btn-accent">
+                        <i class="fa-solid fa-check mr-1"></i>{% translate "Release" %}
+                    </a>
+                {% endif %}
+
                 <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="hidden lg:flex btn btn-error btn-outline">
                     <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
                 </a>
@@ -17,6 +45,22 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-2">
+            {% if newsitem.status == 0 %}
+                <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "in_review" %}" class="lg:hidden btn btn-warning">
+                    <i class="fa-solid fa-arrow-right mr-1"></i>{% translate "In Review" %}
+                </a>
+            {% else %}
+                <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "draft" %}" class="lg:hidden btn btn-error">
+                    <i class="fa-solid fa-times mr-1"></i>{% translate "Draft" %}
+                </a>
+            {% endif %}
+
+            {% if has_release_rights and newsitem.status != 2 %}
+                <a href="{% url "clubmanager_admin:news:news_release" newsitem.id %}" class="lg:hidden btn btn-accent">
+                    <i class="fa-solid fa-check mr-1"></i>{% translate "Release" %}
+                </a>
+            {% endif %}
+
             <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="lg:hidden btn btn-error btn-outline">
                 <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
             </a>

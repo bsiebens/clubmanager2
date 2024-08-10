@@ -73,7 +73,7 @@
                             </label>
                         </th> {% endcomment %}
                         <td>
-                            <a class="font-bold" href="">
+                            <a class="font-bold" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
                                 {{ news_item.title }}
                             </a>
                         </td>

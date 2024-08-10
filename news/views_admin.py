@@ -16,6 +16,8 @@ from .models import NewsItem
 from .filters import NewsItemFilter
 from .rules import is_editor
 from django.db.models import Count
+from rules.contrib.views import permission_required, objectgetter
+from django.contrib import messages
 
 
 class EditorListView(ListView):
@@ -122,54 +124,26 @@ class NewsDeleteView(SuccessMessageMixin, DeleteView):
     success_message = _("News item was succesfully deleted")
 
 
-""" from typing import Any
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
-from django.utils.translation import gettext_lazy as _
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
-from django_filters.views import FilterView
+@permission_required("news.release_newsitem")
+def release_newsitem(request, pk: int) -> HttpResponse:
+    news_item = NewsItem.objects.get(pk=pk)
+    news_item.status = NewsItem.StatusChoices.RELEASED
+    news_item.save(update_fields=["status"])
 
-from .filters import MemberFilter
-from .forms import MemberForm
-from .models import Member
+    messages.success(request, _("News item %(name)s was succesfully released" % ({"name": news_item.title})))
 
-
-class MemberListView(FilterView):
-    filterset_class = MemberFilter
-    paginate_by = 50
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
 
 
-class MemberDeleteView(SuccessMessageMixin, DeleteView):
-    model = Member
-    success_url = reverse_lazy("clubmanager_admin:members:index")
-    success_message = _("Member was succesfully deleted")
+def update_status_newsitem(request, pk: int, status: str) -> HttpResponse:
+    news_item = NewsItem.objects.get(pk=pk)
 
+    news_item.status = NewsItem.StatusChoices.DRAFT
+    if status == "in_review":
+        news_item.status = NewsItem.StatusChoices.IN_REVIEW
 
-class MemberAddView(SuccessMessageMixin, CreateView):
-    model = Member
-    form_class = MemberForm
-    success_url = reverse_lazy("clubmanager_admin:members:index")
-    success_message = _("Member %(name)s was created succesfully")
+    news_item.save(update_fields=["status"])
 
-    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
+    messages.success(request, _("News item %(name)s was succesfully changed" % ({"name": news_item.title})))
 
-
-class MemberEditView(SuccessMessageMixin, UpdateView):
-    model = Member
-    form_class = MemberForm
-    success_url = reverse_lazy("clubmanager_admin:members:index")
-    success_message = _("Member %(name)s was updated succesfully")
-
-    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
-
-    def get_initial(self) -> dict[str, Any]:
-        initial_data = super(MemberEditView, self).get_initial()
-
-        initial_data["first_name"] = self.object.first_name
-        initial_data["last_name"] = self.object.last_name
-        initial_data["email"] = self.object.email
-
-        return initial_data
- """
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))

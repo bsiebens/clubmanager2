@@ -22,7 +22,7 @@ class NewsItem(models.Model):
     title = models.CharField(_("title"), max_length=250)
     text = models.TextField(_("text"))
     slug = models.SlugField(_("slug"), unique=True, blank=True, null=True)
-    author = models.ForeignKey(get_user_model(), verbose_name=_("author"), on_delete=models.PROTECT, blank=True, null=True)
+    author = models.ForeignKey(get_user_model(), verbose_name=_("author"), on_delete=models.PROTECT)
     status = models.IntegerField(_("status"), choices=StatusChoices.choices, default=StatusChoices.DRAFT)
     type = models.IntegerField(_("type"), choices=NewsItemTypeChoices.choices, default=NewsItemTypeChoices.INTERNAL)
     publish_on = models.DateTimeField(
