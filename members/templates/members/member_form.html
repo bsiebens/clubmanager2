@@ -20,6 +20,12 @@
             {% if member.is_organization_admin %}
                 <div class="badge badge-accent">{% translate "Admin" %}</div>
             {% endif %}
+
+            <div class="grow flex justify-end">
+                <a href="{% url "clubmanager_admin:members:delete" member.id %}" class="hidden lg:flex btn btn-error btn-outline">
+                    <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+                </a>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-2">
@@ -34,6 +40,10 @@
             {% if member.emergency_phone_secondary %}
                 <a href="{{ member.emergency_phone_secondary.as_rfc3966 }}" class="btn btn-error"><i class="fa-solid fa-file-medical"></i>{{ member.emergency_phone_secondary }}</a>
             {% endif %}
+
+            <a href="{% url "clubmanager_admin:members:delete" member.id %}" class="lg:hidden btn btn-error btn-outline">
+                <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+            </a>
         </div>
     {% else %}
         <h2 class="subtitle border-b-0 text-2xl">{% translate "Create new member" %}</h2>
@@ -70,7 +80,7 @@
             {% display_field form.password_confirmation display_size="full" %}
         </div>
 
-        <button class="btn btn-primary mt-8" type="submit">
+        <button class="btn btn-primary mt-8 w-full lg:w-fit" type="submit">
             <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
         </button>
     </form>

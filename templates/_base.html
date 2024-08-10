@@ -47,7 +47,7 @@
                                     </a>
                                 </div>
                             {% else %}
-                                {% if request.user.member.is_organization_admin %}
+                                {% if request.user.is_staff %}
                                     <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
                                         <a class="btn btn-sm btn-outline mr-2" href="{% url "clubmanager_admin:index" %}">
                                             <i class="fa-solid fa-screwdriver-wrench"></i>
@@ -146,7 +146,7 @@
                                 </a>
                             </div>
                         {% else %}
-                            {% if request.user.member.is_organization_admin %}
+                            {% if request.user.is_staff %}
                                 <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
                                     <a class="btn btn-sm btn-outline mr-2" href="{% url "clubmanager_admin:index" %}">
                                         <i class="fa-solid fa-screwdriver-wrench"></i>

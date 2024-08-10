@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from django.contrib.auth import get_user_model
@@ -5,6 +6,7 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from members.models import Member
+from .models import NewsItem
 
 
 class EditorAddForm(forms.Form):
@@ -22,3 +24,10 @@ class EditorAddForm(forms.Form):
         member.user.groups.add(editors)
 
         return self.cleaned_data["member"]
+
+
+class NewsItemForm(forms.ModelForm):
+    class Meta:
+        model = NewsItem
+        fields = ["title", "text", "type", "publish_on"]
+        localized_fields = fields

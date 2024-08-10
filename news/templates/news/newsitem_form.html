@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-newspaper"></i>{% translate "News Items" %}</h1>
+
+    {% if newsitem %}
+        <div class="flex flex-row gap-2 mt-8 items-center">
+            <h2 class="subtitle border-b-0 text-2xl">{{ newsitem.title }}</h2>
+            <div class="grow flex justify-end">
+                <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="hidden lg:flex btn btn-error btn-outline">
+                    <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+                </a>
+            </div>    
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="lg:hidden btn btn-error btn-outline">
+                <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+            </a>
+        </div>
+    {% else %}
+        <h2 class="subtitle border-b-0 text-2xl">{% translate "Create new item" %}</h2>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 gap-2">
+            {% display_field form.title display_size="full" %}
+            {% display_field form.text display_size="full" %}
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
+            {% display_field form.type display_size="full" %}
+            {% display_field form.publish_on display_size="full" %}
+        </div>
+
+        <button class="btn btn-primary mt-8 w-full lg:w-fit" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+{% endblock content %}

@@ -8,14 +8,14 @@
             </div>
         {% endif %}
 
-        {% if type == "text" or type == "email" or type == "password" or type == "regionalphonenumber" or type == "date" %}
+        {% if type == "text" or type == "email" or type == "password" or type == "regionalphonenumber" or type == "date" or type == "datetime" %}
             <div class="input input-bordered flex items-center gap-2 {{ input_classes }}">
                 <input 
-                    type="{% if type == "regionalphonenumber" %}tel{% else %}{{ type }}{% endif %}" 
+                    type="{% if type == "regionalphonenumber" %}tel{% elif type == "datetime" %}datetime-local{% else %}{{ type }}{% endif %}" 
                     class="grow {{ input_classes }}"
                     {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}
                     {% if field.field.required %}required="required"{% endif %}
-                    value="{% if type == "date" %}{{ field.value|date:"Y-m-d"|default:"" }}{% else %}{{ field.value|default:"" }}{% endif %}"
+                    value="{% if type == "date" or type == "datetime" %}{{ field.value|date:"c"|default:"" }}{% else %}{{ field.value|default:"" }}{% endif %}"
                     name="{{ field.html_name }}"
                 />
 
@@ -33,11 +33,29 @@
         {% elif type == "select" %}
             <select class="select select-bordered grow {{ input_classes }}" name="{{ field.html_name }}">
                 {% for value, label in field.field.choices %}
-                    <option value="{{ value }}">
+                    <option value="{{ value }}" {% if field.value == value|stringformat:"s" %}selected=""{% endif %}>
                         {{ label }}
                     </option>
                 {% endfor %}
             </select>
+        {% elif type == "textarea" %}
+            <textarea name="{{ field.html_name }}" class="textarea textarea-bordered h-72 {{ input_classes }}" {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}>{{ field.value|default:"" }}</textarea>
+
+            {% if field.field.required or field.help_text %}
+                <div class="label">
+                    {% if field.help_text %}
+                        <div class="label-text-alt">
+                            {{ field.help_text }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.field.required %}
+                        <div class="label-text-alt">
+                            <div class="badge badge-error">{% translate "required" %}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% endif %}
     </label>
 </div>

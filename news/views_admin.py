@@ -11,8 +11,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
-from .forms import EditorAddForm
+from .forms import EditorAddForm, NewsItemForm
 from .models import NewsItem
+from .filters import NewsItemFilter
+from .rules import is_editor
+from django.db.models import Count
 
 
 class EditorListView(ListView):
@@ -65,6 +68,58 @@ class EditorDeleteView(SuccessMessageMixin, DeleteView):
 class NewsListView(FilterView):
     model = NewsItem
     paginate_by = 50
+    filterset_class = NewsItemFilter
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(NewsListView, self).get_context_data(**kwargs)
+        context["draft"] = 0
+        context["in_review"] = 0
+        context["released"] = 0
+
+        if self.request.user.has_perm(is_editor):
+            counts = NewsItem.objects.values("status").annotate(Count("status"))
+
+            for count in counts:
+                match count["status"]:
+                    case 0:
+                        context["draft"] = count["status__count"]
+                    case 1:
+                        context["in_review"] = count["status__count"]
+                    case 2:
+                        context["released"] = count["status__count"]
+
+        return context
+
+
+class NewsAddView(SuccessMessageMixin, CreateView):
+    model = NewsItem
+    form_class = NewsItemForm
+    success_url = reverse_lazy("clubmanager_admin:news:news_index")
+    success_message = _("News item %(title)s was created succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, title=self.object.title)
+
+    def form_valid(self, form: NewsItemForm) -> HttpResponse:
+        form.instance.author = self.request.user
+
+        return super(NewsAddView, self).form_valid(form)
+
+
+class NewsEditView(SuccessMessageMixin, UpdateView):
+    model = NewsItem
+    form_class = NewsItemForm
+    success_url = reverse_lazy("clubmanager_admin:news:news_index")
+    success_message = _("News item %(title)s was updated succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, title=self.object.title)
+
+
+class NewsDeleteView(SuccessMessageMixin, DeleteView):
+    model = NewsItem
+    success_url = reverse_lazy("clubmanager_admin:news:news_index")
+    success_message = _("News item was succesfully deleted")
 
 
 """ from typing import Any

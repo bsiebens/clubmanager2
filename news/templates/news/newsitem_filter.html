@@ -1,0 +1,166 @@
+{% extends "_base.html" %}
+
+{% load pagination_tags %}
+{% load initials_avatar %}
+{% load i18n %}
+{% load form_tags %}
+{% load rules %}    
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-newspaper"></i>{% translate "News Items" %}</h1>
+
+    {% has_perm 'news.release_newsitem' request.user as has_release_rights %}
+    {% if has_release_rights %}
+        <div class="mb-6 grid grid-cols-1 lg:grid-cols-3 gap-2">
+            <a class="btn btn-outline {% if request.GET.status == "0" %}btn-active{% endif %}" href="?{% url_replace request "status" 0 %}">
+                Draft
+                <div class="badge {% if draft > 0 %}badge-error{% endif %}">{{ draft }}</div>
+            </a>
+            <a class="btn btn-outline {% if request.GET.status == "1" %}btn-active{% endif %}" href="?{% url_replace request "status" 1 %}">
+                In Review
+                <div class="badge {% if in_review > 0 %}badge-warning{% endif %}">{{ in_review }}</div>
+            </a>
+            <a class="btn btn-outline {% if request.GET.status == "2" %}btn-active{% endif %}" href="?{% url_replace request "status" 2 %}">
+                Released
+                <div class="badge {% if released > 0 %}badge-success{% endif %}">{{ released }}</div>
+            </a>
+        </div>
+    {% endif %}
+
+    
+    <div class="flex flex-col lg:flex-row items-center">
+        <div class="grow w-full">
+            <form class="flex flex-col lg:flex-row gap-2 items-center">
+                {% for field in filter.form %}
+                    {% display_field field display_label=False %}
+                {% endfor %}
+
+                <button class="btn btn-outline w-full lg:w-fit" type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
+            </form>
+        </div>
+
+        <div class="mt-6 lg:mt-0 w-full lg:w-fit shrink-0 mb-6 lg:mb-0">
+            <a class="btn w-full lg:w-fit" href="{% url "clubmanager_admin:news:news_add" %}">
+                <i class="fa-solid fa-plus"></i>{% translate "Add" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-2 hidden lg:block">
+        <table class="table table-zebra table-fixed">
+            <thead>
+                <tr>
+                    {% comment %} <th>
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-sm" />
+                        </label>
+                    </th> {% endcomment %}
+                    <th>{% translate "Title" %}</th>
+                    <th class="w-44">{% translate "Author" %}</th>
+                    <th class="w-44">{% translate "Type" %}</th>
+                    <th class="w-32">{% translate "Status" %}</th>
+                    <th class="w-44">{% translate "Publish On" %}</th>
+                    <th class="w-44">{% translate "Last Modified" %}</th>
+                    <th class="w-60"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for news_item in object_list %}
+                    <tr class="hover">
+                        {% comment %} <th>
+                            <label>
+                                <input type="checkbox" class="checkbox checkbox-sm" />
+                            </label>
+                        </th> {% endcomment %}
+                        <td>
+                            <a class="font-bold" href="">
+                                {{ news_item.title }}
+                            </a>
+                        </td>
+                        <td>{{ news_item.author.get_full_name }}</td>
+                        <td>
+                            {% if news_item.type == 0 %}
+                                <div class="badge badge-info">
+                            {% elif news_item.type == 1 %}
+                                <div class="badge badge-accent">
+                            {% else %}
+                                <div class="badge badge-neutral">
+                            {% endif %}
+                            {{ news_item.get_type_display }}</div>
+                        </td>
+                        <td>
+                            {% if news_item.status == 0 %}
+                                <div class="badge badge-error">
+                            {% elif news_item.status == 1 %}
+                                <div class="badge badge-warning">
+                            {% else %}
+                                <div class="badge badge-success">
+                            {% endif %}
+                            {{ news_item.get_status_display }}</div>
+                        </td>
+                        <td>{{ news_item.publish_on|date:"d M Y H:m" }}</td>
+                        <td>{{ news_item.modified|date:"d M Y H:m" }}</td>
+                        <td>
+                            <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                            </a>
+                            <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:news:news_delete" news_item.id %}">
+                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-2 lg:hidden flex flex-col gap-2">
+        {% for news_item in object_list %}
+            <a href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                <div class="hover:bg-base-300 border rounded p-2 border-l-4 flex flex-col gap-2 {% if news_item.status == 0 %}border-l-error{% elif news_item.status == 1 %}border-l-warning{% else %}border-l-success{% endif %}">
+                    <div class="text-lg font-semibold">{{ news_item.title }}</div>
+                    <div class="text-sm text-gray-500">{{ news_item.author.get_full_name }}</div>
+                    <div class="text-sm text-gray-500 -mt-2">{% translate "Published on" %} {{ news_item.publish_on|date:"d M Y H:m" }}</div>
+
+                    <div class="flex flex-row grow gap-2">
+                        {% if news_item.type == 0 %}
+                            <div class="badge badge-info min-w-fit">
+                        {% elif news_item.type == 1 %}
+                            <div class="badge badge-accent min-w-fit">
+                        {% else %}
+                            <div class="badge badge-neutral min-w-fit">
+                        {% endif %}
+                        {{ news_item.get_type_display }}</div>
+
+                        {% if news_item.status == 0 %}
+                            <div class="badge badge-error min-w-fit">
+                        {% elif news_item.status == 1 %}
+                            <div class="badge badge-warning min-w-fit">
+                        {% else %}
+                            <div class="badge badge-success min-w-fit">
+                        {% endif %}
+                        {{ news_item.get_status_display }}</div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+        <div class="mt-4 flex justify-center">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.previous_page_number %}"><span class="hidden lg:inline">{% translate "previous" %}</span><span class="lg:hidden">&lt;</span></a>
+                {% endif %}
+
+                <button class="join-item btn btn-disabled">{% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }} of {{ num_pages }}{% endblocktranslate %}</button>
+
+                {% if page_obj.has_next %}
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}"><span class="hidden lg:inline">{% translate "next" %}</span><span class="lg:hidden">&gt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}"><span class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}

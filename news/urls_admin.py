@@ -8,17 +8,7 @@ urlpatterns = [
     path("editors/add/", views_admin.EditorAddView.as_view(), name="editors_add"),
     path("editors/delete/<int:pk>", views_admin.EditorDeleteView.as_view(), name="editors_delete"),
     path("news/", views_admin.NewsListView.as_view(), name="news_index"),
+    path("news/add/", views_admin.NewsAddView.as_view(), name="news_add"),
+    path("news/edit/<int:pk>/", views_admin.NewsEditView.as_view(), name="news_edit"),
+    path("news/delete/<int:pk>/", views_admin.NewsDeleteView.as_view(), name="news_delete"),
 ]
-
-""" from django.urls import path
-
-from . import views_admin
-
-app_name = "members"
-urlpatterns = [
-    path("", views_admin.MemberListView.as_view(), name="index"),
-    path("add/", views_admin.MemberAddView.as_view(), name="add"),
-    path("edit/<int:pk>/", views_admin.MemberEditView.as_view(), name="edit"),
-    path("delete/<int:pk>/", views_admin.MemberDeleteView.as_view(), name="delete"),
-]
- """

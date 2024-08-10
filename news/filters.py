@@ -7,4 +7,4 @@ from .models import NewsItem
 class NewsItemFilter(django_filters.FilterSet):
     class Meta:
         model = NewsItem
-        fields = ["status", "title"]
+        fields = ["status", "type", "title"]
