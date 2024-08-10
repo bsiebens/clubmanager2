@@ -2,6 +2,8 @@ import secrets
 import string
 
 from django.dispatch import Signal, receiver
+from django.db.models.signals import m2m_changed
+from django.contrib.auth import get_user_model
 
 new_member_user_created = Signal()
 
@@ -20,3 +22,20 @@ def create_and_set_initial_password(sender, *args, **kwargs):
 
     sender.user.set_password(password)
     sender.user.save()
+
+
+@receiver(m2m_changed)
+def group_removed(sender, **kwargs):
+    instance = kwargs["instance"]
+    action = kwargs["action"]
+
+    if isinstance(instance, get_user_model()) and not instance.is_superuser:
+        if action == "post_remove":
+            if instance.groups.count() == 0:
+                instance.is_staff = False
+                instance.save(update_fields=["is_staff"])
+
+        if action == "post_add":
+            if not instance.is_staff:
+                instance.is_staff = True
+                instance.save(update_fields=["is_staff"])

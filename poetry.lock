@@ -391,6 +391,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "rules"
+version = "3.4"
+description = "Awesome Django authorization, without the database"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -453,7 +461,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "47bf731e47618715b7ae2d6d857e4c9536e56c1b0be6b3f3fd0dc0b54273c0e3"
+content-hash = "0e9097cd1956a1b7fff520a29ecdfb80cf1a6f857fb7b1892e67b00560f3a0c3"
 
 [metadata.files]
 asgiref = []
@@ -490,6 +498,7 @@ pytest-django = []
 python-dateutil = []
 rcssmin = []
 rjsmin = []
+rules = []
 six = []
 sqlparse = []
 teamcity-messages = []

@@ -74,7 +74,7 @@ class Member(models.Model):
         ordering = ["user__last_name", "user__first_name", "user__username"]
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.username})"
+        return f"{self.first_name} {self.last_name}"
 
     @classmethod
     def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True) -> "Member":

@@ -5,4 +5,15 @@
     <a href="{{ members_index }}" {% if members_index in request.path %}class="active"{% endif %}>
         <i class="fa-solid fa-users mr-2"></i>{% translate "Members" %}
     </a>
+
+    <span class="menu_title">News</span>
+    {% url "clubmanager_admin:news:news_index" as news_index %}
+    <a href="{{ news_index }}" {% if news_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "News Items" %}
+    </a>
+
+    {% url "clubmanager_admin:news:editors_index" as editors_index %}
+    <a href="{{ editors_index }}" {% if editors_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-users mr-2"></i>{% translate "Editors" %}
+    </a>
 </li>

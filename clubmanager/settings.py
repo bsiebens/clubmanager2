@@ -40,13 +40,20 @@ INSTALLED_APPS = [
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
+    "rules.apps.AutodiscoverRulesConfig",
     "compressor",
     "auditlog",
     "members",
+    "news",
 ]
 
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
+
+AUTHENTICATION_BACKENDS = [
+    "rules.permissions.ObjectPermissionBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
