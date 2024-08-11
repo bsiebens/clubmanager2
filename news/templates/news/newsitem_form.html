@@ -10,7 +10,7 @@
     {% has_perm 'news.release_newsitem' request.user as has_release_rights %}
 
     {% if newsitem %}
-        <div class="flex flex-row gap-2 mt-8 items-center">
+        <div class="flex flex-row items-center gap-2 mt-8">
             {% if newsitem.status == 0 %}
                 <div class="badge badge-error min-w-fit">
             {% elif newsitem.status == 1 %}
@@ -19,54 +19,58 @@
                 <div class="badge badge-success min-w-fit">
             {% endif %}
             {{ newsitem.get_status_display }}</div>
-            <h2 class="subtitle mt-0 border-b-0 text-2xl">{{ newsitem.title }}</h2>
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ newsitem.title }}</h2>
 
-            <div class="grow flex flex-row gap-2 justify-end">
+            <div class="flex flex-row justify-end gap-2 grow">
                 {% if newsitem.status == 0 %}
                     <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "in_review" %}" class="hidden lg:flex btn btn-warning">
-                        <i class="fa-solid fa-arrow-right mr-1"></i>{% translate "In Review" %}
+                        <i class="mr-1 fa-solid fa-arrow-right"></i>{% translate "In Review" %}
                     </a>
                 {% else %}
                     <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "draft" %}" class="hidden lg:flex btn btn-error">
-                        <i class="fa-solid fa-times mr-1"></i>{% translate "Draft" %}
+                        <i class="mr-1 fa-solid fa-times"></i>{% translate "Draft" %}
                     </a>
                 {% endif %}
 
                 {% if has_release_rights and newsitem.status != 2 %}
                     <a href="{% url "clubmanager_admin:news:news_release" newsitem.id %}" class="hidden lg:flex btn btn-accent">
-                        <i class="fa-solid fa-check mr-1"></i>{% translate "Release" %}
+                        <i class="mr-1 fa-solid fa-check"></i>{% translate "Release" %}
                     </a>
                 {% endif %}
 
                 <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="hidden lg:flex btn btn-error btn-outline">
-                    <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+                    <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
             </div>    
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-2">
+        <div class="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-3">
             {% if newsitem.status == 0 %}
                 <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "in_review" %}" class="lg:hidden btn btn-warning">
-                    <i class="fa-solid fa-arrow-right mr-1"></i>{% translate "In Review" %}
+                    <i class="mr-1 fa-solid fa-arrow-right"></i>{% translate "In Review" %}
                 </a>
             {% else %}
                 <a href="{% url "clubmanager_admin:news:news_update_status" newsitem.id "draft" %}" class="lg:hidden btn btn-error">
-                    <i class="fa-solid fa-times mr-1"></i>{% translate "Draft" %}
+                    <i class="mr-1 fa-solid fa-times"></i>{% translate "Draft" %}
                 </a>
             {% endif %}
 
             {% if has_release_rights and newsitem.status != 2 %}
                 <a href="{% url "clubmanager_admin:news:news_release" newsitem.id %}" class="lg:hidden btn btn-accent">
-                    <i class="fa-solid fa-check mr-1"></i>{% translate "Release" %}
+                    <i class="mr-1 fa-solid fa-check"></i>{% translate "Release" %}
                 </a>
             {% endif %}
 
             <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="lg:hidden btn btn-error btn-outline">
-                <i class="fa-solid fa-trash mr-1"></i>{% translate "Delete" %}
+                <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}
             </a>
         </div>
     {% else %}
-        <h2 class="subtitle border-b-0 text-2xl">{% translate "Create new item" %}</h2>
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new item" %}</h2>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
     {% endif %}
 
     <form method="post">
@@ -77,12 +81,12 @@
             {% display_field form.text display_size="full" %}
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-2">
+        <div class="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-2">
             {% display_field form.type display_size="full" %}
             {% display_field form.publish_on display_size="full" %}
         </div>
 
-        <button class="btn btn-primary mt-8 w-full lg:w-fit" type="submit">
+        <button class="w-full mt-8 btn btn-primary lg:w-fit" type="submit">
             <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
         </button>
     </form>
