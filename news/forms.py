@@ -11,9 +11,7 @@ from .models import NewsItem
 
 class EditorAddForm(forms.Form):
     member = forms.ModelChoiceField(
-        queryset=Member.objects.filter(user__is_active=True)
-        .exclude(user__groups=Group.objects.get(name="editors"))
-        .order_by("user__last_name", "user__first_name"),
+        queryset=Member.objects.filter(user__is_active=True).exclude(user__groups__name="editors").order_by("user__last_name", "user__first_name"),
         label=_("Member"),
     )
 
