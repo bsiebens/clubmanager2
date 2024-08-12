@@ -12,7 +12,7 @@ from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateVi
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
-from .forms import EditorAddForm, NewsItemForm
+from .forms import EditorAddForm, NewsItemForm, NewsItemPictureFormSet
 from .models import NewsItem
 from .filters import NewsItemFilter
 from .rules import is_editor
@@ -102,6 +102,16 @@ class NewsAddView(SuccessMessageMixin, CreateView):
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(NewsAddView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["pictures"] = NewsItemPictureFormSet(self.request.POST)
+        else:
+            context["pictures"] = NewsItemPictureFormSet()
+
+        return context
 
     def form_valid(self, form: NewsItemForm) -> HttpResponse:
         form.instance.author = self.request.user

@@ -1,12 +1,13 @@
 from typing import Any
 from django import forms
+from django.forms import inlineformset_factory
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from members.models import Member
-from .models import NewsItem
+from .models import NewsItem, Picture
 
 
 class EditorAddForm(forms.Form):
@@ -29,3 +30,13 @@ class NewsItemForm(forms.ModelForm):
         model = NewsItem
         fields = ["title", "text", "type", "publish_on"]
         localized_fields = fields
+
+
+class PictureForm(forms.ModelForm):
+    class Meta:
+        model = Picture
+        fields = "__all__"
+        localized_fields = fields
+
+
+NewsItemPictureFormSet = inlineformset_factory(NewsItem, Picture, form=PictureForm, fields=["picture", "main_picture"], extra=1, can_delete=True)

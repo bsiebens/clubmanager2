@@ -29,4 +29,12 @@
         @apply rounded-none border-b-2 border-gray-500;
         @apply text-gray-500 font-bold;
     }
+
+    .add-row {
+        @apply btn btn-sm btn-outline;
+    }
+
+    .delete-row {
+        @apply btn btn-sm btn-outline btn-error;
+    }
 }

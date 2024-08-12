@@ -11,6 +11,7 @@ def display_field(
     display_label: bool = True,
     display_placeholder: bool = True,
     display_size: str = "default",
+    display_helptext: bool = True,
 ):
     """
     Print HTML for a field.
@@ -26,9 +27,17 @@ def display_field(
     width_classes = "w-full lg:w-fit"
     match display_size:
         case "xs":
-            input_classes = "input-xs"
+            match field.widget_type:
+                case "clearablefile":
+                    input_classes = "file-input-xs"
+                case "checkbox":
+                    input_classes = "checkbox-xs"
+                case _:
+                    input_classes = "input-xs"
+
         case "full":
             width_classes = "w-full"
+
         case _:
             input_classes = ""
 
@@ -37,6 +46,7 @@ def display_field(
         "type": field.widget_type,
         "display_label": display_label,
         "display_placeholder": display_placeholder,
+        "display_helptext": display_helptext,
         "input_classes": input_classes,
         "width_classes": width_classes,
     }

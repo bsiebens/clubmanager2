@@ -4,6 +4,11 @@ module.exports = {
     './templates/**/*.html',
     './**/templates/**/*.html',
   ],
+  safelist: [
+    "checkbox-xs",
+    "file-input-xs",
+    "input-xs",
+  ],
   theme: {
     extend: {},
     fontFamily: {

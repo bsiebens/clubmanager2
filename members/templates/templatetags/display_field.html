@@ -30,7 +30,7 @@
                         <div class="label-text-alt text-error">{{ field.errors }}</div>
                     {% endif %}
 
-                    {% if field.help_text %}
+                    {% if field.help_text and display_helptext %}
                         <div class="label-text-alt {% if field.errors %}text-error{% endif %}">{{ field.help_text }}</div>
                     {% endif %}
                 </div>
@@ -38,8 +38,8 @@
         {% elif type == "checkbox" %}
             <div class="form-control">
                 <label class="cursor-pointer label" id="{{ field.id_for_label }}">
-                    <input type="checkbox" class="checkbox" name="{{ field.html_name }}" {% if field.value %}checked{% endif %}/>
-                    <span class="ml-2 label-text">{{ field.help_text }}</span>
+                    <input type="checkbox" class="checkbox {{ input_classes }}" name="{{ field.html_name }}" {% if field.value %}checked{% endif %}/>
+                    {% if display_helptext %}<span class="ml-2 label-text">{{ field.help_text }}</span>{% endif %}
                 </label>
             </div>
         {% elif type == "select" %}
@@ -55,7 +55,7 @@
 
             {% if field.field.required or field.help_text %}
                 <div class="label">
-                    {% if field.help_text %}
+                    {% if field.help_text and display_helptext %}
                         <div class="label-text-alt">
                             {{ field.help_text }}
                         </div>
@@ -68,6 +68,8 @@
                     {% endif %}
                 </div>
             {% endif %}
+        {% elif type == "clearablefile" %}
+            <input type="file" class="file-input file-input-bordered {{ input_classes }}" />
         {% endif %}
     </label>
 </div>

@@ -44,3 +44,29 @@ class NewsItem(models.Model):
 
     def formatted(self) -> str:
         return markdownify(self.text)
+
+
+class Picture(models.Model):
+    """A picture linked to a news item."""
+
+    news_item = models.ForeignKey(NewsItem, on_delete=models.CASCADE, related_name="pictures", verbose_name=_("news item"))
+    picture = models.ImageField(_("picture"), upload_to="news/pictures/")
+    main_picture = models.BooleanField(
+        _("main picture"), default=False, help_text=_("The main picture is the picture shown on the cover of the news item.")
+    )
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.picture
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["news_item", "main_picture"],
+                condition=models.Q(main_picture=True),
+                name="news_item_main_picture_unique",
+                violation_error_message=_("Only one picture can be the main picture for a news item"),
+            )
+        ]
