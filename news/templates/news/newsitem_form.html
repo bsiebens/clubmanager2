@@ -38,6 +38,10 @@
                     </a>
                 {% endif %}
 
+                <a href="{% url "clubmanager_admin:news:news_preview" newsitem.id %}" class="btn btn-outline hidden lg:flex">
+                    <i class="mr-1 fa-solid fa-eye"></i>{% translate "Preview" %}
+                </a>
+
                 <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="hidden lg:flex btn btn-error btn-outline">
                     <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
@@ -60,6 +64,10 @@
                     <i class="mr-1 fa-solid fa-check"></i>{% translate "Release" %}
                 </a>
             {% endif %}
+
+            <a href="{% url "clubmanager_admin:news:news_preview" newsitem.id %}" class="btn btn-outline lg:hidden">
+                <i class="mr-1 fa-solid fa-eye"></i>{% translate "Preview" %}
+            </a>
 
             <a href="{% url "clubmanager_admin:news:news_delete" newsitem.id %}" class="lg:hidden btn btn-error btn-outline">
                 <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}

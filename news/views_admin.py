@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
 from .forms import EditorAddForm, NewsItemForm
 from .models import NewsItem
@@ -122,6 +123,10 @@ class NewsDeleteView(SuccessMessageMixin, DeleteView):
     model = NewsItem
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
     success_message = _("News item was succesfully deleted")
+
+
+class NewsPreviewView(DetailView):
+    model = NewsItem
 
 
 @permission_required("news.release_newsitem")

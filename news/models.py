@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .utilities import unique_slugify
 from django_extensions.db.fields import AutoSlugField
 from markdownx.models import MarkdownxField
+from markdownx.utils import markdownify
 
 
 class NewsItem(models.Model):
@@ -40,3 +41,6 @@ class NewsItem(models.Model):
     class Meta:
         verbose_name = _("news item")
         verbose_name_plural = _("news items")
+
+    def formatted(self) -> str:
+        return markdownify(self.text)
