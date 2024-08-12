@@ -4,6 +4,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from .utilities import unique_slugify
+from django_extensions.db.fields import AutoSlugField
+from markdownx.models import MarkdownxField
 
 
 class NewsItem(models.Model):
@@ -20,8 +22,8 @@ class NewsItem(models.Model):
         INTERNAL_EXTERNAL = 2, _("Internal & External")
 
     title = models.CharField(_("title"), max_length=250)
-    text = models.TextField(_("text"))
-    slug = models.SlugField(_("slug"), unique=True, blank=True, null=True)
+    text = MarkdownxField(_("text"))
+    slug = AutoSlugField(populate_from=["title"], verbose_name=_("slug"))
     author = models.ForeignKey(get_user_model(), verbose_name=_("author"), on_delete=models.PROTECT)
     status = models.IntegerField(_("status"), choices=StatusChoices.choices, default=StatusChoices.DRAFT)
     type = models.IntegerField(_("type"), choices=NewsItemTypeChoices.choices, default=NewsItemTypeChoices.INTERNAL)
@@ -38,8 +40,3 @@ class NewsItem(models.Model):
     class Meta:
         verbose_name = _("news item")
         verbose_name_plural = _("news items")
-
-    def save(self, *args, **kwargs) -> None:
-        unique_slugify(self, self.title)
-
-        return super(NewsItem, self).save(*args, **kwargs)

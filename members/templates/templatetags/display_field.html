@@ -50,8 +50,8 @@
                     </option>
                 {% endfor %}
             </select>
-        {% elif type == "textarea" %}
-            <textarea name="{{ field.html_name }}" class="textarea textarea-bordered h-72 {{ input_classes }}" {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}>{{ field.value|default:"" }}</textarea>
+        {% elif type == "textarea" or type == "markdownx" %}
+            <textarea name="{{ field.html_name }}" class="{% if type == "markdownx" %}markdownx{% endif %} textarea textarea-bordered h-72 {{ input_classes }}" {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}>{{ field.value|default:"" }}</textarea>
 
             {% if field.field.required or field.help_text %}
                 <div class="label">

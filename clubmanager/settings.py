@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
+    "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
     "compressor",
     "auditlog",
