@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "auditlog",
     "members",
     "news",
+    "teams",
     "django_cleanup.apps.CleanupConfig",
 ]
 
