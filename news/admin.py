@@ -1,6 +1,6 @@
 from django.contrib import admin
 from rules.contrib.admin import ObjectPermissionsModelAdmin
-
+from markdownx.admin import MarkdownxModelAdmin
 from .models import NewsItem, Picture
 
 
@@ -10,7 +10,7 @@ class PictureInlineAdmin(admin.TabularInline):
 
 
 @admin.register(NewsItem)
-class NewsAdmin(ObjectPermissionsModelAdmin):
+class NewsAdmin(ObjectPermissionsModelAdmin, MarkdownxModelAdmin):
     list_display = ["title", "status", "type", "publish_on", "modified"]
     date_hierarchy = "publish_on"
     list_filter = ["status", "type", "modified"]

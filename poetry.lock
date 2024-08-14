@@ -122,6 +122,14 @@ Django = ">=3.2"
 python-dateutil = ">=2.7.0"
 
 [[package]]
+name = "django-cleanup"
+version = "8.1.0"
+description = "Deletes old files."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-compressor"
 version = "4.5.1"
 description = "('Compresses linked and inline JavaScript or CSS into single cached files.',)"
@@ -502,7 +510,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "dd38500b794322950dd959ea252356501bdd7ca3524fb874b5be0b6087705f1a"
+content-hash = "c2f25f4dfa0b066894518022076d533a817c7238d32450f369a1023511c19832"
 
 [metadata.files]
 asgiref = []
@@ -514,6 +522,7 @@ coverage = []
 django = []
 django-appconf = []
 django-auditlog = []
+django-cleanup = []
 django-compressor = []
 django-debug-toolbar = []
 django-extensions = []
