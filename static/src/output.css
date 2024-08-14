@@ -3338,6 +3338,19 @@ html:has(.drawer-toggle:checked){
   font-size: 0.75rem;
 }
 
+.file-input-sm{
+  height: 2rem;
+  padding-inline-end: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  line-height: 2;
+}
+
+.file-input-sm::file-selector-button{
+  margin-right: 0.75rem;
+  font-size: 0.875rem;
+}
+
 .input-xs{
   height: 1.5rem;
   padding-left: 0.5rem;

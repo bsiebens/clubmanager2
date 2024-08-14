@@ -35,6 +35,15 @@ def display_field(
                 case _:
                     input_classes = "input-xs"
 
+        case "sm":
+            match field.widget_type:
+                case "clearablefile":
+                    input_classes = "file-input-sm"
+                case "checkbox":
+                    input_classes = "checkbox-sm"
+                case _:
+                    input_classes = "input-sm"
+
         case "full":
             width_classes = "w-full"
 
