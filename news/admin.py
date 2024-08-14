@@ -11,7 +11,7 @@ class PictureInlineAdmin(admin.TabularInline):
 
 @admin.register(NewsItem)
 class NewsAdmin(ObjectPermissionsModelAdmin, MarkdownxModelAdmin):
-    list_display = ["title", "status", "type", "publish_on", "modified"]
+    list_display = ["title", "author_name", "status", "type", "publish_on", "modified"]
     date_hierarchy = "publish_on"
     list_filter = ["status", "type", "modified"]
     search_fields = ["title", "text"]

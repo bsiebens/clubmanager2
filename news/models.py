@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
@@ -48,6 +49,11 @@ class NewsItem(models.Model):
             return self.pictures.get(main_picture=True)
         except Picture.DoesNotExist:
             return None
+
+    @property
+    @admin.display(description=_("Author"))
+    def author_name(self):
+        return self.author.get_full_name()
 
 
 class Picture(models.Model):
