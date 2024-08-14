@@ -82,7 +82,7 @@
         <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
     {% endif %}
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="grid grid-cols-1 gap-2">
@@ -112,7 +112,7 @@
                 <tbody>
                     {% for form in pictures.forms %}
                         <tr class="formset-row border-b">
-                            <td class="font-bold">{{ forloop.counter }}</td>
+                            <td class="font-bold">{% if not forloop.last %}{{ forloop.counter }}{% endif %}</td>
                             {% for field in form.visible_fields %}
                                 <td>
                                     {% if forloop.first %}
@@ -143,7 +143,8 @@
             deleteText: "{% translate "Remove" %}",
             prefix: "pictures",
             addCssClass: "btn btn-sm btn-outline",
-            deleteCssClass: "btn btn-sm btn-outline btn-error"
+            deleteCssClass: "btn btn-sm btn-outline btn-error",
+            hideLastAddForm: true
         });
     </script>
 {% endblock content %}

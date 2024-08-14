@@ -59,7 +59,7 @@ class Picture(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.picture
+        return self.picture.name
 
     class Meta:
         constraints = [

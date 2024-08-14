@@ -17,6 +17,7 @@ from .models import NewsItem
 from .filters import NewsItemFilter
 from .rules import is_editor
 from django.db.models import Count
+from django.db import transaction
 from rules.contrib.views import permission_required, objectgetter
 from django.contrib import messages
 
@@ -107,14 +108,23 @@ class NewsAddView(SuccessMessageMixin, CreateView):
         context = super(NewsAddView, self).get_context_data(**kwargs)
 
         if self.request.POST:
-            context["pictures"] = NewsItemPictureFormSet(self.request.POST)
+            context["pictures"] = NewsItemPictureFormSet(self.request.POST, self.request.FILES)
         else:
             context["pictures"] = NewsItemPictureFormSet()
 
         return context
 
     def form_valid(self, form: NewsItemForm) -> HttpResponse:
-        form.instance.author = self.request.user
+        context = self.get_context_data()
+
+        pictures = context["pictures"]
+        with transaction.atomic():
+            form.instance.author = self.request.user
+            self.object = form.save()
+
+            if pictures.is_valid():
+                pictures.instance = self.object
+                pictures.save()
 
         return super(NewsAddView, self).form_valid(form)
 
@@ -127,6 +137,31 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(NewsEditView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["pictures"] = NewsItemPictureFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            context["pictures"] = NewsItemPictureFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form: NewsItemForm) -> HttpResponse:
+        context = self.get_context_data()
+
+        pictures = context["pictures"]
+        with transaction.atomic():
+            self.object = form.save()
+
+            print(pictures.is_valid())
+            print(pictures.errors)
+            if pictures.is_valid():
+                print(pictures)
+                pictures.save()
+
+        return super(NewsEditView, self).form_valid(form)
 
 
 class NewsDeleteView(SuccessMessageMixin, DeleteView):

@@ -69,7 +69,10 @@
                 </div>
             {% endif %}
         {% elif type == "clearablefile" %}
-            <input type="file" class="file-input file-input-bordered {{ input_classes }}" />
+                {% if field.value %}
+                    <span class="text-sm text-gray-500 my-1">{% translate "Current picture:" %} {{ field.value }}</span>
+                {% endif %}
+                <input type="file" class="file-input file-input-bordered {{ input_classes }}" name="{{ field.html_name }}" />
         {% endif %}
     </label>
 </div>

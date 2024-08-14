@@ -3637,6 +3637,11 @@ html:has(.drawer-toggle:checked){
   margin-right: 0.5rem;
 }
 
+.my-1{
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 .-mt-2{
   margin-top: -0.5rem;
 }
@@ -3989,20 +3994,12 @@ html:has(.drawer-toggle:checked){
     display: block;
   }
 
-  .lg\:inline-block{
-    display: inline-block;
-  }
-
   .lg\:inline{
     display: inline;
   }
 
   .lg\:flex{
     display: flex;
-  }
-
-  .lg\:inline-flex{
-    display: inline-flex;
   }
 
   .lg\:hidden{
