@@ -1,5 +1,6 @@
 from django.contrib import admin
 from rules.contrib.admin import ObjectPermissionsModelAdmin
+
 from .models import NewsItem, Picture
 
 

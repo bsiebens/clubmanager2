@@ -1,9 +1,7 @@
-from typing import Iterable
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from .utilities import unique_slugify
 from django_extensions.db.fields import AutoSlugField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
@@ -44,6 +42,12 @@ class NewsItem(models.Model):
 
     def formatted(self) -> str:
         return markdownify(self.text)
+
+    def main_picture(self) -> "Picture":
+        try:
+            return self.pictures.get(main_picture=True)
+        except Picture.DoesNotExist:
+            return None
 
 
 class Picture(models.Model):
