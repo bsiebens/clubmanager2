@@ -16,4 +16,30 @@
     <a href="{{ editors_index }}" {% if editors_index in request.path %}class="active"{% endif %}>
         <i class="fa-solid fa-users mr-2"></i>{% translate "Editors" %}
     </a>
+
+    <span class="menu_title">Teams</span>
+    {% url "clubmanager_admin:teams:index" as teams_index %}
+    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Seasons" %}
+    </a>
+
+    {% url "clubmanager_admin:teams:index" as teams_index %}
+    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Number Pools" %}
+    </a>
+
+    {% url "clubmanager_admin:teams:index" as teams_index %}
+    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Team Roles" %}
+    </a>
+
+    {% url "clubmanager_admin:teams:index" as teams_index %}
+    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Teams" %}
+    </a>
+    
+    {% url "clubmanager_admin:teams:index" as teams_index %}
+    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Team Memberships" %}
+    </a>
 </li>
