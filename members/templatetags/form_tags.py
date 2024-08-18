@@ -12,6 +12,7 @@ def display_field(
     display_placeholder: bool = True,
     display_size: str = "default",
     display_helptext: bool = True,
+    small: bool = False,
 ):
     """
     Print HTML for a field.
@@ -58,4 +59,5 @@ def display_field(
         "display_helptext": display_helptext,
         "input_classes": input_classes,
         "width_classes": width_classes,
+        "small": small,
     }

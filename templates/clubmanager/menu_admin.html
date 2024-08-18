@@ -18,14 +18,14 @@
     </a>
 
     <span class="menu_title">Teams</span>
-    {% url "clubmanager_admin:teams:index" as teams_index %}
-    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Seasons" %}
+    {% url "clubmanager_admin:teams:seasons_index" as seasons_index %}
+    <a href="{{ seasons_index }}" {% if seasons_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-calendar-days mr-2"></i>{% translate "Seasons" %}
     </a>
 
-    {% url "clubmanager_admin:teams:index" as teams_index %}
-    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Number Pools" %}
+    {% url "clubmanager_admin:teams:numberpools_index" as numberpools_index %}
+    <a href="{{ numberpools_index }}" {% if numberpools_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-layer-group mr-2"></i>{% translate "Number Pools" %}
     </a>
 
     {% url "clubmanager_admin:teams:index" as teams_index %}

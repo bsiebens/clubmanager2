@@ -5,6 +5,12 @@ from . import views_admin
 app_name = "teams"
 urlpatterns = [
     path("teams/", views_admin.TeamsListView.as_view(), name="index"),
+    path("seasons/", views_admin.SeasonListView.as_view(), name="seasons_index"),
+    path("seasons/add/", views_admin.SeasonAddView.as_view(), name="seasons_add"),
+    path("seasons/delete/<int:pk>/", views_admin.SeasonDeleteView.as_view(), name="seasons_delete"),
+    path("numberpools/", views_admin.NumberPoolListView.as_view(), name="numberpools_index"),
+    path("numberpools/add/", views_admin.NumberPoolAddView.as_view(), name="numberpools_add"),
+    path("numberpools/delete/<int:pk>/", views_admin.NumberPoolDeleteView.as_view(), name="numberpools_delete"),
 ]
 
 

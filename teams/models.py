@@ -53,6 +53,9 @@ class Season(models.Model):
     def start_year(self) -> int:
         return self.start_date.strftime("%Y")
 
+    def has_started(self) -> bool:
+        return self.start_date < timezone.now().date()
+
 
 class NumberPool(models.Model):
     """A number pool holds all numbers that can be assigned, within a pool you can enforce unique numbers."""

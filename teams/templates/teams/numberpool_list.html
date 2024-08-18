@@ -1,0 +1,53 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-layer-group"></i>{% translate "Number Pools" %}</h1>
+
+    <div class="flex flex-col w-full mt-6 lg:mt-0 mb-6 lg:mb-0 lg:flex-row justify-end items-center gap-2">
+        <form class="flex flex-col lg:flex-row gap-2 items-center" method="post" action="{% url "clubmanager_admin:teams:numberpools_add" %}">
+            {% csrf_token %}
+
+            {% display_field form.name display_label=False %}
+            {% display_field form.enforce_unique display_label=False %}
+
+            <button class="btn w-full lg:w-fit" type="submit">
+                <i class="fa-solid fa-add"></i>
+                {% translate "Add" %}
+            </button>
+        </form>
+    </div>
+
+    <div class="text-sm text-gray-500">
+        {% blocktranslate %}
+            A number pool controls which players can use which numbers, it can enforce unique numbers amongst all players in the different teams which are part of the pool.
+        {% endblocktranslate %}
+    </div>
+
+    <div class="mt-2 grid grid-cols-1 lg:grid-cols-3 gap-2">
+        {% for numberpool in object_list %}
+            <div class="border rounded p-2 border-l-4 {% if numberpool.name != "default" %}{% if numberpool.enforce_unique %}border-l-success{% else %}border-l-error{% endif %}{% endif %} flex flex-row items-center gap-2">
+                <div class="flex flex-col grow">
+                    <div class="text-lg font-semibold">{{ numberpool.name|capfirst }}</div>
+                    <div class="text-sm text-gray-500">
+                        {% if numberpool.name == "default" %}
+                            {% translate "Default number pool does not enforce unique numbers and cannot be deleted" %}
+                        {% else %}
+                            {% if numberpool.enforce_unique %}
+                                {% translate "Unique numbers enforced" %}
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <a class="btn btn-error btn-outline {% if numberpool.name == "default" %}btn-disabled{% endif %}" href="{% url "clubmanager_admin:teams:numberpools_delete" numberpool.id %}">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
