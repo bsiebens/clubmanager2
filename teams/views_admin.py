@@ -20,10 +20,12 @@ from rules.contrib.views import permission_required
 
 from .models import Season, Team, TeamRole, TeamMembership, TeamPicture, NumberPool
 from .forms import SeasonAddForm, NumberPoolForm
+from .filters import TeamFilter, TeamRoleFilter
 
 
-class TeamsListView(ListView):
-    model = Team
+class TeamsListView(FilterView):
+    filterset_class = TeamFilter
+    paginate_by = 50
 
 
 class SeasonListView(ListView):
@@ -78,3 +80,49 @@ class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
     success_message = _("Number pool was succesfully removed")
     model = NumberPool
+
+
+class TeamRoleListView(FilterView):
+    filterset_class = TeamRoleFilter
+
+
+class TeamRoleAddView(SuccessMessageMixin, CreateView):
+    model = TeamRole
+    fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
+    success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
+    success_message = _("Team role %(name)s was created succesfully")
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(TeamRoleAddView, self).get_context_data(**kwargs)
+
+        context["alternate_staff_help_text"] = _("Staff role, displays member on staff section of team pages")
+        context["alternate_admin_help_text"] = _("Admin role, can maintain and manage the team")
+
+        return context
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
+
+
+class TeamRoleEditView(SuccessMessageMixin, UpdateView):
+    model = TeamRole
+    fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
+    success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
+    success_message = _("Team role %(name)s was updated succesfully")
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(TeamRoleEditView, self).get_context_data(**kwargs)
+
+        context["alternate_staff_help_text"] = _("Staff role, displays member on staff section of team pages")
+        context["alternate_admin_help_text"] = _("Admin role, can maintain and manage the team")
+
+        return context
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
+
+
+class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
+    model = TeamRole
+    success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
+    success_message = _("Team role was succesfully deleted")

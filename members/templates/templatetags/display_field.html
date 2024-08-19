@@ -39,10 +39,10 @@
             <div class="form-control">
                 <label class="cursor-pointer label" id="{{ field.id_for_label }}">
                     <input type="checkbox" class="checkbox {{ input_classes }}" name="{{ field.html_name }}" {% if field.value %}checked{% endif %}/>
-                    {% if display_helptext %}<span class="ml-2 label-text">{{ field.help_text }}</span>{% endif %}
+                    {% if display_helptext %}<span class="ml-2 label-text grow">{{ field.help_text }}</span>{% endif %}
                 </label>
             </div>
-        {% elif type == "select" %}
+        {% elif type == "select" or type == "nullbooleanselect" %}
             <select class="select select-bordered grow {{ input_classes }}" name="{{ field.html_name }}">
                 {% for value, label in field.field.choices %}
                     <option value="{{ value }}" {% if field.value == value|stringformat:"s" %}selected=""{% endif %}>

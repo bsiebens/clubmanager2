@@ -12,6 +12,7 @@ def display_field(
     display_placeholder: bool = True,
     display_size: str = "default",
     display_helptext: bool = True,
+    alternate_helptext: str | None = None,
     small: bool = False,
 ):
     """
@@ -24,6 +25,9 @@ def display_field(
     if alternate_label is not None:
         field.label = alternate_label
 
+    if alternate_helptext is not None:
+        field.help_text = alternate_helptext
+
     input_classes = ""
     width_classes = "w-full lg:w-fit"
     match display_size:
@@ -33,6 +37,8 @@ def display_field(
                     input_classes = "file-input-xs"
                 case "checkbox":
                     input_classes = "checkbox-xs"
+                case "select":
+                    input_classes = "select-xs"
                 case _:
                     input_classes = "input-xs"
 
@@ -42,6 +48,8 @@ def display_field(
                     input_classes = "file-input-sm"
                 case "checkbox":
                     input_classes = "checkbox-sm"
+                case "select":
+                    input_classes = "select-sm"
                 case _:
                     input_classes = "input-sm"
 

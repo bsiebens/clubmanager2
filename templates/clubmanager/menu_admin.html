@@ -28,17 +28,17 @@
         <i class="fa-solid fa-layer-group mr-2"></i>{% translate "Number Pools" %}
     </a>
 
-    {% url "clubmanager_admin:teams:index" as teams_index %}
-    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Team Roles" %}
+    {% url "clubmanager_admin:teams:teamroles_index" as teamroles_index %}
+    <a href="{{ teamroles_index }}" {% if teamroles_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-circle-user mr-2"></i>{% translate "Team Roles" %}
     </a>
 
-    {% url "clubmanager_admin:teams:index" as teams_index %}
+    {% url "clubmanager_admin:teams:teams_index" as teams_index %}
     <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Teams" %}
+        <i class="fa-solid fa-people-group mr-2"></i>{% translate "Teams" %}
     </a>
     
-    {% url "clubmanager_admin:teams:index" as teams_index %}
+    {% url "clubmanager_admin:teams:teams_index" as teams_index %}
     <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
         <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Team Memberships" %}
     </a>

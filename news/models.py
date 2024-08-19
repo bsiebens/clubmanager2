@@ -40,6 +40,7 @@ class NewsItem(models.Model):
     class Meta:
         verbose_name = _("news item")
         verbose_name_plural = _("news items")
+        ordering = ["-created"]
 
     def formatted(self) -> str:
         return markdownify(self.text)

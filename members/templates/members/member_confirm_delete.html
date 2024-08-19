@@ -5,11 +5,11 @@
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
 
-        <div>
-            {% blocktranslate with name=object.user.get_full_name %}    
-                Are you sure you want to delete <span class="font-bold">{{ name }}</span>?
-            {% endblocktranslate %}
-        </div>
+    <div>
+        {% blocktranslate with name=object.user.get_full_name %}    
+            Are you sure you want to delete <span class="font-bold">{{ name }}</span>?
+        {% endblocktranslate %}
+    </div>
 
     <form method="post" action="{% url "clubmanager_admin:members:delete" object.id %}">
         {% csrf_token %}

@@ -8,20 +8,26 @@
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
 
-    <div class="flex flex-col w-full mt-6 lg:mt-0 mb-6 lg:mb-0 lg:flex-row justify-end">
-        <form class="flex flex-col lg:flex-row gap-2 items-center" method="post" action="{% url "clubmanager_admin:news:editors_add" %}">
+    <div class="action-bar justify-end">
+        <form class="add-form" method="post" action="{% url "clubmanager_admin:news:editors_add" %}">
             {% csrf_token %}
 
-            {% display_field form.member display_label=False %}
+            <div class="form-label">
+                {% translate "Add a new editor" %}
+            </div>
 
-            <button class="btn w-full lg:w-fit" type="submit">
-                <i class="fa-solid fa-add"></i>
-                {% translate "Add" %}
-            </button>
+            <div class="form">
+                {% display_field form.member display_label=False %}
+
+                <button type="submit">
+                    <i class="fa-solid fa-add"></i>
+                    {% translate "Add" %}
+                </button>
+            </div>
         </form>
     </div>
 
-    <div class="text-sm text-gray-500">
+    <div class="mt-8 mb-4">
         {% blocktranslate %}
             Editors have advanced rights for releasing news items to the main page.
         {% endblocktranslate %}
@@ -29,17 +35,17 @@
 
     <div class="mt-2 grid grid-cols-1 lg:grid-cols-4 gap-2">
         {% for user in object_list %}
-            <div class="border rounded p-2 border-l-4 flex flex-row items-center gap-2">
+            <div class="data-card">
                 <div class="avatar">
                     <div class="mask mask-squircle h-12 w-12">
                         <img alt="{{ user.get_full_name }} avatar" src="{% render_initials_avatar user.get_full_name %}" />
                     </div>
                 </div>
 
-                <div class="flex flex-col grow">
-                    <div class="text-lg font-semibold">{{ user.get_full_name }}</div>
+                <div class="data">
+                    <div>{{ user.get_full_name }}</div>
                     {% if user.email %}
-                        <div class="text-sm text-gray-500">{{ user.email }}</div>
+                        <div>{{ user.email }}</div>
                     {% endif %}
                 </div>
 

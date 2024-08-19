@@ -11,6 +11,10 @@ urlpatterns = [
     path("numberpools/", views_admin.NumberPoolListView.as_view(), name="numberpools_index"),
     path("numberpools/add/", views_admin.NumberPoolAddView.as_view(), name="numberpools_add"),
     path("numberpools/delete/<int:pk>/", views_admin.NumberPoolDeleteView.as_view(), name="numberpools_delete"),
+    path("teamroles/", views_admin.TeamRoleListView.as_view(), name="teamroles_index"),
+    path("teamroles/add/", views_admin.TeamRoleAddView.as_view(), name="teamroles_add"),
+    path("teamroles/edit/<int:pk>/", views_admin.TeamRoleEditView.as_view(), name="teamroles_edit"),
+    path("teamroles/delete/<int:pk>/", views_admin.TeamRoleDeleteView.as_view(), name="teamroles_delete"),
 ]
 
 

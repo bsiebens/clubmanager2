@@ -7,9 +7,12 @@ module.exports = {
   safelist: [
     "checkbox-sm",
     "file-input-sm",
+    "select-sm",
+    "file-input-sm",
     "checkbox-xs",
     "file-input-xs",
     "input-xs",
+    "select-xs",
   ],
   theme: {
     extend: {},

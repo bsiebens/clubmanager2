@@ -6,30 +6,33 @@
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
 
-    <div class="flex flex-col w-full mt-6 lg:mt-0 mb-6 lg:mb-0 lg:flex-row justify-end items-center gap-2">
-        <div>{% translate "Create a new season with a duration of" %}</div>
-        <form class="flex flex-col lg:flex-row gap-2 items-center" method="post" action="{% url "clubmanager_admin:teams:seasons_add" %}">
+    <div class="action-bar justify-end">
+        <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:seasons_add" %}">
             {% csrf_token %}
 
-            {% display_field form.duration display_label=False small=True %}
-            {% display_field form.unit display_label=False %}
+            <div class="form-label">
+                {% translate "Add a new season with a duration of" %}
+            </div>
 
-            <button class="btn w-full lg:w-fit" type="submit">
-                <i class="fa-solid fa-add"></i>
-                {% translate "Add" %}
-            </button>
+            <div class="form">
+                {% display_field form.duration display_label=False small=True %}
+                {% display_field form.unit display_label=False %}
+
+                <button type="submit">
+                    <i class="fa-solid fa-add"></i>
+                    {% translate "Add" %}
+                </button>
+            </div>
         </form>
     </div>
 
     <div class="mt-2 grid grid-cols-1 lg:grid-cols-3 gap-2">
         {% for season in object_list %}
-            <div class="border rounded p-2 border-l-4 {% if season.current_season %}border-l-success{% endif %} flex flex-row items-center gap-2">
-                <div class="flex flex-col grow">
-                    <div class="text-lg font-semibold">{{ season.start_date }} {% translate "to" %} {{ season.end_date }}</div>
+            <div class="data-card {% if season.current_season %}border-l-success{% endif %}">
+                <div class="data">
+                    <div>{{ season.start_date }} {% translate "to" %} {{ season.end_date }}</div>
                     {% if season.current_season %}
-                        <div class="text-sm text-gray-500">
-                            {% translate "Current season" %}
-                        </div>
+                        <div>{% translate "Current season" %}</div>
                     {% endif %}
                 </div>
 
