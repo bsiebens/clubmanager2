@@ -28,6 +28,32 @@ class TeamsListView(FilterView):
     paginate_by = 50
 
 
+class TeamsAddView(SuccessMessageMixin, CreateView):
+    model = Team
+    fields = ["name", "short_name", "type", "number_pool"]
+    success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
+    success_message = _("Team %(name)s was created succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
+
+
+class TeamsEditView(SuccessMessageMixin, UpdateView):
+    model = Team
+    fields = ["name", "short_name", "type", "number_pool"]
+    success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
+    success_message = _("Team %(name)s was updated succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
+
+
+class TeamsDeleteView(SuccessMessageMixin, DeleteView):
+    model = Team
+    success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
+    success_message = _("Team was succesfully deleted")
+
+
 class SeasonListView(ListView):
     model = Season
 

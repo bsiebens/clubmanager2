@@ -65,85 +65,97 @@
                 </tr>
             </thead>
             <tbody>
-                {% for news_item in object_list %}
-                    <tr class="hover">
-                        {% comment %} <th>
-                            <label>
-                                <input type="checkbox" class="checkbox checkbox-sm" />
-                            </label>
-                        </th> {% endcomment %}
-                        <td>
-                            <a class="font-bold" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
-                                {{ news_item.title }}
-                            </a>
-                        </td>
-                        <td>{{ news_item.author.get_full_name }}</td>
-                        <td>
-                            {% if news_item.type == 0 %}
-                                <div class="badge badge-info">
-                            {% elif news_item.type == 1 %}
-                                <div class="badge badge-accent">
-                            {% else %}
-                                <div class="badge badge-neutral">
-                            {% endif %}
-                            {{ news_item.get_type_display }}</div>
-                        </td>
-                        <td>
-                            {% if news_item.status == 0 %}
-                                <div class="badge badge-error">
-                            {% elif news_item.status == 1 %}
-                                <div class="badge badge-warning">
-                            {% else %}
-                                <div class="badge badge-success">
-                            {% endif %}
-                            {{ news_item.get_status_display }}</div>
-                        </td>
-                        <td>{{ news_item.publish_on|date:"d M Y H:m" }}</td>
-                        <td>{{ news_item.modified|date:"d M Y H:m" }}</td>
-                        <td>
-                            <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
-                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
-                            </a>
-                            <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:news:news_delete" news_item.id %}">
-                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                            </a>
+                {% if object_list|length == 0 %}
+                    <tr>
+                        <td colspan="7">
+                            {% translate "No news items found" %}
                         </td>
                     </tr>
-                {% endfor %}
+                {% else %}
+                    {% for news_item in object_list %}
+                        <tr class="hover">
+                            {% comment %} <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </th> {% endcomment %}
+                            <td>
+                                <a class="font-bold" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                                    {{ news_item.title }}
+                                </a>
+                            </td>
+                            <td>{{ news_item.author.get_full_name }}</td>
+                            <td>
+                                {% if news_item.type == 0 %}
+                                    <div class="badge badge-info">
+                                {% elif news_item.type == 1 %}
+                                    <div class="badge badge-accent">
+                                {% else %}
+                                    <div class="badge badge-neutral">
+                                {% endif %}
+                                {{ news_item.get_type_display }}</div>
+                            </td>
+                            <td>
+                                {% if news_item.status == 0 %}
+                                    <div class="badge badge-error">
+                                {% elif news_item.status == 1 %}
+                                    <div class="badge badge-warning">
+                                {% else %}
+                                    <div class="badge badge-success">
+                                {% endif %}
+                                {{ news_item.get_status_display }}</div>
+                            </td>
+                            <td>{{ news_item.publish_on|date:"d M Y H:m" }}</td>
+                            <td>{{ news_item.modified|date:"d M Y H:m" }}</td>
+                            <td>
+                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                                    <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                                </a>
+                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:news:news_delete" news_item.id %}">
+                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
 
     <div class="mt-2 lg:hidden flex flex-col gap-2">
-        {% for news_item in object_list %}
-            <a href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
-                <div class="data-card flex-col items-start {% if news_item.status == 0 %}border-l-error{% elif news_item.status == 1 %}border-l-warning{% else %}border-l-success{% endif %}">
-                    <div class="text-lg font-semibold">{{ news_item.title }}</div>
-                    <div class="text-sm text-gray-500">{{ news_item.author.get_full_name }}</div>
-                    <div class="text-sm text-gray-500 -mt-2">{% translate "Published on" %} {{ news_item.publish_on|date:"d M Y H:m" }}</div>
+        {% if object_list|length == 0 %}
+            <div>{% translate "No news items found" %}</div>
+        {% else %}
+            {% for news_item in object_list %}
+                <a href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                    <div class="data-card flex-col items-start {% if news_item.status == 0 %}border-l-error{% elif news_item.status == 1 %}border-l-warning{% else %}border-l-success{% endif %}">
+                        <div class="text-lg font-semibold">{{ news_item.title }}</div>
+                        <div class="text-sm text-gray-500">{{ news_item.author.get_full_name }}</div>
+                        <div class="text-sm text-gray-500 -mt-2">{% translate "Published on" %} {{ news_item.publish_on|date:"d M Y H:m" }}</div>
 
-                    <div class="flex flex-row grow gap-2">
-                        {% if news_item.type == 0 %}
-                            <div class="badge badge-info min-w-fit">
-                        {% elif news_item.type == 1 %}
-                            <div class="badge badge-accent min-w-fit">
-                        {% else %}
-                            <div class="badge badge-neutral min-w-fit">
-                        {% endif %}
-                        {{ news_item.get_type_display }}</div>
+                        <div class="flex flex-row grow gap-2">
+                            {% if news_item.type == 0 %}
+                                <div class="badge badge-info min-w-fit">
+                            {% elif news_item.type == 1 %}
+                                <div class="badge badge-accent min-w-fit">
+                            {% else %}
+                                <div class="badge badge-neutral min-w-fit">
+                            {% endif %}
+                            {{ news_item.get_type_display }}</div>
 
-                        {% if news_item.status == 0 %}
-                            <div class="badge badge-error min-w-fit">
-                        {% elif news_item.status == 1 %}
-                            <div class="badge badge-warning min-w-fit">
-                        {% else %}
-                            <div class="badge badge-success min-w-fit">
-                        {% endif %}
-                        {{ news_item.get_status_display }}</div>
+                            {% if news_item.status == 0 %}
+                                <div class="badge badge-error min-w-fit">
+                            {% elif news_item.status == 1 %}
+                                <div class="badge badge-warning min-w-fit">
+                            {% else %}
+                                <div class="badge badge-success min-w-fit">
+                            {% endif %}
+                            {{ news_item.get_status_display }}</div>
+                        </div>
                     </div>
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        {% endif %}
     </div>
 
     {% if is_paginated %}

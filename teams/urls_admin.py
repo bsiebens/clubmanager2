@@ -4,7 +4,10 @@ from . import views_admin
 
 app_name = "teams"
 urlpatterns = [
-    path("teams/", views_admin.TeamsListView.as_view(), name="index"),
+    path("teams/", views_admin.TeamsListView.as_view(), name="teams_index"),
+    path("teams/add/", views_admin.TeamsAddView.as_view(), name="teams_add"),
+    path("teams/edit/<int:pk>/", views_admin.TeamsEditView.as_view(), name="teams_edit"),
+    path("teams/delete/<int:pk>/", views_admin.TeamsDeleteView.as_view(), name="teams_delete"),
     path("seasons/", views_admin.SeasonListView.as_view(), name="seasons_index"),
     path("seasons/add/", views_admin.SeasonAddView.as_view(), name="seasons_add"),
     path("seasons/delete/<int:pk>/", views_admin.SeasonDeleteView.as_view(), name="seasons_delete"),

@@ -36,8 +36,8 @@
                     </th> {% endcomment %}
                     <th>{% translate "Role" %}</th>
                     <th>{% translate "Abbreviation" %}</th>
-                    <th>{% translate "Team staff?" %}</th>
-                    <th>{% translate "Team admin?" %}</th>
+                    <th>{% translate "Team Staff?" %}</th>
+                    <th>{% translate "Team Admin?" %}</th>
                     <th>
                         {% translate "Order" %}
                         <div class="tooltip ml-2" data-tip="{% translate "Items are sorted from low to high when displaying" %}">
@@ -48,71 +48,83 @@
                 </tr>
             </thead>
             <tbody>
-                {% for team_role in object_list %}
+                {% if object_list|length == 0 %}
                     <tr>
-                        <td class="font-bold">
-                            <a href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
-                                {{ team_role.name }}
-                            </a>
-                        </td>
-                        <td>{{ team_role.abbreviation }}</td>
-                        <td>
-                            {% if team_role.staff_role %}
-                                <i class="fa-solid fa-circle-check text-success"></i>
-                            {% else %}
-                                <i class="fa-solid fa-circle-xmark text-error"></i>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if team_role.admin_role %}
-                                <i class="fa-solid fa-circle-check text-success"></i>
-                            {% else %}
-                                <i class="fa-solid fa-circle-xmark text-error"></i>
-                            {% endif %}
-                        </td>
-                        <td>{{ team_role.sort_order }}</td>
-                        <td>
-                            <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
-                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
-                            </a>
-                            <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:teams:teamroles_delete" team_role.id %}">
-                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                            </a>
+                        <td colspan="6">
+                            {% translate "No team roles found" %}
                         </td>
                     </tr>
-                {% endfor %}
+                {% else %}
+                    {% for team_role in object_list %}
+                        <tr class="hover">
+                            <td class="font-bold">
+                                <a href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
+                                    {{ team_role.name }}
+                                </a>
+                            </td>
+                            <td>{{ team_role.abbreviation }}</td>
+                            <td>
+                                {% if team_role.staff_role %}
+                                    <i class="fa-solid fa-circle-check text-success"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if team_role.admin_role %}
+                                    <i class="fa-solid fa-circle-check text-success"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                                {% endif %}
+                            </td>
+                            <td>{{ team_role.sort_order }}</td>
+                            <td>
+                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
+                                    <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                                </a>
+                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:teams:teamroles_delete" team_role.id %}">
+                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
 
     <div class="mt-2 lg:hidden flex flex-col gap-2">
-        {% for team_role in object_list %}
-            <a class="grow" href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
-                <div class="data-card">
-                    <div class="data">
-                        <div>{{ team_role.name }} ({{ team_role.abbreviation }})</div>
-                        
-                        {% if team_role.admin_role or team_role.staff_role %}
-                            <div class="mt-2 flex flex-row gap-2">
-                                {% if team_role.staff_role %}
-                                    <div class="badge badge-accent">{% translate "Staff" %}</div>
-                                {% endif %}
+        {% if object_list|length == 0 %}
+            <div>{% translate "No team roles found" %}</div>
+        {% else %}
+            {% for team_role in object_list %}
+                <a class="grow" href="{% url "clubmanager_admin:teams:teamroles_edit" team_role.id %}">
+                    <div class="data-card">
+                        <div class="data">
+                            <div>{{ team_role.name }} ({{ team_role.abbreviation }})</div>
+                            
+                            {% if team_role.admin_role or team_role.staff_role %}
+                                <div class="mt-2 flex flex-row gap-2">
+                                    {% if team_role.staff_role %}
+                                        <div class="badge badge-accent">{% translate "Staff" %}</div>
+                                    {% endif %}
 
-                                {% if team_role.admin_role %}
-                                    <div class="badge badge-info">{% translate "Admin" %}</div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    </div>
+                                    {% if team_role.admin_role %}
+                                        <div class="badge badge-info">{% translate "Admin" %}</div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
 
-                    <div>
-                        <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:teams:teamroles_delete" team_role.id %}">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
+                        <div>
+                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:teams:teamroles_delete" team_role.id %}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        {% endif %}
     </div>
 
     {% if is_paginated %}

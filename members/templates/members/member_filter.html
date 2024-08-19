@@ -44,105 +44,117 @@
                 </tr>
             </thead>
             <tbody>
-                {% for member in object_list %}
-                    <tr class="hover">
-                        {% comment %} <th>
-                            <label>
-                                <input type="checkbox" class="checkbox checkbox-sm" />
-                            </label>
-                        </th> {% endcomment %}
-                        <td>
-                            <a href="{% url "clubmanager_admin:members:edit" member.id %}">
-                                <div class="flex flex-row items-center gap-3">
-                                    <div class="avatar">
-                                        <div class="mask mask-squircle h-12 w-12">
-                                            <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
+                {% if object_list|length == 0 %}
+                    <tr>
+                        <td colspan="6">
+                            {% translate "No members found" %}
+                        </td>
+                    </tr>
+                {% else %}
+                    {% for member in object_list %}
+                        <tr class="hover">
+                            {% comment %} <th>
+                                <label>
+                                    <input type="checkbox" class="checkbox checkbox-sm" />
+                                </label>
+                            </th> {% endcomment %}
+                            <td>
+                                <a href="{% url "clubmanager_admin:members:edit" member.id %}">
+                                    <div class="flex flex-row items-center gap-3">
+                                        <div class="avatar">
+                                            <div class="mask mask-squircle h-12 w-12">
+                                                <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="flex flex-col">
-                                        <div class="font-bold">{{ member.user.get_full_name }}</div>
-                                        <div class="text-sm opacity-50">{{ member.email }}</div>
-                                    </div>
+                                        <div class="flex flex-col">
+                                            <div class="font-bold">{{ member.user.get_full_name }}</div>
+                                            <div class="text-sm opacity-50">{{ member.email }}</div>
+                                        </div>
 
-                                    {% if member.is_organization_admin %}
-                                        <div class="badge badge-accent">{% translate "Admin" %}</div>
-                                    {% endif %}
-                                </div>
-                            </a>
-                        </td>
-                        <td>{{ member.birthday|date:"d M Y"|default:"-" }}</td>
-                        <td>{{ member.license|default:"-" }}</td>
-                        <td>
-                            {% if member.phone %}
-                                <a class="border-b border-info hover:border-b-2" href="{{ member.phone.as_rfc3966 }}">
-                                    <i class="fa-solid fa-phone mr-2"></i>
-                                    {{ member.phone }}
+                                        {% if member.is_organization_admin %}
+                                            <div class="badge badge-accent">{% translate "Admin" %}</div>
+                                        {% endif %}
+                                    </div>
                                 </a>
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="flex flex-col gap-2">
-                                {% if member.emergency_phone_primary %}
-                                    <div>
-                                        <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
-                                            <i class="fa-solid fa-phone mr-2"></i>
-                                            {{ member.emergency_phone_primary }}
-                                        </a>
-                                    </div>
+                            </td>
+                            <td>{{ member.birthday|date:"d M Y"|default:"-" }}</td>
+                            <td>{{ member.license|default:"-" }}</td>
+                            <td>
+                                {% if member.phone %}
+                                    <a class="border-b border-info hover:border-b-2" href="{{ member.phone.as_rfc3966 }}">
+                                        <i class="fa-solid fa-phone mr-2"></i>
+                                        {{ member.phone }}
+                                    </a>
                                 {% else %}
                                     -
                                 {% endif %}
-                                    
-                                {% if member.emergency_phone_secondary %}
-                                    <div>
-                                        <a class="mt-2 border-b border-info hover:border-b-2" href="{{ member.emergency_phone_secondary.as_rfc3966 }}">
-                                            <i class="fa-solid fa-phone mr-2"></i>
-                                            {{ member.emergency_phone_secondary }}
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </td>
-                        <td>
-                            <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:members:edit" member.id %}">
-                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
-                            </a>
-                            <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:members:delete" member.id %}">
-                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                            </a>
-                        </td>
-                    </tr>
-                {% endfor %}
+                            </td>
+                            <td>
+                                <div class="flex flex-col gap-2">
+                                    {% if member.emergency_phone_primary %}
+                                        <div>
+                                            <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
+                                                <i class="fa-solid fa-phone mr-2"></i>
+                                                {{ member.emergency_phone_primary }}
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                        
+                                    {% if member.emergency_phone_secondary %}
+                                        <div>
+                                            <a class="mt-2 border-b border-info hover:border-b-2" href="{{ member.emergency_phone_secondary.as_rfc3966 }}">
+                                                <i class="fa-solid fa-phone mr-2"></i>
+                                                {{ member.emergency_phone_secondary }}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:members:edit" member.id %}">
+                                    <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                                </a>
+                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:members:delete" member.id %}">
+                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
 
     <div class="mt-2 lg:hidden flex flex-col gap-2">
-        {% for member in object_list %}
-            <a href="{% url "clubmanager_admin:members:edit" member.id %}">
-                <div class="data-card">
-                    <div class="avatar">
-                        <div class="mask mask-squircle h-12 w-12">
-                            <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
+        {% if object_list|length == 0 %}
+            <div>{% translate "No members found" %}</div>
+        {% else %}
+            {% for member in object_list %}
+                <a href="{% url "clubmanager_admin:members:edit" member.id %}">
+                    <div class="data-card">
+                        <div class="avatar">
+                            <div class="mask mask-squircle h-12 w-12">
+                                <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="data">
-                        <div>{{ member.user.get_full_name }}</div>
-                        {% if member.email %}
-                            <div>{{ member.email }}</div>
+                        <div class="data">
+                            <div>{{ member.user.get_full_name }}</div>
+                            {% if member.email %}
+                                <div>{{ member.email }}</div>
+                            {% endif %}
+                        </div>
+
+                        {% if member.is_organization_admin %}
+                            <div class="badge badge-accent">{% translate "Admin" %}</div>
                         {% endif %}
                     </div>
-
-                    {% if member.is_organization_admin %}
-                        <div class="badge badge-accent">{% translate "Admin" %}</div>
-                    {% endif %}
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        {% endif %}
     </div>
 
     {% if is_paginated %}
