@@ -152,3 +152,19 @@ class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamRole
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
     success_message = _("Team role was succesfully deleted")
+
+
+class TeamMembersListView(FilterView):
+    pass
+
+
+class TeamMembersAddView(SuccessMessageMixin, CreateView):
+    pass
+
+
+class TeamMembersEditView(SuccessMessageMixin, UpdateView):
+    pass
+
+
+class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
+    pass

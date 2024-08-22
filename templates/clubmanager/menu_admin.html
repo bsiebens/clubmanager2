@@ -38,8 +38,8 @@
         <i class="fa-solid fa-people-group mr-2"></i>{% translate "Teams" %}
     </a>
     
-    {% url "clubmanager_admin:teams:teams_index" as teams_index %}
-    <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
-        <i class="fa-solid fa-newspaper mr-2"></i>{% translate "Team Memberships" %}
+    {% url "clubmanager_admin:teams:teammembers_index" as teammembers_index %}
+    <a href="{{ teammembers_index }}" {% if teammembers_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-ticket mr-2"></i>{% translate "Team Memberships" %}
     </a>
 </li>
