@@ -3217,6 +3217,22 @@ html{
   width: 320px;
 }
 
+.badge-xs{
+  height: 0.75rem;
+  font-size: 0.75rem;
+  line-height: .75rem;
+  padding-left: 0.313rem;
+  padding-right: 0.313rem;
+}
+
+.badge-sm{
+  height: 1rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding-left: 0.438rem;
+  padding-right: 0.438rem;
+}
+
 .badge-lg{
   height: 1.5rem;
   font-size: 1rem;
@@ -5192,6 +5208,10 @@ html:has(.drawer-toggle:checked){
 
 .font-semibold{
   font-weight: 600;
+}
+
+.font-normal{
+  font-weight: 400;
 }
 
 .text-base-content{

@@ -21,7 +21,7 @@ class Season(models.Model):
     end_date = models.DateField(_("end date"))
 
     def __str__(self):
-        return _("season {start} - {end}").format(start=self.start_date.strftime("%d %b %Y"), end=self.end_date.strftime("%d %b %Y"))
+        return _("Season '{start} - '{end}").format(start=self.start_date.strftime("%y"), end=self.end_date.strftime("%y"))
 
     class Meta:
         verbose_name = _("season")

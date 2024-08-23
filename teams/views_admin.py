@@ -17,10 +17,11 @@ from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
 from rules.contrib.views import permission_required
+from django.utils.datastructures import MultiValueDict
 
 from .models import Season, Team, TeamRole, TeamMembership, TeamPicture, NumberPool
 from .forms import SeasonAddForm, NumberPoolForm
-from .filters import TeamFilter, TeamRoleFilter
+from .filters import TeamFilter, TeamRoleFilter, TeamMembershipFilter
 
 
 class TeamsListView(FilterView):
@@ -155,7 +156,23 @@ class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
 
 
 class TeamMembersListView(FilterView):
-    pass
+    filterset_class = TeamMembershipFilter
+    paginate_by = 50
+
+    def get_filterset_kwargs(self, filterset_class) -> dict[str, Any]:
+        kwargs = super(TeamMembersListView, self).get_filterset_kwargs(filterset_class)
+
+        if kwargs["data"] is None:
+            filter_values = {}
+        else:
+            filter_values = kwargs["data"].dict()
+
+        if not filter_values:
+            filter_values.update({"season": str(Season.get_season().id)})
+
+        kwargs["data"] = filter_values
+
+        return kwargs
 
 
 class TeamMembersAddView(SuccessMessageMixin, CreateView):
