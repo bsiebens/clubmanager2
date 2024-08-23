@@ -5020,6 +5020,14 @@ html:has(.drawer-toggle:checked){
   min-width: fit-content;
 }
 
+.min-w-5{
+  min-width: 1.25rem;
+}
+
+.max-w-4{
+  max-width: 1rem;
+}
+
 .flex-1{
   flex: 1 1 0%;
 }
