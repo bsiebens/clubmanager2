@@ -50,6 +50,18 @@
                     </option>
                 {% endfor %}
             </select>
+
+            {% if field.errors or field.help_text %}
+                <div class="label">
+                    {% if field.errors %}
+                        <div class="label-text-alt text-error">{{ field.errors }}</div>
+                    {% endif %}
+
+                    {% if field.help_text and display_helptext %}
+                        <div class="label-text-alt {% if field.errors %}text-error{% endif %}">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
         {% elif type == "textarea" or type == "markdownx" %}
             <textarea name="{{ field.html_name }}" class="{% if type == "markdownx" %}markdownx{% endif %} textarea textarea-bordered h-72 {{ input_classes }}" {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}>{{ field.value|default:"" }}</textarea>
 

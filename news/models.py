@@ -26,7 +26,12 @@ class NewsItem(models.Model):
     slug = AutoSlugField(populate_from=["title"], verbose_name=_("slug"))
     author = models.ForeignKey(get_user_model(), verbose_name=_("author"), on_delete=models.PROTECT)
     status = models.IntegerField(_("status"), choices=StatusChoices.choices, default=StatusChoices.DRAFT)
-    type = models.IntegerField(_("type"), choices=NewsItemTypeChoices.choices, default=NewsItemTypeChoices.INTERNAL)
+    type = models.IntegerField(
+        _("type"),
+        choices=NewsItemTypeChoices.choices,
+        default=NewsItemTypeChoices.INTERNAL,
+        help_text=_("Internal news is only visible to members after logging in. External news will be published on the website."),
+    )
     publish_on = models.DateTimeField(
         _("Publish on"), default=timezone.now, help_text="Date and time on which this item should be published. Only released items will be posted."
     )
