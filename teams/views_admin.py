@@ -184,4 +184,6 @@ class TeamMembersEditView(SuccessMessageMixin, UpdateView):
 
 
 class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
-    pass
+    model = TeamMembership
+    success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
+    success_message = _("Team memberships was succesfully deleted")
