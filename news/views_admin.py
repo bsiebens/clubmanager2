@@ -156,10 +156,7 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
         with transaction.atomic():
             self.object = form.save()
 
-            print(pictures.is_valid())
-            print(pictures.errors)
             if pictures.is_valid():
-                print(pictures)
                 pictures.save()
 
         return super(NewsEditView, self).form_valid(form)

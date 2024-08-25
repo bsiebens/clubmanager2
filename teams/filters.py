@@ -1,7 +1,7 @@
 import django_filters
 from django.utils.translation import gettext_lazy as _
 
-from .models import Team, TeamRole, TeamMembership, Season
+from .models import Team, TeamMembership, TeamRole
 
 
 class TeamFilter(django_filters.FilterSet):

@@ -1,8 +1,10 @@
-from django import forms
-from .models import Season, NumberPool
-from django.db.models import TextChoices
-from django.utils.translation import gettext_lazy as _
 from dateutil.relativedelta import relativedelta
+from django import forms
+from django.db.models import TextChoices
+from django.forms import inlineformset_factory
+from django.utils.translation import gettext_lazy as _
+
+from .models import NumberPool, Season, Team, TeamPicture
 
 
 class SeasonAddForm(forms.Form):
@@ -44,3 +46,13 @@ class NumberPoolForm(forms.ModelForm):
         model = NumberPool
         fields = ["name", "enforce_unique"]
         localized_fields = fields
+
+
+class PictureForm(forms.ModelForm):
+    class Meta:
+        model = TeamPicture
+        fields = "__all__"
+        localized_fields = fields
+
+
+TeamPictureFormSet = inlineformset_factory(Team, TeamPicture, form=PictureForm, fields=["picture", "season"], extra=1, can_delete=True)

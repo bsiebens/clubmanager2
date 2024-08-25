@@ -1,27 +1,17 @@
 from typing import Any
 
-from django.contrib import messages
-from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.db.models import Count
-from django.db.models.query import QuerySet
-from django.forms import Form
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
-from django.views.generic.base import View
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
-from rules.contrib.views import permission_required
-from django.utils.datastructures import MultiValueDict
 
-from .models import Season, Team, TeamRole, TeamMembership, TeamPicture, NumberPool
-from .forms import SeasonAddForm, NumberPoolForm
-from .filters import TeamFilter, TeamRoleFilter, TeamMembershipFilter
+from .filters import TeamFilter, TeamMembershipFilter, TeamRoleFilter
+from .forms import NumberPoolForm, SeasonAddForm, TeamPictureFormSet
+from .models import NumberPool, Season, Team, TeamMembership, TeamRole
 
 
 class TeamsListView(FilterView):
@@ -38,6 +28,30 @@ class TeamsAddView(SuccessMessageMixin, CreateView):
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(TeamsAddView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["pictures"] = TeamPictureFormSet(self.request.POST, self.request.FILES)
+        else:
+            context["pictures"] = TeamPictureFormSet()
+
+        return context
+
+    def form_valid(self, form) -> HttpResponse:
+        context = self.get_context_data()
+
+        pictures = context["pictures"]
+        with transaction.atomic():
+            form.instance.author = self.request.user
+            self.object = form.save()
+
+            if pictures.is_valid():
+                pictures.instance = self.object
+                pictures.save()
+
+        return super(TeamsAddView, self).form_valid(form)
+
 
 class TeamsEditView(SuccessMessageMixin, UpdateView):
     model = Team
@@ -47,6 +61,28 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(TeamsEditView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["pictures"] = TeamPictureFormSet(self.request.POST, self.request.FILES, instance=self.object)
+        else:
+            context["pictures"] = TeamPictureFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form) -> HttpResponse:
+        context = self.get_context_data()
+
+        pictures = context["pictures"]
+        with transaction.atomic():
+            self.object = form.save()
+
+            if pictures.is_valid():
+                pictures.save()
+
+        return super(TeamsEditView, self).form_valid(form)
 
 
 class TeamsDeleteView(SuccessMessageMixin, DeleteView):
