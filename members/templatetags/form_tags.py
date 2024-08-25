@@ -32,6 +32,8 @@ def form_field(
             field_type = "textarea"
         case "clearablefile":
             field_type = "file"
+        case "selectmultiple":
+            field_type = "select"
         case _:
             field_type = "input"
 

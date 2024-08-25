@@ -93,6 +93,8 @@
         <div class="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-2">
             {% form_field form.type %}
             {% form_field form.publish_on %}
+
+            {% form_field form.teams %}
         </div>
 
         <h2 class="subtitle">{% translate "Pictures" %}</h2>
@@ -148,5 +150,7 @@
             deleteCssClass: "btn btn-sm btn-outline btn-error",
             hideLastAddForm: true
         });
+
+        new Choices(document.querySelector("#id_teams"));
     </script>
 {% endblock content %}

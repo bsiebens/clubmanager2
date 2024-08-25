@@ -26,7 +26,7 @@ class EditorAddForm(forms.Form):
 class NewsItemForm(forms.ModelForm):
     class Meta:
         model = NewsItem
-        fields = ["title", "text", "type", "publish_on"]
+        fields = ["title", "text", "type", "publish_on", "teams"]
         localized_fields = fields
 
 

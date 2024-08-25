@@ -7,6 +7,8 @@ from django_extensions.db.fields import AutoSlugField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 
+from teams.models import Team
+
 
 class NewsItem(models.Model):
     """A news item. This can be both an internal as well as an external message."""
@@ -35,6 +37,8 @@ class NewsItem(models.Model):
     publish_on = models.DateTimeField(
         _("Publish on"), default=timezone.now, help_text="Date and time on which this item should be published. Only released items will be posted."
     )
+
+    teams = models.ManyToManyField(Team, related_name="news_items")
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -67,9 +71,7 @@ class Picture(models.Model):
 
     news_item = models.ForeignKey(NewsItem, on_delete=models.CASCADE, related_name="pictures", verbose_name=_("news item"))
     picture = models.ImageField(_("picture"), upload_to="news/pictures/")
-    main_picture = models.BooleanField(
-        _("main picture"), default=False, help_text=_("The main picture is the picture shown on the cover of the news item.")
-    )
+    main_picture = models.BooleanField(_("main picture"), default=False, help_text=_("The main picture is the picture shown on the cover of the news item."))
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

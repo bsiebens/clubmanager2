@@ -148,6 +148,10 @@
     @apply bg-base-200 cursor-not-allowed select-none;
 }
 
+.choices__input {
+    @apply bg-base-100;
+}
+
 .choices.is-disabled .choices__item {
     @apply cursor-not-allowed;
 }
@@ -197,7 +201,7 @@
 }
 
 .choices[data-type*=select-multiple] .choices__inner,.choices[data-type*=text] .choices__inner {
-    @apply cursor-text;
+    @apply cursor-text inline-table;
 }
 
 .choices[data-type*=select-multiple] .choices__button,.choices[data-type*=text] .choices__button {
@@ -231,8 +235,12 @@
     @apply rounded-b-lg;
 }
 
+.choices:has(select[multiple]) .choices__input {
+    @apply px-0 py-0;
+}
+
 .choices__list {
-    @apply m-0 pl-0 list-none;
+    @apply m-0 pl-0 list-none bg-base-100;
 }
 
 .choices__list--single {
@@ -252,7 +260,7 @@
 }
 
 .choices__list--multiple .choices__item {
-    @apply badge badge-primary rounded-lg mr-1 break-all box-border inline-flex justify-center items-center;
+    @apply badge badge-neutral badge-sm rounded-lg mr-1 break-all box-border inline-flex inline-table;
 }
 
 .choices__list--multiple .choices__item[data-deletable] {
@@ -264,7 +272,7 @@
 }
 
 .choices__list--multiple .choices__item.is-highlighted {
-    @apply badge-secondary;
+    @apply badge-accent;
 }
 
 .is-disabled .choices__list--multiple .choices__item {

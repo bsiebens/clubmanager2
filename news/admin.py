@@ -19,7 +19,8 @@ class NewsAdmin(ObjectPermissionsModelAdmin, MarkdownxModelAdmin):
     raw_id_fields = ["author"]
     fieldsets = [
         ["GENERAL INFORMATION", {"fields": ["title", "text"]}],
-        ["METADATA", {"fields": ["author", ("status", "type"), "publish_on"]}],
+        ["METADATA", {"fields": ["author", ("status", "type"), "publish_on", "teams"]}],
         ["OTHER", {"fields": ["slug"]}],
     ]
     readonly_fields = ["slug"]
+    filter_horizontal = ["teams"]

@@ -17,15 +17,25 @@
                 class="select select-bordered {% if size_modifier %}select-{{ size_modifier }}{% endif %} {% if field.errors %}select-error text-error{% endif %}" 
                 name="{{ field.html_name }}"
                 id="{{ field.auto_id }}"
+                {% if field.widget_type == "selectmultiple" %}multiple{% endif %}
             >
 
-                {% for option_value, option_label in field.field.choices %}
-                    <option value="{{ option_value }}" {% if field.value|stringformat:"s" == option_value|stringformat:"s" %}selected="selected"{% endif %}>
-                        {{ option_label }}
-                    </option>
-                {% endfor %}
+                {% if field.widget_type == "selectmultiple" %}
+                    {% for option_value, option_label in field.field.choices %}
+                        <option value="{{ option_value }}" {% if option_value in field.value %}selected="selected"{% endif %}>
+                            {{ option_label }}
+                        </option>
+                    {% endfor %}
+                {% else %}
+                    {% for option_value, option_label in field.field.choices %}
+                        <option value="{{ option_value }}" {% if field.value|stringformat:"s" == option_value|stringformat:"s" %}selected="selected"{% endif %}>
+                            {{ option_label }}
+                        </option>
+                    {% endfor %}
+                {% endif %}
 
             </select>
+
         {% elif field_type == "checkbox" %}
             <div class="flex flex-row gap-2 items-center">
                 <input 
@@ -39,12 +49,14 @@
                     {{ field.help_text }}
                 </div>
             </div>
+
         {% elif field_type == "textarea" %}
             <textarea
                 name="{{ field.html_name }}"
                 class="{% if type == "markdownx" %}markdownx{% endif %} textarea textarea-bordered h-72 {% if field.errors %}textarea-error text-error{% endif %} {% if size_modifier %}textarea-{{ size_modifier }}{% endif %}"
                 {% if show_placeholder %}placeholder="{{ field.label }}"{% endif %}
             >{{ field.value|default:"" }}</textarea>
+
         {% elif field_type == "file" %}
             {% if field.value %}
                 <span class="text-sm text-gray-500 my-1">{% translate "Current file:" %} {{ field.value }}</span>
@@ -54,6 +66,7 @@
                 class="file-input file-input-bordered {% if size_modifier %}file-input-{{ size_modifier }}{% endif %}"
                 name="{{ field.html_name }}"
             />
+
         {% elif field_type == "input" %}
             <input 
                 type="{% if field.widget_type == "regionalphonenumber" %}tel{% elif field.widget_type == "datetime" %}datetime-local{% else %}{{ field.widget_type }}{% endif %}" 
