@@ -36,15 +36,15 @@
 
         <h2 class="subtitle">{% translate "Role information" %}</h2>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {% display_field form.name display_size="full" %}
-            {% display_field form.abbreviation display_size="full" display_helptext=False %}
-            {% display_field form.staff_role alternate_helptext=alternate_staff_help_text %}
-            {% display_field form.admin_role alternate_helptext=alternate_admin_help_text %}
+            {% form_field form.name %}
+            {% form_field form.abbreviation show_help=False %}
+            {% form_field form.staff_role help_text=alternate_staff_help_text %}
+            {% form_field form.admin_role help_text=alternate_admin_help_text %}
         </div>
 
         <h2 class="subtitle">{% translate "Display information" %}</h2>
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {% display_field form.sort_order display_size="full" %}
+            {% form_field form.sort_order %}
         </div>
 
         <button class="w-full mt-8 btn btn-primary lg:w-fit" type="submit">

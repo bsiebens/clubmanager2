@@ -58,30 +58,30 @@
 
         <h2 class="subtitle">{% translate "Personal information" %}</h2>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% display_field form.first_name display_size="full" %}
-            {% display_field form.last_name display_size="full" %}
-            {% display_field form.email display_size="full" %}
-            {% display_field form.phone display_size="full" %}
-            {% display_field form.birthday display_size="full" %}
+            {% form_field form.first_name %}
+            {% form_field form.last_name %}
+            {% form_field form.email %}
+            {% form_field form.phone %}
+            {% form_field form.birthday %}
         </div>
 
         <h2 class="subtitle">{% translate "Emergency contacts" %}</h2>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% display_field form.emergency_phone_primary display_size="full" %}
-            {% display_field form.emergency_phone_secondary display_size="full" %}
+            {% form_field form.emergency_phone_primary %}
+            {% form_field form.emergency_phone_secondary %}
         </div>
 
         <h2 class="subtitle">{% translate "Club information" %}</h2>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% display_field form.license display_size="full" %}
-            {% display_field form.is_organization_admin %}
+            {% form_field form.license %}
+            {% form_field form.is_organization_admin %}
         </div>
 
         <h2 class="subtitle">{% translate "Password" %}</h2>
         <div class="text-sm text-gray-500 text-justify">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% display_field form.password display_size="full" %}
-            {% display_field form.password_confirmation display_size="full" %}
+            {% form_field form.password %}
+            {% form_field form.password_confirmation %}
         </div>
 
         <button class="w-full mt-8 btn btn-primary lg:w-fit" type="submit">

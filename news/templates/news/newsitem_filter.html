@@ -32,7 +32,7 @@
         <div class="action-bar-filter">
             <form class="flex flex-col lg:flex-row gap-2 items-center">
                 {% for field in filter.form %}
-                    {% display_field field display_label=False display_size="xs" %}
+                    {% form_field field show_label=False size="extra-small" %}
                 {% endfor %}
 
                 <button type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>

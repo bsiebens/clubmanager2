@@ -16,8 +16,8 @@
                 {% translate "Add a new editor" %}
             </div>
 
-            <div class="form">
-                {% display_field form.member display_label=False %}
+            <div class="form" id="editor-form">
+                {% form_field form.member show_label=False %}
 
                 <button type="submit">
                     <i class="fa-solid fa-add"></i>
@@ -75,4 +75,8 @@
             </div>
         </div>
     {% endif %}
+
+    <script type="text/javascript">
+        new Choices(document.querySelector("#id_member"));
+    </script>
 {% endblock content %}

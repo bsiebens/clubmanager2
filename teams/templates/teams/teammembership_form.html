@@ -1,0 +1,70 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
+
+    {% if teammembership %}
+        <div class="flex flex-row items-center gap-2 mt-8">
+            <div class="flex flex-col">
+                <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ teammembership.member.get_full_name }}</h2>
+                <div class="text-gray-500">{{ teammembership.team }} - {{ teammembership.season }}</div>
+            </div>
+
+            <div class="flex justify-end grow">
+                <a href="{% url "clubmanager_admin:teams:teammembers_delete" teammembership.id %}" class="hidden lg:flex btn btn-outline btn-error">
+                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:teams:teammembers_delete" teammembership.id  %}" class="lg:hidden btn btn-outline btn-error">
+                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+            </a>
+        </div>
+    {% else %}
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new team member" %}</h2>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h2 class="subtitle">{% translate "Member information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.member %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Team information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.team %}
+            {% form_field form.season %}
+            {% form_field form.role %}
+            {% form_field form.number %}
+            {% form_field form.captain %}
+            {% form_field form.assistant_captain %}
+        </div>
+
+        <select class="select select-bordered">
+            <option>1</option>
+            <option>2</option>
+        </select>
+
+        <button class="w-full mt-8 btn btn-primary lg:w-fit" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+
+    <script type="text/javascript">
+        new Choices(document.querySelector("#id_member"));
+        new Choices(document.querySelector("#id_team"));
+        new Choices(document.querySelector("#id_season"));
+        new Choices(document.querySelector("#id_role"));
+    </script>
+{% endblock content %}

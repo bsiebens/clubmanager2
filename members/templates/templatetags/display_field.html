@@ -8,6 +8,7 @@
             </div>
         {% endif %}
 
+
         {% if type == "text" or type == "number" or type == "email" or type == "password" or type == "regionalphonenumber" or type == "date" or type == "datetime" %}
             <div class="input input-bordered flex items-center gap-2 {{ input_classes }} {% if field.errors %}input-error{% endif %}">
                 <input 
@@ -45,7 +46,7 @@
         {% elif type == "select" or type == "nullbooleanselect" %}
             <select class="select select-bordered grow {{ input_classes }}" name="{{ field.html_name }}">
                 {% for value, label in field.field.choices %}
-                    <option value="{{ value }}" {% if field.value == value|stringformat:"s" %}selected=""{% endif %}>
+                    <option value="{{ value }}" {% if field.value == value|stringformat:"s" %}selected="selected"{% endif %}>
                         {{ label }}
                     </option>
                 {% endfor %}

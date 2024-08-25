@@ -86,13 +86,13 @@
         {% csrf_token %}
 
         <div class="grid grid-cols-1 gap-2">
-            {% display_field form.title display_size="full" %}
-            {% display_field form.text display_size="full" %}
+            {% form_field form.title %}
+            {% form_field form.text %}
         </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-2">
-            {% display_field form.type display_size="full" %}
-            {% display_field form.publish_on display_size="full" %}
+            {% form_field form.type %}
+            {% form_field form.publish_on %}
         </div>
 
         <h2 class="subtitle">{% translate "Pictures" %}</h2>
@@ -122,7 +122,7 @@
                                             {{ hidden }}
                                         {% endfor %}
                                     {% endif %}
-                                    {% display_field field display_label=False display_helptext=False display_size="sm" %}
+                                    {% form_field field show_label=False show_help=False size="small" %}
                                 </td>
                             {% endfor %}
                             <td></td>

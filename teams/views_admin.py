@@ -176,11 +176,23 @@ class TeamMembersListView(FilterView):
 
 
 class TeamMembersAddView(SuccessMessageMixin, CreateView):
-    pass
+    model = TeamMembership
+    success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
+    success_message = _("Team membership %(name)s - %(team)s %(season)s was created succesfully")
+    fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)
 
 
 class TeamMembersEditView(SuccessMessageMixin, UpdateView):
-    pass
+    model = TeamMembership
+    success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
+    success_message = _("Team membership %(name)s - %(team)s %(season)s was updated succesfully")
+    fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)
 
 
 class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):

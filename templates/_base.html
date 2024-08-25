@@ -12,11 +12,15 @@
 
         <title>ClubManager - {% block title %}Dashboard{% endblock title %}</title>
 
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
         {% compress css %}
             <link rel="stylesheet" href="{% static 'src/output.css' %}" />
         {% endcompress %}
 
         <script src="https://kit.fontawesome.com/8189f10079.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+        
     </head>
 
     <body>

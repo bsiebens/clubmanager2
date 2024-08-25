@@ -77,9 +77,7 @@ class TeamRole(models.Model):
     name = models.CharField(_("name"), max_length=250, unique=True)
     abbreviation = models.CharField(_("abbreviation"), max_length=10, help_text=_("Abbreviated version of the name"), unique=True)
     staff_role = models.BooleanField(_("staff"), default=False, help_text=_("Staff roles are displayed on the team page under the staff section"))
-    admin_role = models.BooleanField(
-        _("admin"), default=False, help_text=_("Admin roles can manage the team (add/remove members, post messages, create events)")
-    )
+    admin_role = models.BooleanField(_("admin"), default=False, help_text=_("Admin roles can manage the team (add/remove members, post messages, create events)"))
     sort_order = models.IntegerField(
         _("sort order"),
         default=100,
@@ -149,8 +147,8 @@ class TeamMembership(models.Model):
     role = models.ForeignKey(TeamRole, on_delete=models.PROTECT, verbose_name=_("role"))
 
     number = models.IntegerField(_("number"), blank=True, null=True)
-    captain = models.BooleanField(_("captain"), default=False)
-    assistant_captain = models.BooleanField(_("assistant captain"), default=False)
+    captain = models.BooleanField(_("captain"), default=False, help_text=_("Mark as team captain"))
+    assistant_captain = models.BooleanField(_("assistant captain"), default=False, help_text=_("Mark as assistant team captain"))
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)

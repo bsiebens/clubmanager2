@@ -33,9 +33,7 @@ class Member(models.Model):
         help_text=_("If flagged signals that this users will need to reset their password at the next login."),
     )
 
-    is_organization_admin = models.BooleanField(
-        _("Organization admin"), default=False, help_text=_("An organization admin will have advanced access rights into the system.")
-    )
+    is_organization_admin = models.BooleanField(_("Organization admin"), default=False, help_text=_("An organization admin will have advanced access rights into the system."))
 
     objects = UserManager()
 
