@@ -19,14 +19,17 @@ class MemberListView(FilterView):
 class MemberDeleteView(SuccessMessageMixin, DeleteView):
     model = Member
     success_url = reverse_lazy("clubmanager_admin:members:members_index")
-    success_message = _("Member deleted succesfully")
+    success_message = _("Member <strong>%(name)s</strong> deleted succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
 
 
 class MemberAddView(SuccessMessageMixin, CreateView):
     model = Member
     form_class = MemberForm
     success_url = reverse_lazy("clubmanager_admin:members:members_index")
-    success_message = _("Member %(name)s was created succesfully")
+    success_message = _("Member <strong>%(name)s</strong> added succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
@@ -36,7 +39,7 @@ class MemberEditView(SuccessMessageMixin, UpdateView):
     model = Member
     form_class = MemberForm
     success_url = reverse_lazy("clubmanager_admin:members:members_index")
-    success_message = _("Member %(name)s was updated succesfully")
+    success_message = _("Member <strong>%(name)s</strong> updated succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
@@ -61,7 +64,7 @@ class FamilyAddView(SuccessMessageMixin, CreateView):
     fields = ["members"]
     localized_fields = fields
     success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family was created succesfully")
+    success_message = _("Family added succesfully")
 
 
 class FamilyEditView(SuccessMessageMixin, UpdateView):
@@ -69,7 +72,7 @@ class FamilyEditView(SuccessMessageMixin, UpdateView):
     fields = ["members"]
     localized_fields = fields
     success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family was updated succesfully")
+    success_message = _("Family updated succesfully")
 
 
 class FamilyDeleteView(SuccessMessageMixin, DeleteView):

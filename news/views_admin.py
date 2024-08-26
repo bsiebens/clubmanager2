@@ -43,7 +43,7 @@ class EditorListView(ListView):
 class EditorAddView(SuccessMessageMixin, FormView):
     form_class = EditorAddForm
     success_url = reverse_lazy("clubmanager_admin:news:editors_index")
-    success_message = _("Editor %(name)s was added succesfully")
+    success_message = _("Editor <strong>%(name)s</strong> added succesfully")
     template_name = "news/editor_form.html"
 
     def form_valid(self, form: EditorAddForm) -> HttpResponse:
@@ -57,7 +57,7 @@ class EditorAddView(SuccessMessageMixin, FormView):
 
 class EditorDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:news:editors_index")
-    success_message = _("Editor was succesfully removed")
+    success_message = _("Editor <strong>%(name)s</strong> deleted succesfully")
     model = get_user_model()
     template_name = "news/editor_confirm_delete.html"
 
@@ -68,6 +68,9 @@ class EditorDeleteView(SuccessMessageMixin, DeleteView):
         self.object.groups.remove(editors)
 
         return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=cleaned_data["member"].user.get_full_name())
 
 
 class NewsListView(FilterView):
@@ -100,7 +103,7 @@ class NewsAddView(SuccessMessageMixin, CreateView):
     model = NewsItem
     form_class = NewsItemForm
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
-    success_message = _("News item %(title)s was created succesfully")
+    success_message = _("News item <strong>%(title)s</strong> added succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
@@ -134,7 +137,7 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
     model = NewsItem
     form_class = NewsItemForm
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
-    success_message = _("News item %(title)s was updated succesfully")
+    success_message = _("News item <strong>%(title)s</strong> updated succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
@@ -165,7 +168,10 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
 class NewsDeleteView(SuccessMessageMixin, DeleteView):
     model = NewsItem
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
-    success_message = _("News item deleted succesfully")
+    success_message = _("News item <strong>%(title)s</strong> deleted succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, title=self.object.title)
 
 
 class NewsPreviewView(DetailView):
@@ -178,7 +184,7 @@ def release_newsitem(request, pk: int) -> HttpResponse:
     news_item.status = NewsItem.StatusChoices.RELEASED
     news_item.save(update_fields=["status"])
 
-    messages.success(request, _("News item %(name)s was succesfully released" % ({"name": news_item.title})))
+    messages.success(request, _("News item <strong>%(name)s</strong> succesfully released" % ({"name": news_item.title})))
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
 
@@ -192,6 +198,6 @@ def update_status_newsitem(request, pk: int, status: str) -> HttpResponse:
 
     news_item.save(update_fields=["status"])
 
-    messages.success(request, _("News item %(name)s was succesfully changed" % ({"name": news_item.title})))
+    messages.success(request, _("News item <strong>%(name)s</strong> succesfully changed" % ({"name": news_item.title})))
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))

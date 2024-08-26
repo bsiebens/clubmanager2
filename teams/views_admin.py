@@ -23,7 +23,7 @@ class TeamsAddView(SuccessMessageMixin, CreateView):
     model = Team
     fields = ["name", "short_name", "type", "number_pool"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
-    success_message = _("Team %(name)s was created succesfully")
+    success_message = _("Team <strong>%(name)s</strong> created succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -57,7 +57,7 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
     model = Team
     fields = ["name", "short_name", "type", "number_pool"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
-    success_message = _("Team %(name)s was updated succesfully")
+    success_message = _("Team <strong>%(name)s</strong> updated succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -88,7 +88,10 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
 class TeamsDeleteView(SuccessMessageMixin, DeleteView):
     model = Team
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
-    success_message = _("Team deleted succesfully")
+    success_message = _("Team <strong>%(name)s</strong> deleted succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
 class SeasonListView(ListView):
@@ -104,7 +107,7 @@ class SeasonListView(ListView):
 class SeasonAddView(SuccessMessageMixin, FormView):
     form_class = SeasonAddForm
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
-    success_message = _("Season was added succesfully")
+    success_message = _("Season added succesfully")
     template_name = "teams/season_form.html"
 
     def form_valid(self, form: SeasonAddForm) -> HttpResponse:
@@ -115,7 +118,7 @@ class SeasonAddView(SuccessMessageMixin, FormView):
 
 class SeasonDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
-    success_message = _("Season was succesfully removed")
+    success_message = _("Season deleted succesfully")
     model = Season
 
 
@@ -133,7 +136,7 @@ class NumberPoolAddView(SuccessMessageMixin, CreateView):
     model = NumberPool
     form_class = NumberPoolForm
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
-    success_message = _("Number pool %(name)s was created succesfully")
+    success_message = _("Number pool <strong>%(name)s</strong> created succesfully")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.name)
@@ -141,8 +144,11 @@ class NumberPoolAddView(SuccessMessageMixin, CreateView):
 
 class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
-    success_message = _("Number pool was succesfully removed")
+    success_message = _("Number pool <strong>%(name)s</strong> deleted succesfully")
     model = NumberPool
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, title=self.object.name)
 
 
 class TeamRoleListView(FilterView):
@@ -153,7 +159,7 @@ class TeamRoleAddView(SuccessMessageMixin, CreateView):
     model = TeamRole
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
-    success_message = _("Team role %(name)s was created succesfully")
+    success_message = _("Team role <strong>%(name)s</strong> created succesfully")
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(TeamRoleAddView, self).get_context_data(**kwargs)
@@ -171,7 +177,7 @@ class TeamRoleEditView(SuccessMessageMixin, UpdateView):
     model = TeamRole
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
-    success_message = _("Team role %(name)s was updated succesfully")
+    success_message = _("Team role <strong>%(name)s</strong> updated succesfully")
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(TeamRoleEditView, self).get_context_data(**kwargs)
@@ -188,7 +194,10 @@ class TeamRoleEditView(SuccessMessageMixin, UpdateView):
 class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamRole
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
-    success_message = _("Team role deleted succesfully")
+    success_message = _("Team role <strong>%(name)s</strong> deleted succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
 class TeamMembersListView(FilterView):
@@ -214,7 +223,7 @@ class TeamMembersListView(FilterView):
 class TeamMembersAddView(SuccessMessageMixin, CreateView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
-    success_message = _("Team membership %(name)s - %(team)s %(season)s was created succesfully")
+    success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> created succesfully")
     fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
@@ -224,7 +233,7 @@ class TeamMembersAddView(SuccessMessageMixin, CreateView):
 class TeamMembersEditView(SuccessMessageMixin, UpdateView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
-    success_message = _("Team membership %(name)s - %(team)s %(season)s was updated succesfully")
+    success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> updated succesfully")
     fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
@@ -234,4 +243,7 @@ class TeamMembersEditView(SuccessMessageMixin, UpdateView):
 class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
-    success_message = _("Team memberships deleted succesfully")
+    success_message = _("Team memberships <strong>%(name)s - %(team)s %(season)s</strong> deleted succesfully")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)

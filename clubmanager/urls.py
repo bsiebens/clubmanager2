@@ -20,6 +20,7 @@ from django.urls import include, path
 from django.conf import settings
 
 urlpatterns = [
+    path("", include("frontend.urls")),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),
     path("initials-avatar/", include("django_initials_avatar.urls")),
