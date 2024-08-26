@@ -165,7 +165,7 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
 class NewsDeleteView(SuccessMessageMixin, DeleteView):
     model = NewsItem
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
-    success_message = _("News item was succesfully deleted")
+    success_message = _("News item deleted succesfully")
 
 
 class NewsPreviewView(DetailView):

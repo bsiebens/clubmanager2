@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+{% load static %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-euro"></i>{% translate "Sponsors" %}</h1>
+
+    {% if sponsor %}
+        <div class="flex flex-row items-center gap-2 mt-8">
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ sponsor.name }}</h2>
+        
+            <div class="flex justify-end grow">
+                <a href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id %}" class="hidden lg:flex btn btn-outline btn-error">
+                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id  %}" class="lg:hidden btn btn-outline btn-error">
+                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+            </a>
+        </div>
+    {% else %}
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new sponsor" %}</h2>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+    {% endif %}
+
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <h2 class="subtitle">{% translate "Sponsor information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.name %}
+            {% form_field form.url label="URL" %}
+            {% form_field form.logo %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Sponsor campaign" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.start_date %}
+            {% form_field form.end_date %}
+        </div>
+
+        <button class="w-full mt-8 btn btn-primary lg:w-fit" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+{% endblock content %}

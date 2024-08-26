@@ -159,6 +159,7 @@ class TeamMembership(models.Model):
     class Meta:
         verbose_name = _("team membership")
         verbose_name_plural = _("team memberships")
+        ordering = ["team__name", "role__sort_order", "number", "member__user__last_name", "member__user__first_name"]
         constraints = [
             models.CheckConstraint(
                 check=models.Q(number__gte=0) | models.Q(number__lte=99),

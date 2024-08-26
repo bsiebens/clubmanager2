@@ -88,7 +88,7 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
 class TeamsDeleteView(SuccessMessageMixin, DeleteView):
     model = Team
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
-    success_message = _("Team was succesfully deleted")
+    success_message = _("Team deleted succesfully")
 
 
 class SeasonListView(ListView):
@@ -188,7 +188,7 @@ class TeamRoleEditView(SuccessMessageMixin, UpdateView):
 class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamRole
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
-    success_message = _("Team role was succesfully deleted")
+    success_message = _("Team role deleted succesfully")
 
 
 class TeamMembersListView(FilterView):
@@ -234,4 +234,4 @@ class TeamMembersEditView(SuccessMessageMixin, UpdateView):
 class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
-    success_message = _("Team memberships was succesfully deleted")
+    success_message = _("Team memberships deleted succesfully")

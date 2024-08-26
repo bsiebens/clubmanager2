@@ -8,4 +8,5 @@ urlpatterns = [
     path("members/", include("members.urls_admin")),
     path("news/", include("news.urls_admin")),
     path("teams/", include("teams.urls_admin")),
+    path("frontend/", include("frontend.urls_admin")),
 ]

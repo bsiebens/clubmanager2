@@ -19,7 +19,7 @@ class MemberListView(FilterView):
 class MemberDeleteView(SuccessMessageMixin, DeleteView):
     model = Member
     success_url = reverse_lazy("clubmanager_admin:members:members_index")
-    success_message = _("Member was succesfully deleted")
+    success_message = _("Member deleted succesfully")
 
 
 class MemberAddView(SuccessMessageMixin, CreateView):
@@ -75,4 +75,4 @@ class FamilyEditView(SuccessMessageMixin, UpdateView):
 class FamilyDeleteView(SuccessMessageMixin, DeleteView):
     model = Family
     success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family was succesfully deleted")
+    success_message = _("Family deleted succesfully")
