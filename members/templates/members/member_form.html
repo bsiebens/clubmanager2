@@ -22,7 +22,7 @@
             {% endif %}
 
             <div class="flex justify-end grow">
-                <a href="{% url "clubmanager_admin:members:delete" member.id %}" class="hidden lg:flex btn btn-error btn-outline">
+                <a href="{% url "clubmanager_admin:members:members_delete" member.id %}" class="hidden lg:flex btn btn-error btn-outline">
                     <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
             </div>
@@ -41,7 +41,7 @@
                 <a href="{{ member.emergency_phone_secondary.as_rfc3966 }}" class="btn btn-error"><i class="fa-solid fa-file-medical"></i>{{ member.emergency_phone_secondary }}</a>
             {% endif %}
 
-            <a href="{% url "clubmanager_admin:members:delete" member.id %}" class="lg:hidden btn btn-error btn-outline">
+            <a href="{% url "clubmanager_admin:members:members_delete" member.id %}" class="lg:hidden btn btn-error btn-outline">
                 <i class="mr-1 fa-solid fa-trash"></i>{% translate "Delete" %}
             </a>
         </div>

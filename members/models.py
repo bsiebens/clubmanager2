@@ -109,14 +109,13 @@ class Member(models.Model):
 class Family(models.Model):
     """A family is a collection of members that belong together. A member can be a part of multiple families, within a family all information is shared."""
 
-    name = models.CharField(_("name"), max_length=250)
     members = models.ManyToManyField(Member, verbose_name=_("members"))
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return _("Family {i.id}").format(i=self)
 
     class Meta:
         verbose_name = _("family")

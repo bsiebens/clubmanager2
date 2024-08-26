@@ -2,9 +2,14 @@
 
 <li>
     <span class="menu_title">Members</span>
-    {% url "clubmanager_admin:members:index" as members_index %}
+    {% url "clubmanager_admin:members:members_index" as members_index %}
     <a href="{{ members_index }}" {% if members_index in request.path %}class="active"{% endif %}>
         <i class="fa-solid fa-users min-w-5"></i>{% translate "Members" %}
+    </a>
+
+    {% url "clubmanager_admin:members:families_index" as families_index %}
+    <a href="{{ families_index }}" {% if families_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-users min-w-5"></i>{% translate "Families" %}
     </a>
 
     <span class="menu_title">News</span>

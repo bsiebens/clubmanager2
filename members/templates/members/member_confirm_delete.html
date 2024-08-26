@@ -11,11 +11,11 @@
         {% endblocktranslate %}
     </div>
 
-    <form method="post" action="{% url "clubmanager_admin:members:delete" object.id %}">
+    <form method="post" action="{% url "clubmanager_admin:members:members_delete" object.id %}">
         {% csrf_token %}
 
         <div class="flex flex-row gap-2 mt-4">
-            <a href="{% url "clubmanager_admin:members:index" %}" class="btn">{% translate "Cancel" %}</a>
+            <a href="{% url "clubmanager_admin:members:members_index" %}" class="btn">{% translate "Cancel" %}</a>
             <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
         </div>
     </form>

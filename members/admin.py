@@ -21,9 +21,8 @@ class MemberAdmin(admin.ModelAdmin):
 
 @admin.register(Family)
 class FamilyAdmin(admin.ModelAdmin):
-    list_display = ["name", "created", "modified"]
-    search_fields = ["name"]
+    list_display = ["id", "created", "modified"]
     filter_horizontal = ["members"]
     fieldsets = [
-        ["GENERAL INFORMATION", {"fields": ["name", "members"]}],
+        ["GENERAL INFORMATION", {"fields": ["members"]}],
     ]

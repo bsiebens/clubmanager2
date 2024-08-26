@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     extend: {},
     fontFamily: {
-      "sans": ["Ubuntu", "Catamaran", "Cabin", "Fira Sans", "Roboto", "Noto Sans"],
+      "sans": ["Catamaran", "Noto Sans", "Catamaran", "Cabin", "Fira Sans", "Ubuntu", "Roboto"],
     },
   },
   plugins: [
