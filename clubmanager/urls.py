@@ -19,8 +19,10 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 
+from api.api import api
+
 urlpatterns = [
-    path("", include("frontend.urls")),
+    path("api/", api.urls),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),
     path("initials-avatar/", include("django_initials_avatar.urls")),

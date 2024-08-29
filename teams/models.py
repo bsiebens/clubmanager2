@@ -107,7 +107,7 @@ class Team(models.Model):
 
     name = models.CharField(_("name"), max_length=250)
     short_name = models.CharField(_("short name"), max_length=250, help_text=_("An optional short name"), blank=True, null=True)
-    slug = AutoSlugField(populate_from=["name"], verbose_name=_("slug"))
+    slug = AutoSlugField(populate_from=["name"], verbose_name=_("slug"), editable=True, overwrite_on_add=False)
     type = models.CharField(
         _("type"),
         max_length=3,

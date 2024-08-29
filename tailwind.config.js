@@ -15,9 +15,16 @@ module.exports = {
     "select-xs",
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        tablet: '640px',
+        laptop: '1064px',
+        desktop: '1280px'
+      }
+    },
     fontFamily: {
       "sans": ["Catamaran", "Noto Sans", "Catamaran", "Cabin", "Fira Sans", "Ubuntu", "Roboto"],
+      "jersey": ['Graduate', 'sans-serif'],
     },
   },
   plugins: [

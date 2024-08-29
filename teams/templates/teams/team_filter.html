@@ -36,6 +36,7 @@
                     </th> {% endcomment %}
                     <th>{% translate "Name" %}</th>
                     <th>{% translate "Short Name" %}</th>
+                    <th>{% translate "Slug" %}</th>
                     <th>{% translate "Type" %}</th>
                     <th>{% translate "Number Pool" %}</th>
                     <th>{% translate "Member Count" %}</th>
@@ -45,7 +46,7 @@
             <tbody>
                 {% if object_list|length == 0 %}
                     <tr>
-                        <td colspan="6">
+                        <td colspan="7">
                             {% translate "No teams found" %}
                         </td>
                     </tr>
@@ -58,6 +59,7 @@
                                 </a>
                             </td>
                             <td>{{ team.short_name }}</td>
+                            <td>{{ team.slug }}</td>
                             <td>
                                 {% if team.type == "INT" %}
                                     <div class="badge badge-info">

@@ -40,14 +40,18 @@ INSTALLED_APPS = [
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
+    "corsheaders",
     "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
+    "ninja",
+    "ninja_extra",
     "compressor",
     "auditlog",
     "members",
     "news",
     "teams",
     "frontend",
+    "api",
     "django_cleanup.apps.CleanupConfig",
 ]
 
@@ -63,6 +67,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -161,3 +166,6 @@ SITE_LOGO = "media/logo_cold_play_sharks.png"
 INTERNAL_IPS = ["127.0.0.1"]
 
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
