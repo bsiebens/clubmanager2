@@ -3,7 +3,7 @@ from typing_extensions import TypedDict
 from django.db.models import Q
 from django.utils import timezone
 from ninja import ModelSchema, Redoc, Schema
-from ninja_extra import NinjaExtraAPI, api_controller, route, pagination
+from ninja_extra import ControllerBase, NinjaExtraAPI, api_controller, route, pagination
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from news.models import NewsItem
@@ -14,6 +14,7 @@ import random
 from django.db.models import Q
 from teams.models import Team, TeamMembership, Season, TeamPicture
 from itertools import chain
+from activities.models import Game, Opponent
 
 api = NinjaExtraAPI(title="clubmanager", docs=Redoc())
 
@@ -43,11 +44,6 @@ class SponsorSchema(ModelSchema):
     @staticmethod
     def resolve_id(obj: Sponsor) -> int:
         return obj.id
-
-
-class TeamMenuSchema(Schema):
-    name: str
-    slug: str
 
 
 class PictureSchema(Schema):
@@ -119,8 +115,48 @@ class NewsItemSchema(ModelSchema):
         return [picture.picture.url for picture in obj.pictures.exclude(main_picture=True).all()]
 
 
+class TeamSchema(ModelSchema):
+    logo: str
+
+    class Config:
+        model = Team
+        model_fields = ["name"]
+
+    @staticmethod
+    def resolve_name(obj: Team):
+        return obj.short_name
+
+    @staticmethod
+    def resolve_logo(obj: Team):
+        return ""
+
+
+class OpponentSchema(ModelSchema):
+    class Config:
+        model = Opponent
+        model_fields = ["name", "logo"]
+
+    @staticmethod
+    def resolve_logo(obj: Team):
+        return obj.logo.url
+
+
+class GameSchema(ModelSchema):
+    team: TeamSchema
+    opponent: OpponentSchema
+    is_home_game: bool
+
+    class Config:
+        model = Game
+        model_fields = ["team", "opponent", "date", "location"]
+
+    @staticmethod
+    def resolve_is_home_game(obj: Game):
+        return obj.is_home_game
+
+
 @api_controller("/sponsors")
-class SponsorController:
+class SponsorController(ControllerBase):
     @route.get("", response={200: List[SponsorSchema]})
     def get_sponsors(self):
         sponsors = list(Sponsor.objects.filter(start_date__lte=timezone.now()).filter(Q(end_date__gte=timezone.now()) | Q(end_date=None)))
@@ -129,7 +165,7 @@ class SponsorController:
 
 
 @api_controller("/news")
-class NewsController:
+class NewsController(ControllerBase):
     @route.get("", response={200: pagination.PaginatedResponseSchema[NewsItemSchema]})
     @pagination.paginate(pagination.PageNumberPaginationExtra, page_size=8)
     def get_news(self):
@@ -144,24 +180,22 @@ class NewsController:
         return NewsItem.objects.exclude(type=NewsItem.NewsItemTypeChoices.INTERNAL).get(status=NewsItem.StatusChoices.RELEASED, publish_on__lte=timezone.now(), slug=slug)
 
 
-@api_controller("/team")
-class TeamController:
-    @route.get("/menu", response={200: List[TeamMenuSchema]})
-    def get_teams_for_menu(self):
-        return [
-            {"name": "Lady Sharks BE", "slug": "lady-sharks-be"},
-            {"name": "Div 1", "slug": "div-1"},
-            {"name": "Div 2", "slug": "div-2"},
-            {"name": "Div 3", "slug": "div-3"},
-            {"name": "Div 4", "slug": "div-4"},
-            {"name": "U16", "slug": "u16"},
-            {"name": "U14", "slug": "u14"},
-            {"name": "U12", "slug": "u12"},
-            {"name": "U8/U10", "slug": "u8u10"},
-        ]
+@api_controller("/games")
+class GamesController(ControllerBase):
+    @route.get("", response={200: List[GameSchema]})
+    def get_games(self, team: str = "all", count: int = 5, home_games_only: bool = False):
+        games = Game.objects.filter(date__gte=timezone.now())
+
+        if team != "all":
+            games = games.filter(team__slug=team)
+
+        if home_games_only:
+            games = games.filter(Q(location__iexact="ice skating center mechelen") | Q(location__iexact="iscm"))
+
+        return games[:count]
 
 
-api.register_controllers(SponsorController, TeamController, NewsController)
+api.register_controllers(SponsorController, NewsController, GamesController)
 
 """ 
 class BlackoutSchema(Schema):
