@@ -31,7 +31,7 @@ class TeamAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     readonly_fields = ["slug"]
     fieldsets = [
-        ["GENERAL INFORMATION", {"fields": ["name", "short_name", "type", "number_pool"]}],
+        ["GENERAL INFORMATION", {"fields": ["name", "short_name", "type", "number_pool", "logo"]}],
         ["OTHER", {"fields": ["slug"]}],
     ]
     inlines = [TeamPictureInlineAdmin]

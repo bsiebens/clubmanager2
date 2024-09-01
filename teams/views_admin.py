@@ -21,7 +21,7 @@ class TeamsListView(FilterView):
 
 class TeamsAddView(SuccessMessageMixin, CreateView):
     model = Team
-    fields = ["name", "short_name", "type", "number_pool", "slug"]
+    fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> created succesfully")
 
@@ -55,7 +55,7 @@ class TeamsAddView(SuccessMessageMixin, CreateView):
 
 class TeamsEditView(SuccessMessageMixin, UpdateView):
     model = Team
-    fields = ["name", "short_name", "type", "number_pool", "slug"]
+    fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> updated succesfully")
 

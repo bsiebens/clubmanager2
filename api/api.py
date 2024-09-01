@@ -12,7 +12,7 @@ from django.utils import text
 from frontend.models import Sponsor
 import random
 from django.db.models import Q
-from teams.models import Team, TeamMembership, Season, TeamPicture
+from teams.models import Team, TeamMembership, Season, TeamPicture, TeamRole
 from itertools import chain
 from activities.models import Game, Opponent
 
@@ -73,7 +73,7 @@ class NewsItemSchema(ModelSchema):
             }
 
     @staticmethod
-    def resolve_picutres(obj: NewsItem):
+    def resolve_pictures(obj: NewsItem):
         return [{"url": picture.picture.url, "height": picture.picture.height, "width": picture.picture.height} for picture in obj.pictures.exclude(main_picture=True).all()]
 
     @staticmethod
@@ -116,29 +116,27 @@ class NewsItemSchema(ModelSchema):
 
 
 class TeamSchema(ModelSchema):
-    logo: str
+    logo: PictureSchema
 
     class Config:
         model = Team
-        model_fields = ["name"]
-
-    @staticmethod
-    def resolve_name(obj: Team):
-        return obj.short_name
+        model_fields = ["name", "logo"]
 
     @staticmethod
     def resolve_logo(obj: Team):
-        return ""
+        return {"url": obj.logo.url, "height": obj.logo.height, "width": obj.logo.width}
 
 
 class OpponentSchema(ModelSchema):
+    logo: PictureSchema
+
     class Config:
         model = Opponent
         model_fields = ["name", "logo"]
 
     @staticmethod
     def resolve_logo(obj: Team):
-        return obj.logo.url
+        return {"url": obj.logo.url, "height": obj.logo.height, "width": obj.logo.width}
 
 
 class GameSchema(ModelSchema):
@@ -148,11 +146,118 @@ class GameSchema(ModelSchema):
 
     class Config:
         model = Game
-        model_fields = ["team", "opponent", "date", "location"]
+        model_fields = ["id", "team", "opponent", "date", "location"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
         return obj.is_home_game
+
+
+class TeamRoleSchema(ModelSchema):
+    class Config:
+        model = TeamRole
+        model_fields = ["name", "abbreviation"]
+
+
+class TeamMemberSchema(ModelSchema):
+    first_name: str
+    last_name: str
+    birth_year: int | None
+    license_number: str
+    role: TeamRoleSchema
+
+    class Config:
+        model = TeamMembership
+        model_fields = ["captain", "assistant_captain", "role", "number"]
+
+    @staticmethod
+    def resolve_first_name(obj):
+        return obj.member.first_name
+
+    @staticmethod
+    def resolve_last_name(obj):
+        return obj.member.last_name
+
+    @staticmethod
+    def resolve_birth_year(obj):
+        return obj.member.birthday.year
+
+    @staticmethod
+    def resolve_alternate_captain(obj):
+        return obj.assistant_captain
+
+    @staticmethod
+    def resolve_license_number(obj):
+        return obj.member.license
+
+
+class TeamSchema(ModelSchema):
+    picture: PictureSchema
+    goalie: List[TeamMemberSchema]
+    forward: List[TeamMemberSchema]
+    defense: List[TeamMemberSchema]
+    players: List[TeamMemberSchema]
+    staff: List[TeamMemberSchema]
+
+    class Config:
+        model = Team
+        model_fields = ["slug", "name", "short_name"]
+
+    @staticmethod
+    def resolve_picture(obj: Team):
+        try:
+            picture = obj.teampicture_set.get(season=Season.get_season()).picture
+
+            return {"url": picture.url, "height": picture.height, "width": picture.width}
+
+        except TeamPicture.DoesNotExist:
+            return {"url": "", "height": 0, "width": 0}
+
+    @staticmethod
+    def resolve_goalie(obj: Team):
+        return obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="GO").order_by("number")
+
+    @staticmethod
+    def resolve_forward(obj: Team):
+        return obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="F").order_by("number")
+
+    @staticmethod
+    def resolve_defense(obj: Team):
+        return obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="D").order_by("number")
+
+    @staticmethod
+    def resolve_players(obj: Team):
+        return obj.teammembership_set.filter(season=Season.get_season()).filter(role=None).order_by("number")
+
+    @staticmethod
+    def resolve_staff(obj: Team):
+        head_coach = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="CO").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        assistant_coach = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="AC").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        general_manager = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="GM").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        team_manager = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="TM").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        others = (
+            obj.teammembership_set.filter(season=Season.get_season(), number=None)
+            .exclude(
+                Q(role__abbreviation="GO")
+                | Q(role__abbreviation="F")
+                | Q(role__abbreviation="D")
+                | Q(role__abbreviation="CO")
+                | Q(role__abbreviation="AC")
+                | Q(role__abbreviation="GM")
+                | Q(role__abbreviation="TM")
+            )
+            .order_by("member__user__last_name", "member__user__first_name", "member__license")
+        )
+
+        return list(chain(head_coach, assistant_coach, general_manager, team_manager, others))
 
 
 @api_controller("/sponsors")
@@ -183,11 +288,19 @@ class NewsController(ControllerBase):
 @api_controller("/games")
 class GamesController(ControllerBase):
     @route.get("", response={200: List[GameSchema]})
-    def get_games(self, team: str = "all", count: int = 5, home_games_only: bool = False):
-        games = Game.objects.filter(date__gte=timezone.now())
+    def get_games(self, team: str = "all", count: int = 5, home_games_only: bool = False, all_games_for_season=False):
+        games = Game.objects.filter(season=Season.get_season())
 
-        if team != "all":
-            games = games.filter(team__slug=team)
+        if not all_games_for_season:
+            games = games.filter(date__gte=timezone.now())
+
+        match team:
+            case "main":
+                games = games.filter(Q(team__slug="golden-sharks") | Q(team__slug="sharks-ladies"))
+            case "all":
+                games = games
+            case _:
+                games = games.filter(team__slug=team)
 
         if home_games_only:
             games = games.filter(Q(location__iexact="ice skating center mechelen") | Q(location__iexact="iscm"))
@@ -195,7 +308,14 @@ class GamesController(ControllerBase):
         return games[:count]
 
 
-api.register_controllers(SponsorController, NewsController, GamesController)
+@api_controller("/teams")
+class TeamController(ControllerBase):
+    @route.get("{slug}", response={200: TeamSchema})
+    def get_team(self, slug: str):
+        return Team.objects.get(slug=slug)
+
+
+api.register_controllers(SponsorController, NewsController, GamesController, TeamController)
 
 """ 
 class BlackoutSchema(Schema):
