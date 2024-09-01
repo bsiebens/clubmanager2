@@ -1,4 +1,5 @@
 import datetime
+from typing import Iterable
 
 from django.contrib import admin
 from django.core.exceptions import ValidationError
@@ -6,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
+from django.contrib.auth.models import Group
 
 from members.models import Member
 
@@ -128,12 +130,32 @@ class Team(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
+    __original_slug = None
+
+    def __init__(self, *args, **kwargs):
+        super(Team, self).__init__(*args, **kwargs)
+
+        self.__original_slug = self.slug
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = _("team")
         verbose_name_plural = _("teams")
+
+    def save(self, *args, **kwargs) -> None:
+        if self.slug != self.__original_slug:
+            if self.__original_slug == "" or self.__original_slug is None:
+                Group.objects.create(name=self.slug)
+
+            else:
+                group = Group.objects.get(name=self.__original_slug)
+                group.name = self.slug
+                group.save(update_fields=["name"])
+
+        super(Team, self).save(*args, **kwargs)
+        self.__original_slug = self.slug
 
     @property
     def get_short_name(self) -> str:
@@ -159,6 +181,14 @@ class TeamMembership(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
+    __original_team = None
+
+    def __init__(self, *args, **kwargs):
+        super(TeamMembership, self).__init__(*args, **kwargs)
+
+        if hasattr(self, "team"):
+            self.__original_team = self.team
+
     def __str__(self):
         return _("{team} - {member}").format(team=self.team, member=self.member)
 
@@ -178,6 +208,24 @@ class TeamMembership(models.Model):
                 violation_error_message=_("Number already in use for this team in the current season"),
             ),
         ]
+
+    def save(self, *args, **kwargs) -> None:
+        if self.team != self.__original_team:
+            if self.__original_team is None:
+                group = Group.objects.get(name=self.team.slug)
+
+                self.member.user.groups.add(group)
+
+            else:
+                # Find all groups a member belongs to
+                memberships = TeamMembership.objects.filter(season=Season.get_season(), member=self.member).exclude(id=self.id)
+                teams = [membership.team.slug for membership in memberships]
+                teams.append(self.team.slug)
+
+                self.member.user.groups.set(Group.objects.filter(name__in=teams))
+
+        super(TeamMembership, self).save(*args, **kwargs)
+        self.__original_team = self.team
 
     def clean(self) -> None:
         if self.number is not None and self.team.number_pool.enforce_unique:
