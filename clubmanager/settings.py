@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "news",
     "teams",
     "frontend",
+    "activities",
     "api",
     "django_cleanup.apps.CleanupConfig",
 ]

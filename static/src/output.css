@@ -5060,6 +5060,14 @@ html:has(.drawer-toggle:checked){
   min-width: fit-content;
 }
 
+.max-w-6xl{
+  max-width: 72rem;
+}
+
+.max-w-7xl{
+  max-width: 80rem;
+}
+
 .flex-1{
   flex: 1 1 0%;
 }
@@ -5216,11 +5224,6 @@ html:has(.drawer-toggle:checked){
 .text-xl{
   font-size: 1.25rem;
   line-height: 1.75rem;
-}
-
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem;
 }
 
 .font-bold{

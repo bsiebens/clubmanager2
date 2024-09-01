@@ -50,25 +50,35 @@ class TeamMenuSchema(Schema):
     slug: str
 
 
+class PictureSchema(Schema):
+    url: str
+    width: int
+    height: int
+
+
 class NewsItemSchema(ModelSchema):
     teams: List[str]
     summary: str
     content: str
-    picture: str | None
-    pictures: List[str]
-    picture_height: int | None
-    picture_width: int | None
+    main_picture: PictureSchema | None
+    pictures: List[PictureSchema] | List
 
     class Config:
         model = NewsItem
         model_fields = ["title", "slug", "publish_on"]
 
     @staticmethod
-    def resolve_picture(obj: NewsItem):
+    def resolve_main_picture(obj: NewsItem):
         if obj.main_picture() is not None:
-            return obj.main_picture().picture.url
+            return {
+                "url": obj.main_picture().picture.url,
+                "height": obj.main_picture().picture.height,
+                "width": obj.main_picture().picture.width,
+            }
 
-        return None
+    @staticmethod
+    def resolve_picutres(obj: NewsItem):
+        return [{"url": picture.picture.url, "height": picture.picture.height, "width": picture.picture.height} for picture in obj.pictures.exclude(main_picture=True).all()]
 
     @staticmethod
     def resolve_picture_height(obj: NewsItem):

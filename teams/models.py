@@ -44,6 +44,11 @@ class Season(models.Model):
             return [season.start_date, season.end_date]
         return season
 
+    @classmethod
+    def get_season_id(cls, date: datetime.date = timezone.now()) -> int:
+        season = Season.get_season(date=date, return_values_only=False)
+        return season.id
+
     @property
     @admin.display(description=_("Current Season"), boolean=True)
     def current_season(self):

@@ -1,14 +1,25 @@
 {% extends "_base.html" %}
 
-{% load i18n %}
 {% load pagination_tags %}
+{% load i18n %}
+{% load form_tags %}
 
 {% block content %}
-    <h1 class="title"><i class="fa-solid fa-euro"></i>{% translate "Sponsors" %}</h1>
+    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
 
     <div class="action-bar">
-        <div class="action-bar-add flex grow justify-end">
-            <a class="add-btn" href="{% url "clubmanager_admin:frontend:sponsors_add" %}">
+        <div class="action-bar-filter">
+            <form>
+                {% for field in filter.form %}
+                    {% form_field field show_label=False size="extra-small" %}
+                {% endfor %}
+
+                <button type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
+            </form>
+        </div>
+
+        <div class="action-bar-add">
+            <a class="add-btn" href="{% url "clubmanager_admin:activities:games_add" %}">
                 <i class="fa-solid fa-plus"></i>{% translate "Add" %}
             </a>
         </div>
@@ -23,11 +34,11 @@
                             <input type="checkbox" class="checkbox checkbox-sm" />
                         </label>
                     </th> {% endcomment %}
-                    <th>{% translate "Name" %}</th>
-                    <th>{% translate "URL" %}</th>
-                    <th>{% translate "Active?" %}</th>
-                    <th>{% translate "Start Date" %}</th>
-                    <th>{% translate "End Date" %}</th>
+                    <th>{% translate "Date" %}</th>
+                    <th>{% translate "Team" %}</th>
+                    <th>{% translate "Opponent" %}</th>
+                    <th>{% translate "Location" %}</th>
+                    <th>{% translate "Season" %}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,32 +46,26 @@
                 {% if object_list|length == 0 %}
                     <tr>
                         <td colspan="6">
-                            {% translate "No sponsors found" %}
+                            {% translate "No games found" %}
                         </td>
                     </tr>
                 {% else %}
-                    {% for sponsor in object_list %}
+                    {% for game in object_list %}
                         <tr class="hover">
                             <td class="font-bold">
-                                <a href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
-                                    {{ sponsor.name }}
+                                <a href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
+                                    {{ game.date|date:"l d M Y H:i" }}
                                 </a>
                             </td>
-                            <td>{{ sponsor.url }}</td>
+                            <td>{{ game.team }}</td>
+                            <td>{{ game.opponent }}</td>
+                            <td>{{ game.location }}</td>
+                            <td>{{ game.season }}</td>
                             <td>
-                                {% if sponsor.active %}
-                                    <i class="fa-solid fa-circle-check text-success"></i>
-                                {% else %}
-                                    <i class="fa-solid fa-circle-xmark text-error"></i>
-                                {% endif %}
-                            </td>
-                            <td>{{ sponsor.start_date|date:"d M Y"|default:"-" }}</td>
-                            <td>{{ sponsor.end_date|date:"d M Y"|default:"-" }}</td>
-                            <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
+                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id %}">
+                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
                                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                                 </a>
                             </td>
@@ -73,20 +78,21 @@
 
     <div class="mt-2 lg:hidden flex flex-col gap-2">
         {% if object_list|length == 0 %}
-            <div>{% translate "No sponsors found" %}</div>
+            <div>{% translate "No games found" %}</div>
         {% else %}
-            {% for sponsor in object_list %}
-                <a class="grow" href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
-                    <div class="data-card {% if sponsor.active %}border-l-success{% else %}border-l-error{% endif %}">
+            {% for game in object_list %}
+                <a class="grow" href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
+                    <div class="data-card">
                         <div class="data">
-                            <div>{{ sponsor.name }}</div>
-                            <div class="mt-2 flex flex-row gap-2">
-                                {{ sponsor.start_date|date:"d M Y" }}{% if sponsor.end_date %} - {{ sponsor.end_date|date:"d M Y"|default:"-" }}{% endif %}
+                            <div>{{ game.date|date:"l d M Y H:i" }}</div>
+                            <div class="flex flex-col">
+                                <div>{{ game.team }} - {{ game.opponent }}</div>
+                                <div>{{ game.location }}</div>
                             </div>
                         </div>
 
                         <div>
-                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id %}">
+                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </div>
