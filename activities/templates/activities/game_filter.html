@@ -3,6 +3,7 @@
 {% load pagination_tags %}
 {% load i18n %}
 {% load form_tags %}
+{% load rules %}
 
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
@@ -51,9 +52,11 @@
                     </tr>
                 {% else %}
                     {% for game in object_list %}
+                        {% has_perm 'activities.change_game' request.user game as has_team_rights %}
+
                         <tr class="hover">
                             <td class="font-bold">
-                                <a href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
+                                <a href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
                                     {{ game.date|date:"l d M Y H:i" }}
                                 </a>
                             </td>
@@ -62,12 +65,15 @@
                             <td>{{ game.location }}</td>
                             <td>{{ game.season }}</td>
                             <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
+                                <a class="btn btn-outline btn-sm mr-2" href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
-                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                                </a>
+                                
+                                {% if has_team_rights %}
+                                    <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
+                                        <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -81,7 +87,7 @@
             <div>{% translate "No games found" %}</div>
         {% else %}
             {% for game in object_list %}
-                <a class="grow" href="{% url "clubmanager_admin:activities:games_edit" game.id %}">
+                <a class="grow" href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
                     <div class="data-card">
                         <div class="data">
                             <div>{{ game.date|date:"l d M Y H:i" }}</div>
@@ -92,7 +98,7 @@
                         </div>
 
                         <div>
-                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
+                            <a class="btn btn-error btn-outline {% if not has_team_rights %}btn-disabled{% endif %}" href="{% url "clubmanager_admin:activities:games_delete" game.id %}">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </div>

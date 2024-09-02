@@ -1,55 +1,96 @@
 from typing import Any
 
+from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
+from django.forms import BaseModelForm
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
+from rules.contrib.views import PermissionRequiredMixin
 
-from teams.models import Season
+from teams.models import Season, Team
 
 from .filters import GameFilter
 from .models import Game, Opponent
 
 
-class OpponentsListView(ListView):
+class OpponentsListView(PermissionRequiredMixin, ListView):
     model = Opponent
     paginate_by = 50
+    permission_required = "activities.view_opponent"
+    permission_denied_message = _("You do not have sufficient access rights to access the opponent list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
-class OpponentsAddView(SuccessMessageMixin, CreateView):
+class OpponentsAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Opponent
     fields = ["name", "logo"]
     success_url = reverse_lazy("clubmanager_admin:activities:opponents_index")
     success_message = _("Opponent <strong>%(name)s</strong> created succesfully")
+    permission_required = "activities.add_opponent"
+    permission_denied_message = _("You do not have sufficient access rights to access the opponent list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class OpponentsEditView(SuccessMessageMixin, UpdateView):
+class OpponentsEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Opponent
     fields = ["name", "logo"]
     success_url = reverse_lazy("clubmanager_admin:activities:opponents_index")
     success_message = _("Opponent <strong>%(name)s</strong> updated succesfully")
+    permission_required = "activities.change_opponent"
+    permission_denied_message = _("You do not have sufficient access rights to edit opponent <strong>%(name)s</strong>")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
+    def get_permission_denied_message(self) -> str:
+        return self.permission_denied_message % dict(name=self.get_object().name)
 
-class OpponentsDeleteView(SuccessMessageMixin, DeleteView):
+
+class OpponentsDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Opponent
     success_url = reverse_lazy("clubmanager_admin:activities:opponents_index")
     success_message = _("Opponent <strong>%(name)s</strong> deleted succesfully")
+    permission_required = "activities.delete_opponent"
+    permission_denied_message = _("You do not have sufficient access rights to delete opponent <strong>%(name)s</strong>")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
+    def get_permission_denied_message(self) -> str:
+        return self.permission_denied_message % dict(name=self.get_object().name)
 
-class GamesListView(FilterView):
+
+class GamesListView(PermissionRequiredMixin, FilterView):
     filterset_class = GameFilter
     paginate_by = 50
+    permission_required = "activities.view_game"
+    permission_denied_message = _("You do not have sufficient access rights to access the game list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_filterset_kwargs(self, filterset_class) -> dict[str, Any]:
         kwargs = super(GamesListView, self).get_filterset_kwargs(filterset_class)
@@ -72,9 +113,21 @@ class GamesAddView(SuccessMessageMixin, CreateView):
     fields = ["team", "opponent", "date", "location"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> created succesfully")
+    permission_required = "activities.add_game"
+    permission_denied_message = _("You do not have sufficient access rights to access the game list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+
+    def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
+        form = super(GamesAddView, self).get_form(form_class)
+        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        return form
 
 
 class GamesEditView(SuccessMessageMixin, UpdateView):
@@ -82,15 +135,53 @@ class GamesEditView(SuccessMessageMixin, UpdateView):
     fields = ["team", "opponent", "date", "location"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> updated succesfully")
+    permission_required = "activities.edit_game"
+    permission_denied_message = _(
+        "You do not have sufficient access rights to edit game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong>"
+    )
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+
+    def get_permission_denied_message(self) -> str:
+        return self.success_message % dict(team=self.get_object().team, opponent=self.get_object().opponent, date=self.get_object().date.strftime("%d %b %Y %H:%M"))
+
+    def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
+        form = super(GamesEditView, self).get_form(form_class)
+        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        return form
 
 
 class GamesDeleteView(SuccessMessageMixin, DeleteView):
     model = Game
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> deleted succesfully")
+    permission_required = "activities.delete_game"
+    permission_denied_message = _(
+        "You do not have sufficient access rights to delete game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong>"
+    )
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+
+    def get_permission_denied_message(self) -> str:
+        return self.success_message % dict(team=self.get_object().team, opponent=self.get_object().opponent, date=self.get_object().date.strftime("%d %b %Y %H:%M"))
+
+
+class GamePreviewView(PermissionRequiredMixin, DetailView):
+    model = Game
+    permission_required = "activities.view_game"
+    permission_denied_message = _("You do not have sufficient access rights to access the game list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))

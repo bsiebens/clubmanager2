@@ -1,12 +1,16 @@
-from typing import Iterable
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from rules.contrib.models import RulesModel
 
-from teams.models import Team, Season
+from members.rules import is_organization_admin
+from news.rules import is_admin
+from teams.models import Season, Team
+
+from .rules import is_team_admin
 
 
-class Opponent(models.Model):
+class Opponent(RulesModel):
     """A class holding data on opponents"""
 
     name = models.CharField(_("name"), max_length=250)
@@ -22,9 +26,10 @@ class Opponent(models.Model):
         verbose_name = _("opponent")
         verbose_name_plural = _("opponents")
         ordering = ["name"]
+        rules_permissions = {"add": is_admin, "view": is_admin, "change": is_admin, "delete": is_organization_admin}
 
 
-class Game(models.Model):
+class Game(RulesModel):
     """A game"""
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games")
@@ -43,6 +48,12 @@ class Game(models.Model):
         verbose_name = _("game")
         verbose_name_plural = _("games")
         ordering = ["date"]
+        rules_permissions = {
+            "add": is_team_admin | is_organization_admin,
+            "view": is_admin,
+            "change": is_team_admin | is_organization_admin,
+            "delete": is_team_admin | is_organization_admin,
+        }
 
     def save(self, *args, **kwargs) -> None:
         self.season = Season.get_season(date=self.date.date())
