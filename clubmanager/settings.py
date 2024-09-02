@@ -161,8 +161,8 @@ STATICFILES_FINDERS = [
     "compressor.finders.CompressorFinder",
 ]
 
-SITE_NAME = "Cold Play Mechelen"
-SITE_LOGO = "media/logo_cold_play_sharks.png"
+SITE_NAME = "Sharks Mechelen"
+SITE_LOGO = "media/logo_sharks_mechelen.svg"
 
 INTERNAL_IPS = ["127.0.0.1"]
 

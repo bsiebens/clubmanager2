@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.db import transaction
 from django.db.models import Count
 from django.db.models.query import QuerySet
@@ -15,7 +16,8 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
-from rules.contrib.views import permission_required
+from rules.contrib.views import permission_required, objectgetter
+from rules.contrib.views import PermissionRequiredMixin
 
 from .filters import NewsItemFilter
 from .forms import EditorAddForm, NewsItemForm, NewsItemPictureFormSet
@@ -73,10 +75,11 @@ class EditorDeleteView(SuccessMessageMixin, DeleteView):
         return self.success_message % dict(cleaned_data, name=cleaned_data["member"].user.get_full_name())
 
 
-class NewsListView(FilterView):
+class NewsListView(PermissionRequiredMixin, FilterView):
     model = NewsItem
     paginate_by = 50
     filterset_class = NewsItemFilter
+    permission_required = "news.add_newsitem"
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(NewsListView, self).get_context_data(**kwargs)
@@ -99,11 +102,13 @@ class NewsListView(FilterView):
         return context
 
 
-class NewsAddView(SuccessMessageMixin, CreateView):
+class NewsAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = NewsItem
     form_class = NewsItemForm
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
     success_message = _("News item <strong>%(title)s</strong> added succesfully")
+    permission_required = "news.add_newsitem"
+    permission_denied_message = _("You do not have sufficient access rights to add a new news item")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
@@ -133,14 +138,23 @@ class NewsAddView(SuccessMessageMixin, CreateView):
         return super(NewsAddView, self).form_valid(form)
 
 
-class NewsEditView(SuccessMessageMixin, UpdateView):
+class NewsEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = NewsItem
     form_class = NewsItemForm
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
     success_message = _("News item <strong>%(title)s</strong> updated succesfully")
+    permission_required = "news.change_newsitem"
+    permission_denied_message = _("You do not have sufficient access rights to edit <strong>%(title)s</strong>")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
+
+    def get_permission_denied_message(self) -> str:
+        return self.permission_denied_message % dict(title=self.get_object().title)
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(NewsEditView, self).get_context_data(**kwargs)
@@ -165,17 +179,35 @@ class NewsEditView(SuccessMessageMixin, UpdateView):
         return super(NewsEditView, self).form_valid(form)
 
 
-class NewsDeleteView(SuccessMessageMixin, DeleteView):
+class NewsDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = NewsItem
     success_url = reverse_lazy("clubmanager_admin:news:news_index")
     success_message = _("News item <strong>%(title)s</strong> deleted succesfully")
+    permission_required = "news.delete_newsitem"
+    permission_denied_message = _("You do not have sufficient access rights to delete <strong>%(title)s</strong>")
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.title)
 
+    def get_permission_denied_message(self) -> str:
+        return self.permission_denied_message % dict(title=self.get_object().title)
 
-class NewsPreviewView(DetailView):
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=self.success_url)
+
+
+class NewsPreviewView(PermissionRequiredMixin, DetailView):
     model = NewsItem
+    permission_required = "news.view_newsitem"
+    permission_denied_message = _("You do not have sufficient access rights to view <strong>%(title)s</strong>")
+
+    def get_permission_denied_message(self) -> str:
+        return self.permission_denied_message % dict(title=self.get_object().title)
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:news:news_index"))
 
 
 @permission_required("news.release_newsitem")

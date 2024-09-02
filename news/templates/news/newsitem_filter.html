@@ -73,6 +73,9 @@
                     </tr>
                 {% else %}
                     {% for news_item in object_list %}
+                        {% has_perm 'news.change_newsitem' request.user news_item as has_edit_rights %}
+                        {% has_perm 'news.delete_newsitem' request.user news_item as has_delete_rights %}
+
                         <tr class="hover">
                             {% comment %} <th>
                                 <label>
@@ -80,7 +83,7 @@
                                 </label>
                             </th> {% endcomment %}
                             <td>
-                                <a class="font-bold" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                                <a class="font-bold" href="{% if has_edit_rights %}{% url "clubmanager_admin:news:news_edit" news_item.id %}{% else %}{% url "clubmanager_admin:news:news_preview" news_item.id %}{% endif %}">
                                     {{ news_item.title }}
                                 </a>
                             </td>
@@ -108,12 +111,14 @@
                             <td>{{ news_item.publish_on|date:"d M Y H:m" }}</td>
                             <td>{{ news_item.modified|date:"d M Y H:m" }}</td>
                             <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                                <a class="btn btn-outline btn-sm mr-2" href="{% if has_edit_rights %}{% url "clubmanager_admin:news:news_edit" news_item.id %}{% else %}{% url "clubmanager_admin:news:news_preview" news_item.id %}{% endif %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:news:news_delete" news_item.id %}">
-                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                                </a>
+                                {% if has_delete_rights %}
+                                    <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:news:news_delete" news_item.id %}">
+                                        <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
@@ -127,7 +132,10 @@
             <div>{% translate "No news items found" %}</div>
         {% else %}
             {% for news_item in object_list %}
-                <a href="{% url "clubmanager_admin:news:news_edit" news_item.id %}">
+                {% has_perm 'news.change_newsitem' request.user news_item as has_edit_rights %}
+                {% has_perm 'news.delete_newsitem' request.user news_item as has_delete_rights %}
+                
+                <a href="{% if has_edit_rights %}{% url "clubmanager_admin:news:news_edit" news_item.id %}{% else %}{% url "clubmanager_admin:news:news_preview" news_item.id %}{% endif %}">
                     <div class="data-card flex-col items-start {% if news_item.status == 0 %}border-l-error{% elif news_item.status == 1 %}border-l-warning{% else %}border-l-success{% endif %}">
                         <div class="text-lg font-semibold">{{ news_item.title }}</div>
                         <div class="text-sm text-gray-500">{{ news_item.author.get_full_name }}</div>
