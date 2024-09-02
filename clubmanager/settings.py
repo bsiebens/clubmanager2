@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
+    "django_celery_beat",
     "ninja",
     "ninja_extra",
     "compressor",
@@ -170,3 +172,10 @@ PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
+
+CELERY_BROKER_URL = "amqp://bernard:Bernard1@localhost"
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RESULT_EXTENDED = True
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_EXPIRES = timedelta(days=7)
+FLOWER_BROKER_API = "http://localhost:15672/api/"

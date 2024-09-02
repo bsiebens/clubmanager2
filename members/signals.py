@@ -1,9 +1,13 @@
 import secrets
 import string
 
-from django.dispatch import Signal, receiver
-from django.db.models.signals import m2m_changed
 from django.contrib.auth import get_user_model
+from django.db.models.signals import m2m_changed, post_save
+from django.dispatch import Signal, receiver
+
+from teams.tasks import update_group_membership
+
+from .models import Member
 
 new_member_user_created = Signal()
 
@@ -39,3 +43,8 @@ def group_removed(sender, **kwargs):
             if not instance.is_staff:
                 instance.is_staff = True
                 instance.save(update_fields=["is_staff"])
+
+
+@receiver(post_save, sender=Member)
+def update_group_memberships(sender, instance: Member, *args, **kwargs) -> None:
+    update_group_membership.delay_on_commit(instance.user.id)

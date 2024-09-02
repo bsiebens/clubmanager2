@@ -1,11 +1,11 @@
 import rules
 from django.contrib.auth.models import AbstractUser
 
-from .models import NewsItem
+from members.rules import is_organization_admin
 
 
 @rules.predicate
-def is_author(user: AbstractUser | None, news_item: NewsItem | None) -> bool:
+def is_author(user: AbstractUser | None, news_item) -> bool:
     if news_item is not None:
         return user == news_item.author
 
@@ -13,7 +13,9 @@ def is_author(user: AbstractUser | None, news_item: NewsItem | None) -> bool:
 
 
 @rules.predicate
-def is_released(user: AbstractUser | None, news_item: NewsItem | None) -> bool:
+def is_released(user: AbstractUser | None, news_item) -> bool:
+    from .models import NewsItem
+
     if news_item is not None:
         return news_item.status == NewsItem.StatusChoices.RELEASED
 
@@ -21,11 +23,8 @@ def is_released(user: AbstractUser | None, news_item: NewsItem | None) -> bool:
 
 
 is_editor = rules.is_group_member("editors")
+is_admin = rules.is_group_member("admin")
 
 # Activate rules per model
-rules.add_perm("news", rules.always_allow)
-rules.add_perm("news.add_newsitem", rules.is_staff)
-rules.add_perm("news.view_newsitem", is_author | is_released)
-rules.add_perm("news.change_newsitem", is_author | is_editor)
-rules.add_perm("news.delete_newsitem", is_author | is_editor)
-rules.add_perm("news.release_newsitem", is_editor)
+rules.add_perm("news", is_admin)
+rules.add_perm("editors", is_organization_admin)

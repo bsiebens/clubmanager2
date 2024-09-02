@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib import messages
 from django.db import transaction
 from django.db.models import Count
 from django.db.models.query import QuerySet
@@ -16,8 +15,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
-from rules.contrib.views import permission_required, objectgetter
-from rules.contrib.views import PermissionRequiredMixin
+from rules.contrib.views import PermissionRequiredMixin, objectgetter, permission_required
 
 from .filters import NewsItemFilter
 from .forms import EditorAddForm, NewsItemForm, NewsItemPictureFormSet
@@ -25,10 +23,16 @@ from .models import NewsItem
 from .rules import is_editor
 
 
-class EditorListView(ListView):
+class EditorListView(PermissionRequiredMixin, ListView):
     model = get_user_model()
     paginate_by = 200
     template_name = "news/editor_list.html"
+    permission_required = "editors"
+    permission_denied_message = _("You do not have sufficient access rights to access the editor list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_queryset(self) -> QuerySet[Any]:
         group = Group.objects.get(name="editors")
@@ -42,11 +46,17 @@ class EditorListView(ListView):
         return context
 
 
-class EditorAddView(SuccessMessageMixin, FormView):
+class EditorAddView(PermissionRequiredMixin, SuccessMessageMixin, FormView):
     form_class = EditorAddForm
     success_url = reverse_lazy("clubmanager_admin:news:editors_index")
     success_message = _("Editor <strong>%(name)s</strong> added succesfully")
     template_name = "news/editor_form.html"
+    permission_required = "editors"
+    permission_denied_message = _("You do not have sufficient access rights to access the editor list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def form_valid(self, form: EditorAddForm) -> HttpResponse:
         form.save_member()
@@ -57,11 +67,17 @@ class EditorAddView(SuccessMessageMixin, FormView):
         return self.success_message % dict(cleaned_data, name=cleaned_data["member"].user.get_full_name())
 
 
-class EditorDeleteView(SuccessMessageMixin, DeleteView):
+class EditorDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:news:editors_index")
     success_message = _("Editor <strong>%(name)s</strong> deleted succesfully")
     model = get_user_model()
     template_name = "news/editor_confirm_delete.html"
+    permission_required = "editors"
+    permission_denied_message = _("You do not have sufficient access rights to access the editor list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def form_valid(self, form: Form) -> HttpResponse:
         self.object = self.get_object()
@@ -221,6 +237,7 @@ def release_newsitem(request, pk: int) -> HttpResponse:
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
 
 
+@permission_required("news.change_newsitem", fn=objectgetter(NewsItem, "pk"))
 def update_status_newsitem(request, pk: int, status: str) -> HttpResponse:
     news_item = NewsItem.objects.get(pk=pk)
 

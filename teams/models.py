@@ -1,22 +1,26 @@
 import datetime
-from typing import Iterable
 
 from django.contrib import admin
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
-from django.contrib.auth.models import Group
+from model_utils import FieldTracker
+from rules.contrib.models import RulesModel
 
 from members.models import Member
+from members.rules import is_organization_admin
+from .rules import is_team_admin
+from news.rules import is_admin
 
 
 def team_season_path(instance: "TeamPicture", filename: str) -> str:
     return "groups/picture/{instance.team.slug}/{instance.season.start_year}/{filename}".format(instance=instance, filename=filename)
 
 
-class Season(models.Model):
+class Season(RulesModel):
     """A season of play"""
 
     start_date = models.DateField(_("start date"))
@@ -29,6 +33,7 @@ class Season(models.Model):
         verbose_name = _("season")
         verbose_name_plural = _("seasons")
         ordering = ["start_date"]
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
     @classmethod
     def get_season(cls, date: datetime.date = timezone.now(), return_values_only: bool = False) -> "list | Season":
@@ -64,7 +69,7 @@ class Season(models.Model):
         return self.start_date < timezone.now().date()
 
 
-class NumberPool(models.Model):
+class NumberPool(RulesModel):
     """A number pool holds all numbers that can be assigned, within a pool you can enforce unique numbers."""
 
     name = models.CharField(_("name"), max_length=250, unique=True)
@@ -76,9 +81,10 @@ class NumberPool(models.Model):
     class Meta:
         verbose_name = _("number pool")
         verbose_name_plural = _("number pools")
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
 
-class TeamRole(models.Model):
+class TeamRole(RulesModel):
     """Roles that can be assigned to team members"""
 
     name = models.CharField(_("name"), max_length=250, unique=True)
@@ -103,9 +109,10 @@ class TeamRole(models.Model):
         verbose_name = _("team role")
         verbose_name_plural = _("team roles")
         ordering = ["sort_order", "name"]
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
 
-class Team(models.Model):
+class Team(RulesModel):
     """A team"""
 
     class TeamTypes(models.TextChoices):
@@ -130,12 +137,7 @@ class Team(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    __original_slug = None
-
-    def __init__(self, *args, **kwargs):
-        super(Team, self).__init__(*args, **kwargs)
-
-        self.__original_slug = self.slug
+    tracker = FieldTracker(fields=["slug"])
 
     def __str__(self):
         return self.name
@@ -143,19 +145,7 @@ class Team(models.Model):
     class Meta:
         verbose_name = _("team")
         verbose_name_plural = _("teams")
-
-    def save(self, *args, **kwargs) -> None:
-        if self.slug != self.__original_slug:
-            if self.__original_slug == "" or self.__original_slug is None:
-                Group.objects.create(name=self.slug)
-
-            else:
-                group = Group.objects.get(name=self.__original_slug)
-                group.name = self.slug
-                group.save(update_fields=["name"])
-
-        super(Team, self).save(*args, **kwargs)
-        self.__original_slug = self.slug
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
     @property
     def get_short_name(self) -> str:
@@ -166,7 +156,7 @@ class Team(models.Model):
         return self.name
 
 
-class TeamMembership(models.Model):
+class TeamMembership(RulesModel):
     """Linking members to teams"""
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
@@ -208,6 +198,12 @@ class TeamMembership(models.Model):
                 violation_error_message=_("Number already in use for this team in the current season"),
             ),
         ]
+        rules_permissions = {
+            "add": is_team_admin | is_organization_admin,
+            "view": is_admin,
+            "change": is_team_admin | is_organization_admin,
+            "delete": is_team_admin | is_organization_admin,
+        }
 
     def save(self, *args, **kwargs) -> None:
         if self.team != self.__original_team:
@@ -240,7 +236,7 @@ class TeamMembership(models.Model):
         return super(TeamMembership, self).clean()
 
 
-class TeamPicture(models.Model):
+class TeamPicture(RulesModel):
     """A picture for a given team in a given season"""
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"))
@@ -256,3 +252,4 @@ class TeamPicture(models.Model):
     class Meta:
         verbose_name = _("team picture")
         verbose_name_plural = _("team pictures")
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}

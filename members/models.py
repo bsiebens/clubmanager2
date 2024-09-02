@@ -1,12 +1,13 @@
 from typing import Any
+
 from auditlog.registry import auditlog
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import DEFAULT_DB_ALIAS, models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-from django.db import DEFAULT_DB_ALIAS
+from rules.contrib.models import RulesModel
 
-from .signals import new_member_user_created
+from .rules import is_organization_admin
 
 
 class UserManager(models.Manager):
@@ -14,7 +15,7 @@ class UserManager(models.Manager):
         return super().get_queryset().select_related("user")
 
 
-class Member(models.Model):
+class Member(RulesModel):
     """User profile for a given member."""
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("user"))
@@ -70,6 +71,7 @@ class Member(models.Model):
         verbose_name = _("member")
         verbose_name_plural = _("members")
         ordering = ["user__last_name", "user__first_name", "user__username"]
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -77,6 +79,7 @@ class Member(models.Model):
     @classmethod
     def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True) -> "Member":
         """Creates a new member and user."""
+        from .signals import new_member_user_created
 
         member = cls()
         users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
@@ -106,7 +109,7 @@ class Member(models.Model):
         return member
 
 
-class Family(models.Model):
+class Family(RulesModel):
     """A family is a collection of members that belong together. A member can be a part of multiple families, within a family all information is shared."""
 
     members = models.ManyToManyField(Member, verbose_name=_("members"))
@@ -120,6 +123,7 @@ class Family(models.Model):
     class Meta:
         verbose_name = _("family")
         verbose_name_plural = _("families")
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
 
 
 # Log both models into the audit log to maintain track of changes and who made them.

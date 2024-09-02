@@ -22,4 +22,5 @@ urlpatterns = [
     path("teammembers/add", views_admin.TeamMembersAddView.as_view(), name="teammembers_add"),
     path("teammembers/edit/<int:pk>", views_admin.TeamMembersEditView.as_view(), name="teammembers_edit"),
     path("teammembers/delete/<int:pk>", views_admin.TeamMembersDeleteView.as_view(), name="teammembers_delete"),
+    path("teammembers/view/<int:pk>", views_admin.TeamMembersPreviewView.as_view(), name="teammembers_view"),
 ]

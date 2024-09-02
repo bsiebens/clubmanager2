@@ -1,0 +1,68 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
+
+    <div class="flex flex-row items-center gap-2 mt-8">
+        <div class="flex flex-col">
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ teammembership.member.get_full_name }}</h2>
+            <div class="text-gray-500">{{ teammembership.team }} - {{ teammembership.season }}</div>
+        </div>
+    </div>
+
+    <h2 class="subtitle">{% translate "Member information" %}</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Email" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.member.email }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Phone" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.member.phone }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "First emergency phone" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.member.phone }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Second emergency phone" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.member.phone }}</div>
+        </div>
+    </div>
+
+    <h2 class="subtitle">{% translate "Team information" %}</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Team" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.team.name }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Role" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.role.name }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Number" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">{{ teammembership.number|default:"-" }}</div>
+        </div>
+
+        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
+            <div class="label-text font-light text-gray-500">{% translate "Captain / Assistant captain" %}</div>
+            <div class="p-2 border border-base-content/20 rounded-lg">
+                {% if teammembership.captain %}
+                    <div class="badge badge-neutral">captain</div>
+                {% elif teammembership.assistant_captain %}
+                    <div class="badge badge-neutral">assistant captain</div>
+                {% else %}
+                    -
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

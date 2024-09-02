@@ -2,21 +2,31 @@ from typing import Any
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import HttpResponse
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
+from rules.contrib.views import PermissionRequiredMixin
+from django.contrib import messages
 
 from .filters import TeamFilter, TeamMembershipFilter, TeamRoleFilter
 from .forms import NumberPoolForm, SeasonAddForm, TeamPictureFormSet
 from .models import NumberPool, Season, Team, TeamMembership, TeamRole
 
 
-class TeamsListView(FilterView):
+class TeamsListView(PermissionRequiredMixin, FilterView):
     filterset_class = TeamFilter
     paginate_by = 50
+    permission_required = "teams.view_team"
+    permission_denied_message = _("You do not have sufficient access rights to access the team list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
 class TeamsAddView(SuccessMessageMixin, CreateView):
@@ -24,6 +34,12 @@ class TeamsAddView(SuccessMessageMixin, CreateView):
     fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> created succesfully")
+    permission_required = "teams.add_team"
+    permission_denied_message = _("You do not have sufficient access rights to access the team list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -58,6 +74,12 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
     fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> updated succesfully")
+    permission_required = "teams.change_team"
+    permission_denied_message = _("You do not have sufficient access rights to access the team list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -89,6 +111,12 @@ class TeamsDeleteView(SuccessMessageMixin, DeleteView):
     model = Team
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> deleted succesfully")
+    permission_required = "teams.delete_team"
+    permission_denied_message = _("You do not have sufficient access rights to access the team list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -96,6 +124,12 @@ class TeamsDeleteView(SuccessMessageMixin, DeleteView):
 
 class SeasonListView(ListView):
     model = Season
+    permission_required = "teams.view_season"
+    permission_denied_message = _("You do not have sufficient access rights to access the season list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(SeasonListView, self).get_context_data(**kwargs)
@@ -109,6 +143,12 @@ class SeasonAddView(SuccessMessageMixin, FormView):
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
     success_message = _("Season added succesfully")
     template_name = "teams/season_form.html"
+    permission_required = "teams.ad_season"
+    permission_denied_message = _("You do not have sufficient access rights to access the season list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def form_valid(self, form: SeasonAddForm) -> HttpResponse:
         form.save_season()
@@ -120,10 +160,22 @@ class SeasonDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
     success_message = _("Season deleted succesfully")
     model = Season
+    permission_required = "teams.delete_season"
+    permission_denied_message = _("You do not have sufficient access rights to access the season list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
 class NumberPoolListView(ListView):
     model = NumberPool
+    permission_required = "teams.view_numberpool"
+    permission_denied_message = _("You do not have sufficient access rights to access the numberpool list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(NumberPoolListView, self).get_context_data(**kwargs)
@@ -137,6 +189,12 @@ class NumberPoolAddView(SuccessMessageMixin, CreateView):
     form_class = NumberPoolForm
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
     success_message = _("Number pool <strong>%(name)s</strong> created succesfully")
+    permission_required = "teams.add_numberpool"
+    permission_denied_message = _("You do not have sufficient access rights to access the numberpool list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.name)
@@ -146,6 +204,12 @@ class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
     success_message = _("Number pool <strong>%(name)s</strong> deleted succesfully")
     model = NumberPool
+    permission_required = "teams.delete_numberpool"
+    permission_denied_message = _("You do not have sufficient access rights to access the numberpool list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, title=self.object.name)
@@ -153,6 +217,12 @@ class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
 
 class TeamRoleListView(FilterView):
     filterset_class = TeamRoleFilter
+    permission_required = "teams.view_teamrole"
+    permission_denied_message = _("You do not have sufficient access rights to access the team role list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
 class TeamRoleAddView(SuccessMessageMixin, CreateView):
@@ -160,6 +230,12 @@ class TeamRoleAddView(SuccessMessageMixin, CreateView):
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
     success_message = _("Team role <strong>%(name)s</strong> created succesfully")
+    permission_required = "teams.add_teamrole"
+    permission_denied_message = _("You do not have sufficient access rights to access the team role list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(TeamRoleAddView, self).get_context_data(**kwargs)
@@ -178,6 +254,12 @@ class TeamRoleEditView(SuccessMessageMixin, UpdateView):
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
     success_message = _("Team role <strong>%(name)s</strong> updated succesfully")
+    permission_required = "teams.change_teamrole"
+    permission_denied_message = _("You do not have sufficient access rights to access the team role list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super(TeamRoleEditView, self).get_context_data(**kwargs)
@@ -195,6 +277,12 @@ class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamRole
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
     success_message = _("Team role <strong>%(name)s</strong> deleted succesfully")
+    permission_required = "teams.delete_teamrole"
+    permission_denied_message = _("You do not have sufficient access rights to access the team role list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
@@ -203,6 +291,12 @@ class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
 class TeamMembersListView(FilterView):
     filterset_class = TeamMembershipFilter
     paginate_by = 50
+    permission_required = "teams.view_teammembership"
+    permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_filterset_kwargs(self, filterset_class) -> dict[str, Any]:
         kwargs = super(TeamMembersListView, self).get_filterset_kwargs(filterset_class)
@@ -225,9 +319,27 @@ class TeamMembersAddView(SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> created succesfully")
     fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
+    permission_required = "teams.add_teammembership"
+    permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super(TeamMembersAddView, self).get_initial()
+        initial["season"] = Season.get_season()
+
+        return initial
+
+    def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
+        form = super(TeamMembersAddView, self).get_form(form_class)
+        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        return form
 
 
 class TeamMembersEditView(SuccessMessageMixin, UpdateView):
@@ -235,15 +347,43 @@ class TeamMembersEditView(SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> updated succesfully")
     fields = ["team", "member", "season", "role", "number", "captain", "assistant_captain"]
+    permission_required = "teams.change_teammembership"
+    permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)
+
+    def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
+        form = super(TeamMembersEditView, self).get_form(form_class)
+        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        return form
 
 
 class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team memberships <strong>%(name)s - %(team)s %(season)s</strong> deleted succesfully")
+    permission_required = "teams.delete_teammembership"
+    permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.member.get_full_name(), team=self.object.team, season=self.object.season)
+
+
+class TeamMembersPreviewView(PermissionRequiredMixin, DetailView):
+    model = TeamMembership
+    permission_required = "teams.view_teammembership"
+    permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))

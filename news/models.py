@@ -6,11 +6,13 @@ from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
+from rules.contrib.models import RulesModel
 
 from teams.models import Team
+from .rules import is_admin, is_author, is_released, is_editor
 
 
-class NewsItem(models.Model):
+class NewsItem(RulesModel):
     """A news item. This can be both an internal as well as an external message."""
 
     class StatusChoices(models.IntegerChoices):
@@ -50,6 +52,7 @@ class NewsItem(models.Model):
         verbose_name = _("news item")
         verbose_name_plural = _("news items")
         ordering = ["-created"]
+        rules_permissions = {"add": is_admin, "view": is_author | is_released, "change": is_author | is_editor, "delete": is_author | is_editor, "release": is_editor}
 
     def formatted(self) -> str:
         return markdownify(self.text)

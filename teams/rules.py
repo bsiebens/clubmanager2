@@ -1,18 +1,22 @@
 import rules
 from django.contrib.auth.models import AbstractUser
 
-from .models import Team, TeamRole, TeamMembership, Season
+from news.rules import is_admin
 
 
 @rules.predicate
-def is_team_admin(user: AbstractUser | None, team: Team | None) -> bool:
+def is_team_admin(user: AbstractUser | None, teammembership) -> bool:
+    from .models import Season, TeamMembership
+
     season = Season.get_season()
 
-    if team is not None:
-        memberships = TeamMembership.objects.filter(member__user=user, team=team, season=season)
+    if user is not None:
+        if teammembership is not None:
+            return TeamMembership.objects.filter(member__user=user, team=teammembership.team, season=season, role__admin_role=True).exists()
 
-        for membership in memberships:
-            if membership.role.admin_role:
-                return True
+        return TeamMembership.objects.filter(member__user=user, season=season, role__admin_role=True).exists()
 
-        return False
+    return False
+
+
+rules.add_perm("teams", is_admin)

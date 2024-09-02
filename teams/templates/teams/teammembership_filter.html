@@ -3,6 +3,7 @@
 {% load pagination_tags %}
 {% load i18n %}
 {% load form_tags %}
+{% load rules %}   
 
 {% block content %}
     <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
@@ -51,9 +52,11 @@
                     </tr>
                 {% else %}
                     {% for team_member in object_list %}
+                        {% has_perm 'teams.change_teammembership' request.user team_member as has_team_rights %}
+
                         <tr class="hover">
                             <td class="font-bold">
-                                <a href="{% url "clubmanager_admin:teams:teammembers_edit" team_member.id %}">
+                                <a href="{% if has_team_rights %}{% url "clubmanager_admin:teams:teammembers_edit" team_member.id %}{% else %}{% url "clubmanager_admin:teams:teammembers_view" team_member.id %}{% endif %}">
                                     {{ team_member.member.get_full_name }}
                                     {% if team_member.captain %}<div class="badge badge-neutral badge-sm ml-2 font-normal">C</div>{% endif %}
                                     {% if team_member.assistant_captain %}<div class="badge badge-neutral badge-sm ml-2 font-normal">A</div>{% endif %}
@@ -64,12 +67,15 @@
                             <td>{{ team_member.role }}</td>
                             <td>{{ team_member.number|default:"-" }}</td>
                             <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:teams:teammembers_edit" team_member.id %}">
+                                <a class="btn btn-outline btn-sm mr-2" href="{% if has_team_rights %}{% url "clubmanager_admin:teams:teammembers_edit" team_member.id %}{% else %}{% url "clubmanager_admin:teams:teammembers_view" team_member.id %}{% endif %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:teams:teammembers_delete" team_member.id %}">
-                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                                </a>
+
+                                {% if has_team_rights %}
+                                    <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:teams:teammembers_delete" team_member.id %}">
+                                        <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
