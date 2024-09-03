@@ -48,6 +48,11 @@ INSTALLED_APPS = [
     "ninja",
     "ninja_extra",
     "compressor",
+    "django_otp",
+    "django_otp.plugins.otp_static",
+    "django_otp.plugins.otp_totp",
+    "two_factor",
+    "two_factor.plugins.webauthn",
     "auditlog",
     "members",
     "news",
@@ -74,6 +79,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django_otp.middleware.OTPMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "auditlog.middleware.AuditlogMiddleware",
@@ -179,3 +185,6 @@ CELERY_RESULT_EXTENDED = True
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_RESULT_EXPIRES = timedelta(days=7)
 FLOWER_BROKER_API = "http://localhost:15672/api/"
+
+LOGIN_URL = "two_factor:login"
+TWO_FACTOR_WEBAUTHN_RP_NAME = SITE_NAME

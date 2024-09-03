@@ -15,13 +15,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from django.conf import settings
+from two_factor.admin import AdminSiteOTPRequired
+from two_factor.urls import urlpatterns as two_factor_urls
+from django.contrib.auth import views as auth_views
+from django.views.generic import RedirectView
 
 from api.api import api
 
+# admin.site.__class__ = AdminSiteOTPRequired
+
 urlpatterns = [
+    path("", include(two_factor_urls)),
+    path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
+    path("accounts/profile/", RedirectView.as_view(pattern_name="clubmanager:index"), name="profile"),
     path("api/", api.urls),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),

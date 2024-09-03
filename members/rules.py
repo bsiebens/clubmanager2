@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 @rules.predicate
 def is_organization_admin(user: AbstractUser | None) -> bool:
-    if user is not None:
+    if user is not None and hasattr(user, "member"):
         return user.member.is_organization_admin
 
     return False

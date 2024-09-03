@@ -32,6 +32,14 @@ typing-extensions = {version = ">=4", markers = "python_version < \"3.11\""}
 tests = ["pytest", "pytest-asyncio", "mypy (>=0.800)"]
 
 [[package]]
+name = "asn1crypto"
+version = "1.5.1"
+description = "Fast ASN.1 parser and serializer with definitions for private keys, public keys, certificates, CRL, OCSP, CMS, PKCS#3, PKCS#7, PKCS#8, PKCS#12, PKCS#5, X.509 and TSP"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "astroid"
 version = "2.15.8"
 description = "An abstract syntax tree for Python with inference support."
@@ -97,6 +105,19 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
+name = "cbor2"
+version = "5.6.4"
+description = "CBOR (de)serializer with extensive tag support"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+benchmarks = ["pytest-benchmark (==4.0.0)"]
+doc = ["packaging", "Sphinx (>=7)", "sphinx-rtd-theme (>=1.3.0)", "sphinx-autodoc-typehints (>=1.2.0)", "typing-extensions"]
+test = ["coverage (>=7)", "pytest", "hypothesis"]
+
+[[package]]
 name = "celery"
 version = "5.4.0"
 description = "Distributed Task Queue."
@@ -148,6 +169,17 @@ tblib = ["tblib (>=1.3.0)", "tblib (>=1.5.0)"]
 yaml = ["PyYAML (>=3.10)"]
 zookeeper = ["kazoo (>=1.3.1)"]
 zstd = ["zstandard (==0.22.0)"]
+
+[[package]]
+name = "cffi"
+version = "1.17.0"
+description = "Foreign Function Interface for Python calling C code."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+pycparser = "*"
 
 [[package]]
 name = "click"
@@ -237,6 +269,27 @@ python-versions = "*"
 
 [package.extras]
 dev = ["polib"]
+
+[[package]]
+name = "cryptography"
+version = "43.0.0"
+description = "cryptography is a package which provides cryptographic recipes and primitives to Python developers."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+cffi = {version = ">=1.12", markers = "platform_python_implementation != \"PyPy\""}
+
+[package.extras]
+ssh = ["bcrypt (>=3.1.5)"]
+nox = ["nox"]
+test = ["cryptography-vectors (==43.0.0)", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest-xdist", "pretend", "certifi"]
+test-randomorder = ["pytest-randomly"]
+docs = ["sphinx (>=5.3.0)", "sphinx-rtd-theme (>=1.1.1)"]
+docstest = ["pyenchant (>=1.6.11)", "readme-renderer", "sphinxcontrib-spelling (>=4.0.1)"]
+sdist = ["build"]
+pep8test = ["ruff", "mypy", "check-sdist", "click"]
 
 [[package]]
 name = "django"
@@ -363,6 +416,17 @@ python-versions = ">=3.8"
 Django = ">=4.2"
 
 [[package]]
+name = "django-formtools"
+version = "2.5.1"
+description = "A set of high-level abstractions for Django forms"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+Django = ">=3.2"
+
+[[package]]
 name = "django-initials-avatar"
 version = "0.0.7"
 description = "A ridiculously simple avatar generator with initials from names."
@@ -430,6 +494,21 @@ django-ninja = "1.3.0"
 injector = ">=0.19.0"
 
 [[package]]
+name = "django-otp"
+version = "1.5.2"
+description = "A pluggable framework for adding two-factor authentication to Django using one-time passwords."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+django = ">=3.2"
+
+[package.extras]
+qrcode = ["qrcode"]
+segno = ["segno"]
+
+[[package]]
 name = "django-phonenumber-field"
 version = "8.0.0"
 description = "An international phone number field for django models."
@@ -455,6 +534,32 @@ python-versions = "<4.0,>=3.8"
 
 [package.dependencies]
 Django = ">=3.2,<6.0"
+
+[[package]]
+name = "django-two-factor-auth"
+version = "1.17.0"
+description = "Complete Two-Factor Authentication for Django"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+Django = ">=4.2"
+django-formtools = "*"
+django_otp = ">=0.8.0"
+django-phonenumber-field = "<9"
+qrcode = ">=4.0.0,<7.99"
+webauthn = {version = ">=2.0,<2.99", optional = true, markers = "extra == \"webauthn\""}
+
+[package.extras]
+call = ["twilio (>=6.0)"]
+sms = ["twilio (>=6.0)"]
+webauthn = ["webauthn (>=2.0,<2.99)"]
+yubikey = ["django-otp-yubikey"]
+phonenumbers = ["phonenumbers (>=7.0.9,<8.99)"]
+phonenumberslite = ["phonenumberslite (>=7.0.9,<8.99)"]
+tests = ["coverage", "freezegun", "tox"]
+linting = ["ruff", "isort (<=5.99)"]
 
 [[package]]
 name = "exceptiongroup"
@@ -698,6 +803,14 @@ optional = false
 python-versions = ">=3.8"
 
 [[package]]
+name = "pycparser"
+version = "2.22"
+description = "C parser in Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "pydantic"
 version = "2.8.2"
 description = "Data validation using Python type hints"
@@ -734,6 +847,29 @@ description = "passive checker of Python programs"
 category = "dev"
 optional = false
 python-versions = ">=3.8"
+
+[[package]]
+name = "pyopenssl"
+version = "24.2.1"
+description = "Python wrapper module around the OpenSSL library"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+cryptography = ">=41.0.5,<44"
+
+[package.extras]
+docs = ["sphinx (!=5.2.0,!=5.2.0.post0,!=7.2.5)", "sphinx-rtd-theme"]
+test = ["pytest-rerunfailures", "pretend", "pytest (>=3.0.1)"]
+
+[[package]]
+name = "pypng"
+version = "0.20220715.0"
+description = "Pure Python library for saving and loading PNG images"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "pytest"
@@ -802,6 +938,26 @@ description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "qrcode"
+version = "7.4.2"
+description = "QR Code image generator"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+pypng = "*"
+typing-extensions = "*"
+
+[package.extras]
+all = ["zest.releaser", "tox", "pytest", "pytest-cov", "pillow (>=9.1.0)"]
+dev = ["tox", "pytest", "pytest-cov"]
+maintainer = ["zest.releaser"]
+pil = ["pillow (>=9.1.0)"]
+test = ["coverage", "pytest"]
 
 [[package]]
 name = "rcssmin"
@@ -912,6 +1068,20 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "webauthn"
+version = "2.2.0"
+description = "Pythonic WebAuthn"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+asn1crypto = ">=1.4.0"
+cbor2 = ">=5.4.6"
+cryptography = ">=41.0.7"
+pyOpenSSL = ">=23.3.0"
+
+[[package]]
 name = "wrapt"
 version = "1.16.0"
 description = "Module for decorators, wrappers and monkey patching."
@@ -922,17 +1092,20 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "75550d934ab59f7e2f81eee1ebb302a39ab64d2c807d14ea3c7ae8fba36beeb0"
+content-hash = "073cc1d7ea50846a95b4de2a41b9d9b1a3d3d7ab5d1c81b96482868a5af78a46"
 
 [metadata.files]
 amqp = []
 annotated-types = []
 asgiref = []
+asn1crypto = []
 astroid = []
 beautifulsoup4 = []
 billiard = []
 black = []
+cbor2 = []
 celery = []
+cffi = []
 click = []
 click-didyoumean = []
 click-plugins = []
@@ -941,6 +1114,7 @@ colorama = []
 contextlib2 = []
 coverage = []
 cron-descriptor = []
+cryptography = []
 django = []
 django-appconf = []
 django-auditlog = []
@@ -951,13 +1125,16 @@ django-cors-headers = []
 django-debug-toolbar = []
 django-extensions = []
 django-filter = []
+django-formtools = []
 django-initials-avatar = []
 django-markdownx = []
 django-model-utils = []
 django-ninja = []
 django-ninja-extra = []
+django-otp = []
 django-phonenumber-field = []
 django-timezone-field = []
+django-two-factor-auth = []
 exceptiongroup = []
 flake8 = []
 flake8-django = []
@@ -979,14 +1156,18 @@ pluggy = []
 prometheus-client = []
 prompt-toolkit = []
 pycodestyle = []
+pycparser = []
 pydantic = []
 pydantic-core = []
 pyflakes = []
+pyopenssl = []
+pypng = []
 pytest = []
 pytest-django = []
 python-crontab = []
 python-dateutil = []
 pytz = []
+qrcode = []
 rcssmin = []
 rjsmin = []
 rules = []
@@ -1000,4 +1181,5 @@ typing-extensions = []
 tzdata = []
 vine = []
 wcwidth = []
+webauthn = []
 wrapt = []

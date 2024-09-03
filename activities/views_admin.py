@@ -108,7 +108,7 @@ class GamesListView(PermissionRequiredMixin, FilterView):
         return kwargs
 
 
-class GamesAddView(SuccessMessageMixin, CreateView):
+class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Game
     fields = ["team", "opponent", "date", "location"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
@@ -130,7 +130,7 @@ class GamesAddView(SuccessMessageMixin, CreateView):
         return form
 
 
-class GamesEditView(SuccessMessageMixin, UpdateView):
+class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Game
     fields = ["team", "opponent", "date", "location"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
@@ -157,7 +157,7 @@ class GamesEditView(SuccessMessageMixin, UpdateView):
         return form
 
 
-class GamesDeleteView(SuccessMessageMixin, DeleteView):
+class GamesDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Game
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> deleted succesfully")

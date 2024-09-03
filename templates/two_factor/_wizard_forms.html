@@ -1,0 +1,9 @@
+{% load form_tags %}
+
+<div class="mb-3">
+    {{ wizard.management_form }}
+
+    {% for field in wizard.form %}
+        {% form_field field show_placeholder=False %}
+    {% endfor %}
+</div>

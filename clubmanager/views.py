@@ -3,6 +3,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.decorators import login_required, permission_required
+from django_otp.decorators import otp_required
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -19,6 +21,8 @@ def index(request: HttpRequest) -> HttpResponse:
     return render(request, "clubmanager/index.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO})
 
 
+@login_required
+@permission_required("teams")
 def index_admin(request: HttpRequest) -> HttpResponse:
     """The main admin index page."""
 
@@ -28,6 +32,4 @@ def index_admin(request: HttpRequest) -> HttpResponse:
     elif timezone.now().hour > 18:
         welcome_string = _("Good evening")
 
-    return render(
-        request, "clubmanager/index_admin.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO}
-    )
+    return render(request, "clubmanager/index_admin.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO})

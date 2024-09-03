@@ -24,7 +24,7 @@ def form_field(
 
     field_type = None
     match field.widget_type:
-        case "select" | "nullbooleanselect":
+        case "select" | "nullbooleanselect" | "radioselect":
             field_type = "select"
         case "checkbox":
             field_type = "checkbox"

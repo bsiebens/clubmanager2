@@ -29,7 +29,7 @@ class TeamsListView(PermissionRequiredMixin, FilterView):
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
-class TeamsAddView(SuccessMessageMixin, CreateView):
+class TeamsAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Team
     fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
@@ -69,7 +69,7 @@ class TeamsAddView(SuccessMessageMixin, CreateView):
         return super(TeamsAddView, self).form_valid(form)
 
 
-class TeamsEditView(SuccessMessageMixin, UpdateView):
+class TeamsEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Team
     fields = ["name", "short_name", "type", "number_pool", "slug", "logo"]
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
@@ -107,7 +107,7 @@ class TeamsEditView(SuccessMessageMixin, UpdateView):
         return super(TeamsEditView, self).form_valid(form)
 
 
-class TeamsDeleteView(SuccessMessageMixin, DeleteView):
+class TeamsDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Team
     success_url = reverse_lazy("clubmanager_admin:teams:teams_index")
     success_message = _("Team <strong>%(name)s</strong> deleted succesfully")
@@ -122,7 +122,7 @@ class TeamsDeleteView(SuccessMessageMixin, DeleteView):
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class SeasonListView(ListView):
+class SeasonListView(PermissionRequiredMixin, ListView):
     model = Season
     permission_required = "teams.view_season"
     permission_denied_message = _("You do not have sufficient access rights to access the season list")
@@ -138,7 +138,7 @@ class SeasonListView(ListView):
         return context
 
 
-class SeasonAddView(SuccessMessageMixin, FormView):
+class SeasonAddView(PermissionRequiredMixin, SuccessMessageMixin, FormView):
     form_class = SeasonAddForm
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
     success_message = _("Season added succesfully")
@@ -156,7 +156,7 @@ class SeasonAddView(SuccessMessageMixin, FormView):
         return super(SeasonAddView, self).form_valid(form)
 
 
-class SeasonDeleteView(SuccessMessageMixin, DeleteView):
+class SeasonDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:seasons_index")
     success_message = _("Season deleted succesfully")
     model = Season
@@ -168,7 +168,7 @@ class SeasonDeleteView(SuccessMessageMixin, DeleteView):
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
-class NumberPoolListView(ListView):
+class NumberPoolListView(PermissionRequiredMixin, ListView):
     model = NumberPool
     permission_required = "teams.view_numberpool"
     permission_denied_message = _("You do not have sufficient access rights to access the numberpool list")
@@ -184,7 +184,7 @@ class NumberPoolListView(ListView):
         return context
 
 
-class NumberPoolAddView(SuccessMessageMixin, CreateView):
+class NumberPoolAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = NumberPool
     form_class = NumberPoolForm
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
@@ -200,7 +200,7 @@ class NumberPoolAddView(SuccessMessageMixin, CreateView):
         return self.success_message % dict(cleaned_data, title=self.object.name)
 
 
-class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
+class NumberPoolDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy("clubmanager_admin:teams:numberpools_index")
     success_message = _("Number pool <strong>%(name)s</strong> deleted succesfully")
     model = NumberPool
@@ -215,7 +215,7 @@ class NumberPoolDeleteView(SuccessMessageMixin, DeleteView):
         return self.success_message % dict(cleaned_data, title=self.object.name)
 
 
-class TeamRoleListView(FilterView):
+class TeamRoleListView(PermissionRequiredMixin, FilterView):
     filterset_class = TeamRoleFilter
     permission_required = "teams.view_teamrole"
     permission_denied_message = _("You do not have sufficient access rights to access the team role list")
@@ -225,7 +225,7 @@ class TeamRoleListView(FilterView):
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
-class TeamRoleAddView(SuccessMessageMixin, CreateView):
+class TeamRoleAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = TeamRole
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
@@ -249,7 +249,7 @@ class TeamRoleAddView(SuccessMessageMixin, CreateView):
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class TeamRoleEditView(SuccessMessageMixin, UpdateView):
+class TeamRoleEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = TeamRole
     fields = ["name", "abbreviation", "staff_role", "admin_role", "sort_order"]
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
@@ -273,7 +273,7 @@ class TeamRoleEditView(SuccessMessageMixin, UpdateView):
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
+class TeamRoleDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = TeamRole
     success_url = reverse_lazy("clubmanager_admin:teams:teamroles_index")
     success_message = _("Team role <strong>%(name)s</strong> deleted succesfully")
@@ -288,7 +288,7 @@ class TeamRoleDeleteView(SuccessMessageMixin, DeleteView):
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class TeamMembersListView(FilterView):
+class TeamMembersListView(PermissionRequiredMixin, FilterView):
     filterset_class = TeamMembershipFilter
     paginate_by = 50
     permission_required = "teams.view_teammembership"
@@ -314,7 +314,7 @@ class TeamMembersListView(FilterView):
         return kwargs
 
 
-class TeamMembersAddView(SuccessMessageMixin, CreateView):
+class TeamMembersAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> created succesfully")
@@ -342,7 +342,7 @@ class TeamMembersAddView(SuccessMessageMixin, CreateView):
         return form
 
 
-class TeamMembersEditView(SuccessMessageMixin, UpdateView):
+class TeamMembersEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team membership <strong>%(name)s - %(team)s %(season)s</strong> updated succesfully")
@@ -364,7 +364,7 @@ class TeamMembersEditView(SuccessMessageMixin, UpdateView):
         return form
 
 
-class TeamMembersDeleteView(SuccessMessageMixin, DeleteView):
+class TeamMembersDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = TeamMembership
     success_url = reverse_lazy("clubmanager_admin:teams:teammembers_index")
     success_message = _("Team memberships <strong>%(name)s - %(team)s %(season)s</strong> deleted succesfully")
