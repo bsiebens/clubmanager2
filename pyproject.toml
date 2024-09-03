@@ -28,6 +28,9 @@ django-celery-beat = "^2.7.0"
 flower = "^2.0.1"
 django-model-utils = "^4.5.1"
 django-two-factor-auth = {extras = ["webauthn"], version = "^1.17.0"}
+django-environ = "^0.11.2"
+pillow = "^10.4.0"
+gunicorn = "^23.0.0"
 
 [tool.poetry.dev-dependencies]
 black = "^24.4.2"

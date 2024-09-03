@@ -1,0 +1,14 @@
+[Unit]
+Description = Gunicorn based serving of the clubmanager
+After = network.target
+Wants = network-online.target
+
+[Service]
+Restart = always
+Type = simple
+ExecStart = poetry run gunicorn clubmanager.wsgi
+Environment = 
+WorkingDirectory = /home/ubuntu/clubmanager
+
+[Install]
+WantedBy = multi-user.target

@@ -394,6 +394,19 @@ django = ">=4.2.9"
 sqlparse = ">=0.2"
 
 [[package]]
+name = "django-environ"
+version = "0.11.2"
+description = "A package that allows you to utilize 12factor inspired environment variables to configure your Django application."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4"
+
+[package.extras]
+develop = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)", "furo (>=2021.8.17b43,<2021.9.0)", "sphinx (>=3.5.0)", "sphinx-notfound-page"]
+docs = ["furo (>=2021.8.17b43,<2021.9.0)", "sphinx (>=3.5.0)", "sphinx-notfound-page"]
+testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
+
+[[package]]
 name = "django-extensions"
 version = "3.2.3"
 description = "Extensions for Django"
@@ -613,6 +626,24 @@ pytz = "*"
 tornado = ">=5.0.0,<7.0.0"
 
 [[package]]
+name = "gunicorn"
+version = "23.0.0"
+description = "WSGI HTTP Server for UNIX"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+packaging = "*"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1,!=0.36.0)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+testing = ["gevent", "eventlet", "coverage", "pytest", "pytest-cov"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
 name = "humanize"
 version = "4.10.0"
 description = "Python humanize utilities"
@@ -711,7 +742,7 @@ python-versions = ">=3.5"
 name = "packaging"
 version = "24.1"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.8"
 
@@ -1092,7 +1123,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "073cc1d7ea50846a95b4de2a41b9d9b1a3d3d7ab5d1c81b96482868a5af78a46"
+content-hash = "20a45a18710ad636e88367c986eb66c5e8145765f880a710af12f4a4e2520287"
 
 [metadata.files]
 amqp = []
@@ -1123,6 +1154,7 @@ django-cleanup = []
 django-compressor = []
 django-cors-headers = []
 django-debug-toolbar = []
+django-environ = []
 django-extensions = []
 django-filter = []
 django-formtools = []
@@ -1139,6 +1171,7 @@ exceptiongroup = []
 flake8 = []
 flake8-django = []
 flower = []
+gunicorn = []
 humanize = []
 iniconfig = []
 injector = []

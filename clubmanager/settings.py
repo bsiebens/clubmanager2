@@ -10,24 +10,27 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
+import environ
+
+env = environ.Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+environ.Env.read_env(Path(BASE_DIR, ".env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w2!hy&a%m%te*oxqk4faxam%bu$13h2uuqmv$_9iy!4u0fq5sf"
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
 # Application definition
 
@@ -153,7 +156,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = env("DJANGO_STATIC_URL", default="http://localhost/static/")
+MEDIA_URL = env("DJANGO_MEDIA_URL", default="http://localhost/media/")
+
+STATIC_ROOT = env("DJANGO_STATIC_ROOT")
+MEDIA_ROOT = env("DJANGO_MEDIA_ROOT")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -169,8 +176,8 @@ STATICFILES_FINDERS = [
     "compressor.finders.CompressorFinder",
 ]
 
-SITE_NAME = "Sharks Mechelen"
-SITE_LOGO = "media/logo_sharks_mechelen.svg"
+SITE_NAME = env("CLUB_SITE_NAME")
+SITE_LOGO = env("CLUB_SITE_LOGO")
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -179,12 +186,14 @@ PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
-CELERY_BROKER_URL = "amqp://bernard:Bernard1@localhost"
+CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["localhost"])
+
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_RESULT_EXTENDED = True
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_RESULT_EXPIRES = timedelta(days=7)
-FLOWER_BROKER_API = "http://localhost:15672/api/"
+FLOWER_BROKER_API = env("FLOWER_BROKER_API")
 
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = SITE_NAME
