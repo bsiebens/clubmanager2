@@ -110,10 +110,6 @@ class NewsItemSchema(ModelSchema):
 
         return text.Truncator(summary).words(40, html=True)
 
-    @staticmethod
-    def resolve_pictures(obj: NewsItem):
-        return [picture.picture.url for picture in obj.pictures.exclude(main_picture=True).all()]
-
 
 class TeamSchema(ModelSchema):
     logo: PictureSchema
