@@ -47,4 +47,5 @@ def group_removed(sender, **kwargs):
 
 @receiver(post_save, sender=Member)
 def update_group_memberships(sender, instance: Member, *args, **kwargs) -> None:
-    update_group_membership.delay_on_commit(instance.user.id)
+    update_group_membership(instance.user.id)
+    # update_group_membership.delay_on_commit(instance.user.id)
