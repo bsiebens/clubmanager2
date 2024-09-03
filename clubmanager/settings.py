@@ -176,6 +176,8 @@ STATICFILES_FINDERS = [
     "compressor.finders.CompressorFinder",
 ]
 
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
 SITE_NAME = env("CLUB_SITE_NAME")
 SITE_LOGO = env("CLUB_SITE_LOGO")
 
