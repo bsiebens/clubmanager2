@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
+
+        <div>
+            {% blocktranslate with name=teammembership.member.get_full_name team=teammembership.team season=teammembership.season %}    
+                Are you sure you want to remove team membership <span class="font-bold">{{ name }} - {{ team }} ({{ season }})</span>?
+            {% endblocktranslate %}
+        </div>
+
+    <form method="post" action="{% url "clubmanager_admin:teams:teammembers_delete" object.id %}">
+        {% csrf_token %}
+
+        <div class="flex flex-row gap-2 mt-4">
+            <a href="{% url "clubmanager_admin:teams:teammembers_index" %}" class="btn">{% translate "Cancel" %}</a>
+            <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
+        </div>
+    </form>
+{% endblock content %}

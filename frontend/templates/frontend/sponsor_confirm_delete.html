@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-euro"></i>{% translate "Sponsors" %}</h1>
+
+    <div>
+        {% blocktranslate with name=sponsor.name %}    
+            Are you sure you want to remove sponsor <span class="font-bold">{{ name }}</span>?
+        {% endblocktranslate %}
+    </div>
+
+    <form method="post" action="{% url "clubmanager_admin:frontend:sponsors_delete" object.id %}">
+        {% csrf_token %}
+
+        <div class="flex flex-row gap-2 mt-4">
+            <a href="{% url "clubmanager_admin:frontend:sponsors_index" %}" class="btn">{% translate "Cancel" %}</a>
+            <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
+        </div>
+    </form>
+{% endblock content %}

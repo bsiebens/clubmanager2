@@ -1,0 +1,26 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <div class="w-full flex flex-col lg:flex-row items-center justify-center mt-2 mb-4 gap-x-4">
+        <img class="w-48 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% static site_logo %}" />
+
+        <div class="flex flex-col items-center lg:items-start">
+            <h1 class="text-3xl lg:text-5xl font-bold">{{ site_name }}</h1>
+            <div class="mt-1 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</div>
+            <div>
+                <a class="btn mt-2 btn-info btn-outline btn-sm" href="#"><i class="fa-solid fa-user"></i>{% translate "Access your profile" %}</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-2 flex flex-col gap-y-2">
+        <h2 class="subtitle">{% translate "Latest news from the club" %}</h2>
+        {% if newsitems %}
+            ... 
+        {% else %}
+            {% translate "No news found" %}
+        {% endif %}
+    </div>
+{% endblock content %}

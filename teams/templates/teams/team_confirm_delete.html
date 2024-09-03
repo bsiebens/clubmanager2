@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-people-group"></i>{% translate "Teams" %}</h1>
+
+    <div>
+        {% blocktranslate with name=team.name %}    
+            Are you sure you want to remove team <span class="font-bold">{{ name }}</span>?
+        {% endblocktranslate %}
+    </div>
+
+    <form method="post" action="{% url "clubmanager_admin:teams:teams_delete" object.id %}">
+        {% csrf_token %}
+
+        <div class="flex flex-row gap-2 mt-4">
+            <a href="{% url "clubmanager_admin:teams:teams_index" %}" class="btn">{% translate "Cancel" %}</a>
+            <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
+        </div>
+    </form>
+{% endblock content %}

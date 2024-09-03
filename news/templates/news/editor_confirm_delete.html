@@ -1,0 +1,22 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
+
+        <div>
+            {% blocktranslate with name=user.get_full_name %}    
+                Are you sure you want to remove <span class="font-bold">{{ name }}</span> as an editor?
+            {% endblocktranslate %}
+        </div>
+
+    <form method="post" action="{% url "clubmanager_admin:news:editors_delete" object.id %}">
+        {% csrf_token %}
+
+        <div class="flex flex-row gap-2 mt-4">
+            <a href="{% url "clubmanager_admin:news:editors_index" %}" class="btn">{% translate "Cancel" %}</a>
+            <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
+        </div>
+    </form>
+{% endblock content %}

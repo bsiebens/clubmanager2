@@ -1,0 +1,17 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+    <div class="w-full flex flex-col lg:flex-row items-center justify-center mt-2 mb-4 gap-x-4">
+        <img class="w-48 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% static site_logo %}" />
+
+        <div class="flex flex-col items-center lg:items-start">
+            <h1 class="text-3xl lg:text-5xl font-bold">{{ site_name }}</h1>
+            <div class="badge badge-lg badge-primary mt-1">
+                <i class="fa-solid fa-lock mr-2"></i>Admin area
+            </div>
+            <div class="mt-2 text-lg lg:text-xl">{{ welcome }} {{ request.user.first_name }}!</div>
+        </div>
+    </div>
+{% endblock content %}

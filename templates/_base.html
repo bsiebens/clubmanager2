@@ -1,0 +1,202 @@
+{% load compress %}
+{% load static %}
+{% load initials_avatar %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light" class="h-full">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>ClubManager - {% block title %}Dashboard{% endblock title %}</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+
+        {% compress css %}
+            <link rel="stylesheet" href="{% static 'src/output.css' %}" />
+        {% endcompress %}
+
+        <script src="https://kit.fontawesome.com/8189f10079.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+        
+    </head>
+
+    <body>
+        <div class="drawer">
+            <input id="drawer-mobile-menu" type="checkbox" class="drawer-toggle" />
+            <div class="drawer-content flex flex-col">
+                <!-- Navbar -->
+                <div class="navbar bg-gray-200 dark:bg-gray-700 w-full">
+                    <div class="navbar-start">
+                        <div class="flex-none lg:hidden">
+                            <label for="drawer-mobile-menu" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                                <i class="fa-solid fa-bars text-xl"></i>
+                            </label>
+                        </div>
+
+                        <div class="mx-2 flex-1 px-2 font-bold text-xl">
+                            <a href="{% if "admin" in request.path %}{% url "clubmanager_admin:index" %}{% else %}{% url "clubmanager:index" %}{% endif %}">ClubManager</a>
+                        </div>
+                    </div>
+                    
+                    <div class="navbar-end">
+                        <div class="hidden flex-none lg:block">
+                            {% if "admin" in request.path %}
+                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
+                                    <a class="btn btn-sm btn-scroll-m-7 btn-outline mr-2" href="{% url "clubmanager:index" %}">
+                                        <i class="fa-solid fa-user"></i>
+                                        {% translate "Member area" %}
+                                    </a>
+                                </div>
+                            {% else %}
+                                {% if request.user.is_staff %}
+                                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
+                                        <a class="btn btn-sm btn-outline mr-2" href="{% url "clubmanager_admin:index" %}">
+                                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                                            {% translate "Admin area" %}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if request.user.is_superuser %}
+                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
+                                    <a class="btn btn-sm btn-outline mr-2" href="{% url "admin:index" %}">
+                                        <i class="fa-solid fa-shield"></i>
+                                        {% translate "Django admin" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="dropdown dropdown-end">
+                            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                                <div class="w-10 rounded-full">
+                                    <img alt="{{ request.user.get_full_name }} avatar" src="{% render_initials_avatar request.user.get_full_name %}" />
+                                </div>
+                            </div>
+                            <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                                <li>
+                                    <a href="{% url "two_factor:profile" %}">
+                                        <i class="fa-solid fa-key"></i>Manage MFA
+                                    </a>
+                                </li>
+                                
+                                <li>
+                                    <form action="{% url 'logout' %}?next={% url "clubmanager:index" %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit">
+                                            <i class="fa-solid fa-right-from-bracket mr-2"></i>Log out
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page content here -->
+                <div class="flex flex-row">
+                    <div class="hidden lg:flex min-w-fit">
+                        <div class="bg-base-200 text-base-content w-80 p-4">
+                            <div class="font-bold text-lg mb-2">{% translate "Admin Applications" %}</div>
+
+                            <ul class="menu">
+                                {% if "admin" in request.path %}
+                                    {% include "clubmanager/menu_admin.html" %}
+                                {% else %}
+                                    {% include "clubmanager/menu_user.html" %}
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="grow p-6">
+                        {% if messages %}
+                            <div class="flex flex-col p-2 m-4 gap-y-2">      
+                                {% for message in messages %}
+                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                        <div role="alert" class="alert alert-success">
+                                            <i class="fa-solid fa-check text-lg"></i>
+                                            <span>{{ message|safe }}</span>
+                                        </div>
+                                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                        <div role="alert" class="alert alert-warning">
+                                            <i class="fa-solid fa-ban text-lg"></i>
+                                            <span>{{ message|safe }}</span>
+                                        </div>
+                                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                        <div role="alert" class="alert alert-error">
+                                            <i class="fa-solid fa-exclamation text-lg"></i>
+                                            <span>{{ message|safe }}</span>
+                                        </div>
+                                    {% else %}
+                                        <div role="alert" class="alert alert-info">
+                                            <i class="fa-solid fa-info text-lg"></i>
+                                            <span>{{ message|safe }}</span>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        {% block content %}_base.html content block{% endblock content %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="drawer-side">
+                <label for="drawer-mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
+                <div class="flex flex-col bg-base-200 min-h-full w-84 p-4">
+                    <div class="font-bold text-lg mb-2">{% translate "Admin Applications" %}</div>
+
+                    <ul class="menu">
+                        <!-- Sidebar content here -->
+                        {% if "admin" in request.path %}
+                            {% include "clubmanager/menu_admin.html" %}
+                        {% else %}
+                            {% include "clubmanager/menu_user.html" %}
+                        {% endif %}
+                    </ul>
+
+                    <div class="mt-4">
+                        {% if "admin" in request.path %}
+                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
+                                <a class="btn btn-sm btn-scroll-m-7 btn-outline mr-2" href="{% url "clubmanager:index" %}">
+                                    <i class="fa-solid fa-user"></i>
+                                    {% translate "Member area" %}
+                                </a>
+                            </div>
+                        {% else %}
+                            {% if request.user.is_staff %}
+                                <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
+                                    <a class="btn btn-sm btn-outline mr-2" href="{% url "clubmanager_admin:index" %}">
+                                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                                        {% translate "Admin area" %}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if request.user.is_superuser %}
+                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
+                                <a class="btn btn-sm btn-outline mr-2" href="{% url "admin:index" %}">
+                                    <i class="fa-solid fa-shield"></i>
+                                    {% translate "Django admin" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer footer-center bg-gray-200 dark:bg-gray-700 text-base-content p-4">
+            <aside>
+                <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - MIT License</p>
+            </aside>
+        </footer>
+    </body>
+</html>

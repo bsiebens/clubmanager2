@@ -1,0 +1,105 @@
+{% load i18n %}
+{% load rules %}
+
+{% has_perm 'members' request.user as has_member_rights %}
+{% has_perm 'news' request.user as has_news_rights %}
+{% has_perm 'editors' request.user as has_editor_rights %}
+{% has_perm 'frontend' request.user as has_frontend_rights %}
+{% has_perm 'teams' request.user as has_team_rights %}
+{% has_perm 'teams.view_team' request.user as has_team_admin_rights %}
+{% has_perm 'teams.view_teammembership' request.user as has_teammembership_admin_rights %}
+
+<li>
+    {% if has_member_rights %}
+        <span class="menu_title">{% translate "Members" %}</span>
+        {% url "clubmanager_admin:members:members_index" as members_index %}
+        <a href="{{ members_index }}" {% if members_index in request.path %}class="active"{% endif %}>
+            <i class="fa-solid fa-users min-w-5"></i>
+            <span class="mt-1">{% translate "Members" %}</span>
+        </a>
+
+        {% url "clubmanager_admin:members:families_index" as families_index %}
+        <a href="{{ families_index }}" {% if families_index in request.path %}class="active"{% endif %}>
+            <i class="fa-solid fa-users min-w-5"></i>
+            <span class="mt-1">{% translate "Families" %}</span>
+        </a>
+    {% endif %}
+
+    {% if has_editor_rights or has_news_rights %}
+        <span class="menu_title">{% translate "News" %}</span>
+        {% if has_news_rights %}
+            {% url "clubmanager_admin:news:news_index" as news_index %}
+            <a href="{{ news_index }}" {% if news_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-newspaper min-w-5"></i>
+                <span class="mt-1">{% translate "News Items" %}</span>
+            </a>
+        {% endif %}
+
+        {% if has_editor_rights %}
+            {% url "clubmanager_admin:news:editors_index" as editors_index %}
+            <a href="{{ editors_index }}" {% if editors_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-users min-w-5"></i>
+                <span class="mt-1">{% translate "Editors" %}</span>
+            </a>
+        {% endif %}
+    {% endif %}
+
+    {% if has_team_rights %}
+        <span class="menu_title">{% translate "Teams" %}</span>
+        {% if has_team_admin_rights %}
+            {% url "clubmanager_admin:teams:seasons_index" as seasons_index %}
+            <a href="{{ seasons_index }}" {% if seasons_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-calendar-days min-w-5"></i>
+                <span class="mt-1">{% translate "Seasons" %}</span>
+            </a>
+
+            {% url "clubmanager_admin:teams:numberpools_index" as numberpools_index %}
+            <a href="{{ numberpools_index }}" {% if numberpools_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-layer-group min-w-5"></i>
+                <span class="mt-1">{% translate "Number Pools" %}</span>
+            </a>
+
+            {% url "clubmanager_admin:teams:teamroles_index" as teamroles_index %}
+            <a href="{{ teamroles_index }}" {% if teamroles_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-circle-user min-w-5"></i>
+                <span class="mt-1">{% translate "Team Roles" %}</span>
+            </a>
+
+            {% url "clubmanager_admin:teams:teams_index" as teams_index %}
+            <a href="{{ teams_index }}" {% if teams_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-people-group min-w-5"></i>
+                <span class="mt-1">{% translate "Teams" %}</span>
+            </a>
+        {% endif %}
+        
+        {% if has_teammembership_admin_rights %}
+            {% url "clubmanager_admin:teams:teammembers_index" as teammembers_index %}
+            <a href="{{ teammembers_index }}" {% if teammembers_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-ticket min-w-5"></i>
+                <span class="mt-1">{% translate "Team Memberships" %}</span>
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <span class="menu_title">{% translate "Activities" %}</span>
+    {% url "clubmanager_admin:activities:opponents_index" as opponents_index %}
+    <a href="{{ opponents_index }}" {% if opponents_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-people-group min-w-5"></i>
+        <span class="mt-1">{% translate "Opponents" %}</span>
+    </a>
+
+    {% url "clubmanager_admin:activities:games_index" as games_index %}
+    <a href="{{ games_index }}" {% if games_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-medal min-w-5"></i>
+        <span class="mt-1">{% translate "Games" %}</span>
+    </a>
+
+    {% if has_frontend_rights %}
+        <span class="menu_title">Frontend</span>
+        {% url "clubmanager_admin:frontend:sponsors_index" as sponsors_index %}
+        <a href="{{ sponsors_index }}" {% if sponsors_index in request.path %}class="active"{% endif %}>
+            <i class="fa-solid fa-euro min-w-5"></i>
+            <span class="mt-1">{% translate "Sponsors" %}</span>
+        </a>
+    {% endif %}
+</li>

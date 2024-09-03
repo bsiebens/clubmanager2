@@ -1,0 +1,64 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+{% load static %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+
+    {% if game %}
+        <div class="flex flex-row items-center gap-2 mt-8">
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ game.team }} vs {{ game.opponent }} ({{ game.date|date:"l d b Y H:i" }})</h2>
+        
+            <div class="flex justify-end grow">
+                <a href="{% url "clubmanager_admin:activities:games_delete" game.id %}" class="hidden lg:flex btn btn-outline btn-error">
+                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:activities:games_delete" game.id %}" class="lg:hidden btn btn-outline btn-error">
+                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+            </a>
+        </div>
+    {% else %}
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new game" %}</h2>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.team %}
+            {% form_field form.opponent %}
+            {% form_field form.date %}
+            {% form_field form.location %}
+        </div>
+
+        <button class="w-full mt-8 btn btn-neutral" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="{% static "src/jquery.formset.js" %}"></script>
+    <script type="text/javascript">
+        $(".formset-row").formset({
+            addText: "{% translate "Add row" %}",
+            deleteText: "{% translate "Remove" %}",
+            prefix: "pictures",
+            addCssClass: "btn btn-sm btn-outline",
+            deleteCssClass: "btn btn-sm btn-outline btn-error",
+            hideLastAddForm: true
+        });
+
+        new Choices(document.querySelector("#id_team"));
+        new Choices(document.querySelector("#id_opponent"))
+    </script>
+{% endblock content %}

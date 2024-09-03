@@ -1,0 +1,91 @@
+{% load i18n %}
+
+<div class="{{ width_classes }}">
+    <label class="form-control" id="{{ field.id_for_label }}">
+        {% if display_label %}
+            <div class="label">
+                <span class="label-text {% if field.errors %}text-error{% endif %}">{% blocktranslate with label=field.label %}{{ label }}{% endblocktranslate %}</span>
+            </div>
+        {% endif %}
+
+
+        {% if type == "text" or type == "number" or type == "email" or type == "password" or type == "regionalphonenumber" or type == "date" or type == "datetime" %}
+            <div class="input input-bordered flex items-center gap-2 {{ input_classes }} {% if field.errors %}input-error{% endif %}">
+                <input 
+                    type="{% if type == "regionalphonenumber" %}tel{% elif type == "datetime" %}datetime-local{% else %}{{ type }}{% endif %}" 
+                    class="grow {% if field.errors %}text-error{% endif %}{% if small %}lg:w-20{% endif %}"
+                    {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}
+                    {% if field.field.required %}required="required"{% endif %}
+                    value="{% if type == "date" or type == "datetime" %}{{ field.value|date:"c"|default:"" }}{% else %}{{ field.value|default:"" }}{% endif %}"
+                    name="{{ field.html_name }}"
+                />
+
+                {% if field.field.required %}
+                    <span class="badge badge-error">{% translate "required" %}</span>
+                {% endif %}
+            </div>
+
+            {% if field.errors or field.help_text %}
+                <div class="label">
+                    {% if field.errors %}
+                        <div class="label-text-alt text-error">{{ field.errors }}</div>
+                    {% endif %}
+
+                    {% if field.help_text and display_helptext %}
+                        <div class="label-text-alt {% if field.errors %}text-error{% endif %}">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% elif type == "checkbox" %}
+            <div class="form-control">
+                <label class="cursor-pointer label" id="{{ field.id_for_label }}">
+                    <input type="checkbox" class="checkbox {{ input_classes }}" name="{{ field.html_name }}" {% if field.value %}checked{% endif %}/>
+                    {% if display_helptext %}<span class="ml-2 label-text grow">{{ field.help_text }}</span>{% endif %}
+                </label>
+            </div>
+        {% elif type == "select" or type == "nullbooleanselect" %}
+            <select class="select select-bordered grow {{ input_classes }}" name="{{ field.html_name }}">
+                {% for value, label in field.field.choices %}
+                    <option value="{{ value }}" {% if field.value == value|stringformat:"s" %}selected="selected"{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            {% if field.errors or field.help_text %}
+                <div class="label">
+                    {% if field.errors %}
+                        <div class="label-text-alt text-error">{{ field.errors }}</div>
+                    {% endif %}
+
+                    {% if field.help_text and display_helptext %}
+                        <div class="label-text-alt {% if field.errors %}text-error{% endif %}">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% elif type == "textarea" or type == "markdownx" %}
+            <textarea name="{{ field.html_name }}" class="{% if type == "markdownx" %}markdownx{% endif %} textarea textarea-bordered h-72 {{ input_classes }}" {% if display_placeholder %}placeholder="{{ field.label }}"{% endif %}>{{ field.value|default:"" }}</textarea>
+
+            {% if field.field.required or field.help_text %}
+                <div class="label">
+                    {% if field.help_text and display_helptext %}
+                        <div class="label-text-alt">
+                            {{ field.help_text }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.field.required %}
+                        <div class="label-text-alt">
+                            <div class="badge badge-error">{% translate "required" %}</div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% elif type == "clearablefile" %}
+                {% if field.value %}
+                    <span class="text-sm text-gray-500 my-1">{% translate "Current picture:" %} {{ field.value }}</span>
+                {% endif %}
+                <input type="file" class="file-input file-input-bordered {{ input_classes }}" name="{{ field.html_name }}" />
+        {% endif %}
+    </label>
+</div>

@@ -1,0 +1,54 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+
+    {% if teamrole %}
+        <div class="flex flex-row items-center gap-2 mt-8">
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ teamrole.name }} ({{ teamrole.abbreviation }})</h2>
+        
+            <div class="flex justify-end grow">
+                <a href="{% url "clubmanager_admin:teams:teamroles_delete" teamrole.id %}" class="hidden lg:flex btn btn-outline btn-error">
+                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:teams:teamroles_delete" teamrole.id %}" class="lg:hidden btn btn-outline btn-error">
+                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+            </a>
+        </div>
+    {% else %}
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new role" %}</h2>
+    {% endif %}
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+    {% endif %}
+
+
+    <form method="post">
+        {% csrf_token %}
+
+        <h2 class="subtitle">{% translate "Role information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.name %}
+            {% form_field form.abbreviation show_help=False %}
+            {% form_field form.staff_role help_text=alternate_staff_help_text %}
+            {% form_field form.admin_role help_text=alternate_admin_help_text %}
+        </div>
+
+        <h2 class="subtitle">{% translate "Display information" %}</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+            {% form_field form.sort_order %}
+        </div>
+
+        <button class="w-full mt-8 btn btn-neutral" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+{% endblock content %}

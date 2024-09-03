@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+
+{% block content %}
+    <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
+
+    <div class="action-bar justify-end">
+        <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:seasons_add" %}">
+            {% csrf_token %}
+
+            <div class="form-label">
+                {% translate "Add a new season with a duration of" %}
+            </div>
+
+            <div class="form">
+                {% display_field form.duration display_label=False small=True %}
+                {% display_field form.unit display_label=False %}
+
+                <button type="submit">
+                    <i class="fa-solid fa-add"></i>
+                    {% translate "Add" %}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-2">
+        {% for season in object_list %}
+            <div class="data-card {% if season.current_season %}border-l-success{% endif %}">
+                <div class="data">
+                    <div>{{ season.start_date }} {% translate "to" %} {{ season.end_date }}</div>
+                    {% if season.current_season %}
+                        <div>{% translate "Current season" %}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <a class="btn btn-error btn-outline {% if season.has_started %}btn-disabled{% endif %}" href="{% url "clubmanager_admin:teams:seasons_delete" season.id %}">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
