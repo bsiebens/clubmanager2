@@ -1,2 +1,2 @@
 cd /home/ubuntu/clubmanager
-/home/ubuntu/.local/bin/poetry run gunicorn clubmanager.wsgi
+/home/ubuntu/.cache/pypoetry/virtualenvs/clubmanager-wvKJ8zXl-py3.10/bin/gunicorn clubmanager.wsgi
