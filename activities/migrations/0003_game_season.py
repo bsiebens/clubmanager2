@@ -4,6 +4,23 @@ import django.db.models.deletion
 import teams.models
 from django.db import migrations, models
 
+import datetime
+
+
+def create_default_season(apps, schema_editor):
+    Season = apps.get_model("teams", "Season")
+
+    today = datetime.date.today()
+    start_year = today.year
+
+    if today.month < 9:
+        start_year = start_year - 1
+
+    start_date = datetime.date(day=1, month=9, year=start_year)
+    end_date = datetime.date(day=1, month=9, year=start_year + 1) - datetime.timedelta(days=1)
+
+    Season.objects.create(start_date=start_date, end_date=end_date)
+
 
 class Migration(migrations.Migration):
 
@@ -13,6 +30,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(create_default_season),
         migrations.AddField(
             model_name="game",
             name="season",
