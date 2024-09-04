@@ -156,11 +156,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = env("DJANGO_STATIC_URL", default="http://localhost/static/")
-MEDIA_URL = env("DJANGO_MEDIA_URL", default="http://localhost/media/")
+STATIC_URL = "static/"
 
-STATIC_ROOT = env("DJANGO_STATIC_ROOT")
-MEDIA_ROOT = env("DJANGO_MEDIA_ROOT")
+if not DEBUG:
+    STATIC_URL = env("DJANGO_STATIC_URL", default="http://localhost/static/")
+    MEDIA_URL = env("DJANGO_MEDIA_URL", default="http://localhost/media/")
+
+    STATIC_ROOT = env("DJANGO_STATIC_ROOT")
+    MEDIA_ROOT = env("DJANGO_MEDIA_ROOT")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

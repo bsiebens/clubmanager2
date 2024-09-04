@@ -78,7 +78,7 @@
         </div>
 
         <h2 class="subtitle">{% translate "Password" %}</h2>
-        <div class="text-sm text-gray-500 text-justify">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
+        <div class="text-sm text-gray-500 text-justify mt-2">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
             {% form_field form.password %}
             {% form_field form.password_confirmation %}
