@@ -3,11 +3,15 @@
 {% load pagination_tags %}
 {% load initials_avatar %}
 {% load i18n %}
-{% load form_tags %}    
+{% load form_tags %}
+
+{% block title %}{% translate "Members" %}{% endblock title %}
+
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% endblock pagetitle %}
 
 {% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
-    
     <div class="action-bar">
         <div class="action-bar-filter">
             <form>

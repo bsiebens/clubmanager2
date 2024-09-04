@@ -2,14 +2,18 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-layer-group"></i>{% translate "Number Pools" %}</h1>
+{% block title %}{% translate "Number Pools" %}{% endblock title %}
 
-        <div>
-            {% blocktranslate with name=numberpool.name %}    
-                Are you sure you want to remove number pool <span class="font-bold">{{ name }}</span>?
-            {% endblocktranslate %}
-        </div>
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-layer-group"></i>{% translate "Number Pools" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
+    <div>
+        {% blocktranslate with name=numberpool.name %}    
+            Are you sure you want to remove number pool <span class="font-bold">{{ name }}</span>?
+        {% endblocktranslate %}
+    </div>
 
     <form method="post" action="{% url "clubmanager_admin:teams:numberpools_delete" object.id %}">
         {% csrf_token %}

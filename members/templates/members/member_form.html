@@ -4,9 +4,13 @@
 {% load form_tags %}
 {% load initials_avatar %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% block title %}{% translate "Members" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% if member %}
         <div class="flex flex-row items-center gap-2 mt-8">
             <div class="avatar">

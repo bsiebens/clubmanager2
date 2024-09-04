@@ -4,9 +4,13 @@
 {% load form_tags %}
 {% load initials_avatar %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Families" %}</h1>
+{% block title %}{% translate "Families" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Families" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% if family %}
         <div class="flex flex-row items-center gap-2 mt-8">
             <h2 class="mt-0 text-2xl border-b-0 subtitle">Family</h2>

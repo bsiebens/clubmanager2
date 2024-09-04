@@ -3,9 +3,13 @@
 {% load i18n %}
 {% load pagination_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-people-group"></i>{% translate "Editors" %}</h1>
+{% block title %}{% translate "Opponents" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-people-group"></i>{% translate "Opponents" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar">
         <div class="action-bar-add flex grow justify-end">
             <a class="add-btn" href="{% url "clubmanager_admin:activities:opponents_add" %}">

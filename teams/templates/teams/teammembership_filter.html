@@ -3,11 +3,15 @@
 {% load pagination_tags %}
 {% load i18n %}
 {% load form_tags %}
-{% load rules %}   
+{% load rules %}
+
+{% block title %}{% translate "Team Memberships" %}{% endblock title %}
+
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
+{% endblock pagetitle %}
 
 {% block content %}
-    <h1 class="title"><i class="fa-solid fa-ticket"></i>{% translate "Team Memberships" %}</h1>
-
     <div class="action-bar">
         <div class="action-bar-filter">
             <form>

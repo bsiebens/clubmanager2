@@ -3,9 +3,13 @@
 {% load i18n %}
 {% load form_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
+{% block title %}{% translate "Seasons" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar justify-end">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:seasons_add" %}">
             {% csrf_token %}

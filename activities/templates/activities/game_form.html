@@ -4,9 +4,13 @@
 {% load form_tags %}
 {% load static %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% block title %}{% translate "Games" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% if game %}
         <div class="flex flex-row items-center gap-2 mt-8">
             <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ game.team }} vs {{ game.opponent }} ({{ game.date|date:"l d b Y H:i" }})</h2>

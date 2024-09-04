@@ -2,14 +2,18 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
+{% block title %}{% translate "Editors" %}{% endblock title %}
 
-        <div>
-            {% blocktranslate with name=user.get_full_name %}    
-                Are you sure you want to remove <span class="font-bold">{{ name }}</span> as an editor?
-            {% endblocktranslate %}
-        </div>
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
+    <div>
+        {% blocktranslate with name=user.get_full_name %}    
+            Are you sure you want to remove <span class="font-bold">{{ name }}</span> as an editor?
+        {% endblocktranslate %}
+    </div>
 
     <form method="post" action="{% url "clubmanager_admin:news:editors_delete" object.id %}">
         {% csrf_token %}
