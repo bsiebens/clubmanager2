@@ -6,9 +6,9 @@ Wants = network-online.target
 [Service]
 Restart = always
 Type = simple
-ExecStart = /bin/bash /home/ubuntu/clubmanager/start-server.sh
+ExecStart = /bin/bash /home/ec2-user/clubmanager/start-server.sh
 Environment = 
-WorkingDirectory = /home/ubuntu/clubmanager
+WorkingDirectory = /home/ec2-user/clubmanager
 
 [Install]
 WantedBy = multi-user.target
