@@ -37,6 +37,7 @@ urlpatterns = [
     path("initials-avatar/", include("django_initials_avatar.urls")),
     path("markdownx/", include("markdownx.urls")),
     path("admin/", admin.site.urls),
+    path("", RedirectView.as_view(pattern_name="clubmanager:index")),
 ]
 
 if settings.DEBUG:

@@ -30,4 +30,5 @@ def delete_group(sender, instance: Team, *args, **kwargs):
 
 @receiver([post_save, post_delete], sender=TeamMembership)
 def update_group_memberships(sender, instance: TeamMembership, *args, **kwargs) -> None:
-    update_group_membership.delay_on_commit(instance.member.user.id)
+    update_group_membership(instance.member.user.id)
+    # update_group_membership.delay_on_commit(instance.member.user.id)

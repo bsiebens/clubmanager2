@@ -6,9 +6,9 @@ Wants = network-online.target
 [Service]
 Restart = always
 Type = simple
-ExecStart = poetry run gunicorn clubmanager.wsgi
+ExecStart = /bin/bash /home/ec2-user/clubmanager/start-server.sh
 Environment = 
-WorkingDirectory = /home/ubuntu/clubmanager
+WorkingDirectory = /home/ec2-user/clubmanager
 
 [Install]
 WantedBy = multi-user.target

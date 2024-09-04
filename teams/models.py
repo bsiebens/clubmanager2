@@ -146,6 +146,7 @@ class Team(RulesModel):
         verbose_name = _("team")
         verbose_name_plural = _("teams")
         rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
+        ordering = ["name"]
 
     @property
     def get_short_name(self) -> str:

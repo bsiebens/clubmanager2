@@ -86,7 +86,7 @@ class Member(RulesModel):
         send_signal = False
 
         if users.count() == 1:
-            if users.first().member is not None:
+            if hasattr(users.first(), "member") and users.first().member is not None:
                 return users.first().member
 
             member.user = users.first()

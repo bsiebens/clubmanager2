@@ -112,8 +112,8 @@
                                 {% endif %}
                                 {{ news_item.get_status_display }}</div>
                             </td>
-                            <td>{{ news_item.publish_on|date:"d M Y H:m" }}</td>
-                            <td>{{ news_item.modified|date:"d M Y H:m" }}</td>
+                            <td>{{ news_item.publish_on|date:"d M Y H:i" }}</td>
+                            <td>{{ news_item.modified|date:"d M Y H:i" }}</td>
                             <td>
                                 <a class="btn btn-outline btn-sm mr-2" href="{% if has_edit_rights %}{% url "clubmanager_admin:news:news_edit" news_item.id %}{% else %}{% url "clubmanager_admin:news:news_preview" news_item.id %}{% endif %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
