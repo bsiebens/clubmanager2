@@ -2,9 +2,13 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% block title %}{% translate "Games" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div>
         {% blocktranslate with team=game.team opponent=game.opponent date=game.date|date:"l d b Y H:i" %}    
             Are you sure you want to remove game <span class="font-bold">{{ team }}</span> vs <span class="font-bold">{{ opponent }}</span> ({{ date }})?

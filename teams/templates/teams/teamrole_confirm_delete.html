@@ -2,14 +2,18 @@
 
 {% load i18n %}
 
-{% block content %}
-        <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% block title %}{% translate "Team Roles" %}{% endblock title %}
 
-        <div>
-            {% blocktranslate with name=teamrole.name %}    
-                Are you sure you want to remove team role <span class="font-bold">{{ name }}</span>?
-            {% endblocktranslate %}
-        </div>
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}    
+    <div>
+        {% blocktranslate with name=teamrole.name %}    
+            Are you sure you want to remove team role <span class="font-bold">{{ name }}</span>?
+        {% endblocktranslate %}
+    </div>
 
     <form method="post" action="{% url "clubmanager_admin:teams:teamroles_delete" object.id %}">
         {% csrf_token %}

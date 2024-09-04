@@ -5,9 +5,13 @@
 {% load rules %}
 {% load static %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-newspaper"></i>{% translate "News Items" %}</h1>
+{% block title %}{% translate "News Items" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-newspaper"></i>{% translate "News Items" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% has_perm 'news.release_newsitem' request.user as has_release_rights %}
 
     {% if newsitem %}

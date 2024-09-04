@@ -4,9 +4,13 @@
 {% load i18n %}
 {% load form_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% block title %}{% translate "Team Roles" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar">
         <div class="action-bar-filter">
             <form>

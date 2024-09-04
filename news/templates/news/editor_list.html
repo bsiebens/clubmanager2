@@ -5,9 +5,13 @@
 {% load initials_avatar %}
 {% load form_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
+{% block title %}{% translate "Editors" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Editors" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar justify-end">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:news:editors_add" %}">
             {% csrf_token %}

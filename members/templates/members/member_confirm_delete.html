@@ -2,9 +2,13 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% block title %}{% translate "Members" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div>
         {% blocktranslate with name=object.user.get_full_name %}    
             Are you sure you want to delete <span class="font-bold">{{ name }}</span>?

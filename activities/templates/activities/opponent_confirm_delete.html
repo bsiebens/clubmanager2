@@ -2,9 +2,13 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-people-group"></i>{% translate "Opponents" %}</h1>
+{% block title %}{% translate "Opponents" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-people-group"></i>{% translate "Opponents" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div>
         {% blocktranslate with name=opponent.name %}    
             Are you sure you want to remove opponent <span class="font-bold">{{ name }}</span>?

@@ -44,7 +44,7 @@ class MemberAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Member
     form_class = MemberForm
     success_url = reverse_lazy("clubmanager_admin:members:members_index")
-    success_message = _("Member <strong>%(name)s</strong> added succesfully")
+    success_message = _("Member <strong>%(name)s</strong> added succesfully - <strong>%(note)s</strong>")
     permission_required = "members"
     permission_denied_message = _("You do not have sufficient access rights to access the member list")
 
@@ -53,7 +53,7 @@ class MemberAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name())
+        return self.success_message % dict(cleaned_data, name=self.object.user.get_full_name(), note=self.object.notes)
 
 
 class MemberEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):

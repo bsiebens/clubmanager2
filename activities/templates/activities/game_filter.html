@@ -5,9 +5,13 @@
 {% load form_tags %}
 {% load rules %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% block title %}{% translate "Games" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-medal"></i>{% translate "Games" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar">
         <div class="action-bar-filter">
             <form>

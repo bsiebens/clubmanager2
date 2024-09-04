@@ -2,14 +2,18 @@
 
 {% load i18n %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
+{% block title %}{% translate "Seasons" %}{% endblock title %}
 
-        <div>
-            {% blocktranslate with start_date=season.start_date end_date=season.end_date %}    
-                Are you sure you want to remove season <span class="font-bold">{{ start_date }} - {{ end_date }}</span>?
-            {% endblocktranslate %}
-        </div>
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-calendar-days"></i>{% translate "Seasons" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
+    <div>
+        {% blocktranslate with start_date=season.start_date end_date=season.end_date %}    
+            Are you sure you want to remove season <span class="font-bold">{{ start_date }} - {{ end_date }}</span>?
+        {% endblocktranslate %}
+    </div>
 
     <form method="post" action="{% url "clubmanager_admin:teams:seasons_delete" object.id %}">
         {% csrf_token %}

@@ -3,9 +3,13 @@
 {% load i18n %}
 {% load form_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-layer-group"></i>{% translate "Number Pools" %}</h1>
+{% block title %}{% translate "Number Pools" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-layer-group"></i>{% translate "Number Pools" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     <div class="action-bar justify-end">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:numberpools_add" %}">
             {% csrf_token %}

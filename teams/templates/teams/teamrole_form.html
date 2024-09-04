@@ -3,9 +3,13 @@
 {% load i18n %}
 {% load form_tags %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% block title %}{% translate "Team Roles" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-user-circle"></i>{% translate "Team Roles" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% if teamrole %}
         <div class="flex flex-row items-center gap-2 mt-8">
             <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ teamrole.name }} ({{ teamrole.abbreviation }})</h2>

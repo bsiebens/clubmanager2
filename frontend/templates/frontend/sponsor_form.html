@@ -4,9 +4,13 @@
 {% load form_tags %}
 {% load static %}
 
-{% block content %}
-    <h1 class="title"><i class="fa-solid fa-euro"></i>{% translate "Sponsors" %}</h1>
+{% block title %}{% translate "Sponsors" %}{% endblock title %}
 
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-euro"></i>{% translate "Sponsors" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
     {% if sponsor %}
         <div class="flex flex-row items-center gap-2 mt-8">
             <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ sponsor.name }}</h2>
