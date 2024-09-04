@@ -337,7 +337,9 @@ class TeamMembersAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateVie
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         form = super(TeamMembersAddView, self).get_form(form_class)
-        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        if not self.request.user.member.is_organization_admin:
+            form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
 
         return form
 
