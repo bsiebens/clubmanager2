@@ -197,7 +197,7 @@ class NumberPoolAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, title=self.object.name)
+        return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
 class NumberPoolDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
@@ -212,7 +212,7 @@ class NumberPoolDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteV
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, title=self.object.name)
+        return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
 class TeamRoleListView(PermissionRequiredMixin, FilterView):

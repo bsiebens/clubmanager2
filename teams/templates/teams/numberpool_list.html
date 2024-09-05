@@ -10,7 +10,7 @@
 {% endblock pagetitle %}
 
 {% block content %}
-    <div class="action-bar justify-end">
+    <div class="justify-end action-bar">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:numberpools_add" %}">
             {% csrf_token %}
 
@@ -19,8 +19,8 @@
             </div>
 
             <div class="form">
-                {% display_field form.name display_label=False %}
-                {% display_field form.enforce_unique display_label=False %}
+                {% form_field form.name show_label=False %}
+                {% form_field form.enforce_unique show_label=False %}
 
                 <button type="submit">
                     <i class="fa-solid fa-add"></i>
@@ -36,7 +36,7 @@
         {% endblocktranslate %}
     </div>
 
-    <div class="mt-2 grid grid-cols-1 lg:grid-cols-3 gap-2">
+    <div class="grid grid-cols-1 gap-2 mt-2 lg:grid-cols-3">
         {% for numberpool in object_list %}
             <div class="data-card {% if numberpool.name != "default" %}{% if numberpool.enforce_unique %}border-l-success{% else %}border-l-error{% endif %}{% endif %} flex flex-row items-center gap-2">
                 <div class="data">

@@ -129,7 +129,7 @@ class Team(RulesModel):
         default=TeamTypes.INTERNAL,
         help_text=_("Internal groups are only visible to members, external groups are available via the API"),
     )
-    number_pool = models.ForeignKey(NumberPool, on_delete=models.PROTECT, verbose_name=_("number pool"), to_field="name", default="default")
+    number_pool = models.ForeignKey(NumberPool, on_delete=models.SET_DEFAULT, verbose_name=_("number pool"), to_field="name", default="default")
     logo = models.ImageField(_("logo"), upload_to="team/logo/")
 
     members = models.ManyToManyField(Member, verbose_name=_("members"), through="TeamMembership")

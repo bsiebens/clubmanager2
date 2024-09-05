@@ -6496,8 +6496,8 @@ body > div.flex.grow.justify-center.items-center > div > div:nth-child(2) > div.
 }
 
 .choices[data-type*=select-one][dir=rtl]::after{
-  left: 0.75rem;
   right: auto;
+  left: 0.75rem;
 }
 
 .choices[data-type*=select-one][dir=rtl] .choices__button{
@@ -6955,8 +6955,8 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 [dir=rtl] .choices__list--multiple .choices__item{
-  margin-right: 0px;
   margin-left: 0.25rem;
+  margin-right: 0px;
 }
 
 .choices__list--multiple .choices__item.is-highlighted{
@@ -7156,8 +7156,8 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 [dir=rtl] .choices__input{
-  padding-right: 0.25rem;
   padding-left: 0px;
+  padding-right: 0.25rem;
 }
 
 .choices__placeholder{
