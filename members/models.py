@@ -85,10 +85,9 @@ class Member(RulesModel):
         """Creates a new member and user."""
         from .signals import new_member_user_created
 
-        member = cls()
-
         try:
             member = instance
+
             member.user.first_name = first_name
             member.user.last_name = last_name
             member.user.username = email
@@ -99,7 +98,9 @@ class Member(RulesModel):
 
             member.user.save(update_fields=["first_name", "last_name", "username", "email"])
 
-        except Member.user.RelatedObjectDoesNotExist:
+        except (Member.user.RelatedObjectDoesNotExist, AttributeError):
+            member = cls()
+
             users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
             send_signal = False
 

@@ -1,0 +1,47 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load form_tags %}
+{% load initials_avatar %}
+
+{% block title %}{% translate "Members" %}{% endblock title %}
+
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-users"></i>{% translate "Members" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
+
+    <h2 class="text-2xl border-b-0 subtitle">{% translate "Bulk load new member information" %}</h2>
+    
+    <div class="mt-2 text-sm text-justify text-gray-500">
+        {% blocktranslate %}
+            Data should be formatted as a .csv file with the following information in the different columns:
+            <ul class="my-2 list-disc list-inside">
+                <li>First name</li>
+                <li>Last name</li>
+                <li>Email</li>
+                <li>Birthday (YYYY-MM-DD)</li>
+                <li>License number</li>
+                <li>Team (short name)</li>
+                <li>Role (abbreviation)</li>
+                <li>Number</li>
+                <li>Position (C or A, depending on captain or assistant captain, leave empty if neither)</li>
+            <ul>
+        {% endblocktranslate %}
+    </div>
+
+    {% if form.errors %}
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% form_field form.member_data %}
+
+        <button class="w-full mt-8 btn btn-neutral" type="submit">
+            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+        </button>
+    </form>
+{% endblock content %}

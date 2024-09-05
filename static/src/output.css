@@ -5842,6 +5842,11 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   margin-bottom: 0.25rem;
 }
 
+.my-2{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .my-4{
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -5964,10 +5969,6 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   width: 2.5rem;
 }
 
-.w-11\/12{
-  width: 91.666667%;
-}
-
 .w-12{
   width: 3rem;
 }
@@ -6056,6 +6057,14 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 
 .cursor-pointer{
   cursor: pointer;
+}
+
+.list-inside{
+  list-style-position: inside;
+}
+
+.list-disc{
+  list-style-type: disc;
 }
 
 .columns-2{
@@ -7248,19 +7257,6 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 @media (min-width: 1280px){
   .desktop\:float-right{
     float: right;
-  }
-
-  .desktop\:float-left{
-    float: left;
-  }
-
-  .desktop\:mx-6{
-    margin-left: 1.5rem;
-    margin-right: 1.5rem;
-  }
-
-  .desktop\:mb-6{
-    margin-bottom: 1.5rem;
   }
 
   .desktop\:ml-6{
