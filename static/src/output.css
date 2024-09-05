@@ -48,7 +48,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: Catamaran, Noto Sans, Catamaran, Cabin, Fira Sans, Ubuntu, Roboto;
+  font-family: Ubuntu, Noto Sans, Catamaran, Cabin, Fira Sans, Ubuntu, Roboto;
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -5811,6 +5811,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   z-index: 1;
 }
 
+.float-left{
+  float: left;
+}
+
 .clear-both{
   clear: both;
 }
@@ -5836,6 +5840,11 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 .my-1{
   margin-top: 0.25rem;
   margin-bottom: 0.25rem;
+}
+
+.my-2{
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .my-4{
@@ -5960,10 +5969,6 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   width: 2.5rem;
 }
 
-.w-11\/12{
-  width: 91.666667%;
-}
-
 .w-12{
   width: 3rem;
 }
@@ -6052,6 +6057,14 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 
 .cursor-pointer{
   cursor: pointer;
+}
+
+.list-inside{
+  list-style-position: inside;
+}
+
+.list-disc{
+  list-style-type: disc;
 }
 
 .columns-2{
@@ -6496,8 +6509,8 @@ body > div.flex.grow.justify-center.items-center > div > div:nth-child(2) > div.
 }
 
 .choices[data-type*=select-one][dir=rtl]::after{
-  left: 0.75rem;
   right: auto;
+  left: 0.75rem;
 }
 
 .choices[data-type*=select-one][dir=rtl] .choices__button{
@@ -6955,8 +6968,8 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 [dir=rtl] .choices__list--multiple .choices__item{
-  margin-right: 0px;
   margin-left: 0.25rem;
+  margin-right: 0px;
 }
 
 .choices__list--multiple .choices__item.is-highlighted{
@@ -7156,8 +7169,8 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 [dir=rtl] .choices__input{
-  padding-right: 0.25rem;
   padding-left: 0px;
+  padding-right: 0.25rem;
 }
 
 .choices__placeholder{
@@ -7242,17 +7255,16 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 @media (min-width: 1280px){
-  .desktop\:float-left{
-    float: left;
+  .desktop\:float-right{
+    float: right;
   }
 
-  .desktop\:mx-6{
+  .desktop\:ml-6{
     margin-left: 1.5rem;
-    margin-right: 1.5rem;
   }
 
-  .desktop\:mb-6{
-    margin-bottom: 1.5rem;
+  .desktop\:max-h-svh{
+    max-height: 100svh;
   }
 
   .desktop\:w-4\/12{

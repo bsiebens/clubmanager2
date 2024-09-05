@@ -225,6 +225,12 @@ class NewsPreviewView(PermissionRequiredMixin, DetailView):
         messages.error(self.request, self.get_permission_denied_message())
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:news:news_index"))
 
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(NewsPreviewView, self).get_context_data(**kwargs)
+        context["pictures"] = self.object.pictures.filter(main_picture=False)
+
+        return context
+
 
 @permission_required("news.release_newsitem")
 def release_newsitem(request, pk: int) -> HttpResponse:

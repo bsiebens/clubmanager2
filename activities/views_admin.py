@@ -125,7 +125,9 @@ class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         form = super(GamesAddView, self).get_form(form_class)
-        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        if not self.request.user.member.is_organization_admin:
+            form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
 
         return form
 
@@ -152,7 +154,9 @@ class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         form = super(GamesEditView, self).get_form(form_class)
-        form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
+
+        if not self.request.user.member.is_organization_admin:
+            form.fields["team"].queryset = Team.objects.filter(teammembership__member__user=self.request.user, teammembership__role__admin_role=True)
 
         return form
 

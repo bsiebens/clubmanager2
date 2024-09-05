@@ -6,8 +6,10 @@ from django.db import DEFAULT_DB_ALIAS, models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from rules.contrib.models import RulesModel
-
+from django.conf import settings
 from .rules import is_organization_admin
+
+LICENSE_REQUIRED = not settings.CLUB_ENFORCE_LICENSE
 
 
 class UserManager(models.Manager):
@@ -22,7 +24,7 @@ class Member(RulesModel):
     notes = models.TextField(_("notes"), blank=True)
 
     birthday = models.DateField(_("birthday"), blank=True, null=True)
-    license = models.CharField(_("license"), blank=True, null=True, max_length=250)
+    license = models.CharField(_("license"), blank=LICENSE_REQUIRED, max_length=250)
 
     phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)
     emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"), blank=True, null=True)
@@ -77,34 +79,51 @@ class Member(RulesModel):
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
-    def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True) -> "Member":
+    def create_member(
+        cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True, instance: "Member | None" = None
+    ) -> "Member":
         """Creates a new member and user."""
         from .signals import new_member_user_created
 
-        member = cls()
-        users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
-        send_signal = False
+        try:
+            member = instance
 
-        if users.count() == 1:
-            if hasattr(users.first(), "member") and users.first().member is not None:
-                return users.first().member
+            member.user.first_name = first_name
+            member.user.last_name = last_name
+            member.user.username = email
+            member.user.email = email
 
-            member.user = users.first()
-
-            if not member.user.is_active:
-                member.user.is_active = True
-                member.user.save(update_fields=["is_active"])
-
-        else:
-            user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, username=username, is_active=True)
-            member.user = user
-            send_signal = True
-
-        if commit:
-            member.save()
-
-            if send_signal:
+            if password is None or password == "":
                 new_member_user_created.send(member, password=password)
+
+            member.user.save(update_fields=["first_name", "last_name", "username", "email"])
+
+        except (Member.user.RelatedObjectDoesNotExist, AttributeError):
+            member = cls()
+
+            users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
+            send_signal = False
+
+            if users.count() == 1:
+                if hasattr(users.first(), "member") and users.first().member is not None:
+                    return users.first().member
+
+                member.user = users.first()
+
+                if not member.user.is_active:
+                    member.user.is_active = True
+                    member.user.save(update_fields=["is_active"])
+
+            else:
+                user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, username=username, is_active=True)
+                member.user = user
+                send_signal = True
+
+            if commit:
+                member.save()
+
+                if send_signal:
+                    new_member_user_created.send(member, password=password)
 
         return member
 

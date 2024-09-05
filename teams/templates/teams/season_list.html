@@ -10,7 +10,7 @@
 {% endblock pagetitle %}
 
 {% block content %}
-    <div class="action-bar justify-end">
+    <div class="justify-end action-bar">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:teams:seasons_add" %}">
             {% csrf_token %}
 
@@ -19,8 +19,8 @@
             </div>
 
             <div class="form">
-                {% display_field form.duration display_label=False small=True %}
-                {% display_field form.unit display_label=False %}
+                {% form_field form.duration show_label=False %}
+                {% form_field form.unit show_label=False %}
 
                 <button type="submit">
                     <i class="fa-solid fa-add"></i>
@@ -30,7 +30,7 @@
         </form>
     </div>
 
-    <div class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-2">
+    <div class="grid grid-cols-1 gap-2 mt-8 lg:grid-cols-3">
         {% for season in object_list %}
             <div class="data-card {% if season.current_season %}border-l-success{% endif %}">
                 <div class="data">

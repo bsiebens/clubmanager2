@@ -9,40 +9,42 @@
 {% endblock pagetitle %}
 
 {% block content %}
-    <div class="flex flex-col lg:flex-row items-center gap-2">
-        <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ newsitem.title }}</h2>
+    <div class="flex flex-col items-center gap-2 lg:flex-row">
         <div class="badge badge-outline">
-            <i class="fa-solid fa-eye mr-1"></i>
+            <i class="mr-1 fa-solid fa-eye"></i>
             {% translate "Preview" %}
         </div>
+        <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ newsitem.title }}</h2>
     </div>
 
-    <div class="flex flex-col text-center text-sm justify-around items-center border-t border-slate-600 text-slate-600 mb-8 pt-1">
+    <div class="flex flex-col items-center justify-around pt-1 mb-8 text-sm text-center border-t border-slate-600 text-slate-600">
         <div>{{ newsitem.publish_on|date:"D d b Y H:i" }}</div>
-        <div className="flex flex-row flex-wrap gap-1 justify-center mt-2 mx-2">
+        <div class="flex flex-row flex-wrap justify-center gap-1 mx-2 mt-2">
             {% for team in newsitem.teams.all %}
                 <div class="badge badge-neutral badge-outline badge-sm">{{ team.short_name }}</div>
             {% endfor %}
         </div>
     </div>
 
-    <article className="mb-16 space-y-5 font-normal text-justify px-4 prose max-w-fit">
+    <article class="px-4 mb-16 space-y-5 font-normal prose text-justify max-w-fit">
         {% if newsitem.main_picture %}  
-            <img src="{{ newsitem.main_picture.picture.url }}" width="{{ newsitem.main_picture.picture.width }}" height="{{ newsitem.main_picture.picture.height }}" class="mx-auto border border-neutral rounded-lg shadow-lg object-scale-down transform-gpu w-11/12 desktop:w-4/12 max-w-fit desktop:float-left desktop:mx-6 desktop:mb-6" />
+            <img src="{{ newsitem.main_picture.picture.url }}" width="{{ newsitem.main_picture.picture.width }}" height="{{ newsitem.main_picture.picture.height }}" class="float-left object-scale-down w-full mx-auto mb-6 border rounded-lg shadow-lg border-neutral transform-gpu max-w-fit desktop:max-h-svh desktop:w-4/12 desktop:float-right desktop:ml-6" />
         {% endif %}
 
         {{ newsitem.formatted|safe }}
     </article>
 
-    <div class="clear-both">
-        <h2 class="text-2xl mb-2">Foto album</h2>
+    {% if pictures %}
+        <div class="clear-both">
+            <h2 class="mb-2 text-2xl">Foto album</h2>
 
-        <div class="columns-2 laptop:columns-3 desktop:columns-4 gap-2">
-            {% for picture in newsitem.pictures.all %}
-                <a href="{{ picture.picture.url }}">
-                    <img src="{{ picture.picture.url }}" width="{{ picture.picture.width }}" height="{{ picture.picture.height }}" class="border border-neutral rounded-lg w-full" />
-                </a>
-            {% endfor %}
+            <div class="gap-2 columns-2 laptop:columns-3 desktop:columns-4">
+                {% for picture in pictures %}
+                    <a href="{{ picture.picture.url }}">
+                        <img src="{{ picture.picture.url }}" width="{{ picture.picture.width }}" height="{{ picture.picture.height }}" class="w-full border rounded-lg border-neutral" />
+                    </a>
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 {% endblock content %}

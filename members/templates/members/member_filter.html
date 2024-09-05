@@ -24,13 +24,17 @@
         </div>
 
         <div class="action-bar-add">
+            <a class="mr-2 btn btn-accent" href="{% url "clubmanager_admin:members:members_add_bulk" %}">
+                <i class="fa-solid fa-file-upload"></i>{% translate "Bulk load members" %}
+            </a>
+            
             <a class="add-btn" href="{% url "clubmanager_admin:members:members_add" %}">
                 <i class="fa-solid fa-plus"></i>{% translate "Add" %}
             </a>
         </div>
     </div>
 
-    <div class="mt-2 hidden lg:block">
+    <div class="hidden mt-2 lg:block">
         <table class="table table-zebra">
             <thead>
                 <tr>
@@ -66,7 +70,7 @@
                                 <a href="{% url "clubmanager_admin:members:members_edit" member.id %}">
                                     <div class="flex flex-row items-center gap-3">
                                         <div class="avatar">
-                                            <div class="mask mask-squircle h-12 w-12">
+                                            <div class="w-12 h-12 mask mask-squircle">
                                                 <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
                                             </div>
                                         </div>
@@ -87,7 +91,7 @@
                             <td>
                                 {% if member.phone %}
                                     <a class="border-b border-info hover:border-b-2" href="{{ member.phone.as_rfc3966 }}">
-                                        <i class="fa-solid fa-phone mr-2"></i>
+                                        <i class="mr-2 fa-solid fa-phone"></i>
                                         {{ member.phone }}
                                     </a>
                                 {% else %}
@@ -99,7 +103,7 @@
                                     {% if member.emergency_phone_primary %}
                                         <div>
                                             <a class="border-b border-info hover:border-b-2" href="{{ member.emergency_phone_primary.as_rfc3966 }}">
-                                                <i class="fa-solid fa-phone mr-2"></i>
+                                                <i class="mr-2 fa-solid fa-phone"></i>
                                                 {{ member.emergency_phone_primary }}
                                             </a>
                                         </div>
@@ -110,7 +114,7 @@
                                     {% if member.emergency_phone_secondary %}
                                         <div>
                                             <a class="mt-2 border-b border-info hover:border-b-2" href="{{ member.emergency_phone_secondary.as_rfc3966 }}">
-                                                <i class="fa-solid fa-phone mr-2"></i>
+                                                <i class="mr-2 fa-solid fa-phone"></i>
                                                 {{ member.emergency_phone_secondary }}
                                             </a>
                                         </div>
@@ -118,7 +122,7 @@
                                 </div>
                             </td>
                             <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:members:members_edit" member.id %}">
+                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:members:members_edit" member.id %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
                                 <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:members:members_delete" member.id %}">
@@ -132,7 +136,7 @@
         </table>
     </div>
 
-    <div class="mt-2 lg:hidden flex flex-col gap-2">
+    <div class="flex flex-col gap-2 mt-2 lg:hidden">
         {% if object_list|length == 0 %}
             <div>{% translate "No members found" %}</div>
         {% else %}
@@ -140,7 +144,7 @@
                 <a href="{% url "clubmanager_admin:members:members_edit" member.id %}">
                     <div class="data-card">
                         <div class="avatar">
-                            <div class="mask mask-squircle h-12 w-12">
+                            <div class="w-12 h-12 mask mask-squircle">
                                 <img alt="{{ member.user.get_full_name }} avatar" src="{% render_initials_avatar member.user.get_full_name %}" />
                             </div>
                         </div>
@@ -162,7 +166,7 @@
     </div>
 
     {% if is_paginated %}
-        <div class="mt-4 flex justify-center">
+        <div class="flex justify-center mt-4">
             <div class="join">
                 {% if page_obj.has_previous %}
                     <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
