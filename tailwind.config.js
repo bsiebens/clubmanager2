@@ -23,7 +23,7 @@ module.exports = {
       }
     },
     fontFamily: {
-      "sans": ["Catamaran", "Noto Sans", "Catamaran", "Cabin", "Fira Sans", "Ubuntu", "Roboto"],
+      "sans": ["Ubuntu", "Noto Sans", "Catamaran", "Cabin", "Fira Sans", "Ubuntu", "Roboto"],
       "jersey": ['Graduate', 'sans-serif'],
     },
   },

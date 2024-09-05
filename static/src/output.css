@@ -48,7 +48,7 @@ html,
   -o-tab-size: 4;
      tab-size: 4;
   /* 3 */
-  font-family: Catamaran, Noto Sans, Catamaran, Cabin, Fira Sans, Ubuntu, Roboto;
+  font-family: Ubuntu, Noto Sans, Catamaran, Cabin, Fira Sans, Ubuntu, Roboto;
   /* 4 */
   font-feature-settings: normal;
   /* 5 */
@@ -5811,6 +5811,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   z-index: 1;
 }
 
+.float-left{
+  float: left;
+}
+
 .clear-both{
   clear: both;
 }
@@ -7242,6 +7246,10 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 @media (min-width: 1280px){
+  .desktop\:float-right{
+    float: right;
+  }
+
   .desktop\:float-left{
     float: left;
   }
@@ -7253,6 +7261,14 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 
   .desktop\:mb-6{
     margin-bottom: 1.5rem;
+  }
+
+  .desktop\:ml-6{
+    margin-left: 1.5rem;
+  }
+
+  .desktop\:max-h-svh{
+    max-height: 100svh;
   }
 
   .desktop\:w-4\/12{
