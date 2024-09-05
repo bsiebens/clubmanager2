@@ -77,34 +77,50 @@ class Member(RulesModel):
         return f"{self.first_name} {self.last_name}"
 
     @classmethod
-    def create_member(cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True) -> "Member":
+    def create_member(
+        cls, first_name: str, last_name: str, email: str, username: str, password: str | None = None, commit: bool = True, instance: "Member | None" = None
+    ) -> "Member":
         """Creates a new member and user."""
         from .signals import new_member_user_created
 
         member = cls()
-        users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
-        send_signal = False
 
-        if users.count() == 1:
-            if hasattr(users.first(), "member") and users.first().member is not None:
-                return users.first().member
+        try:
+            member = instance
+            member.user.first_name = first_name
+            member.user.last_name = last_name
+            member.user.username = email
+            member.user.email = email
 
-            member.user = users.first()
-
-            if not member.user.is_active:
-                member.user.is_active = True
-                member.user.save(update_fields=["is_active"])
-
-        else:
-            user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, username=username, is_active=True)
-            member.user = user
-            send_signal = True
-
-        if commit:
-            member.save()
-
-            if send_signal:
+            if password is None or password == "":
                 new_member_user_created.send(member, password=password)
+
+            member.user.save(update_fields=["first_name", "last_name", "username", "email"])
+
+        except Member.user.RelatedObjectDoesNotExist:
+            users = get_user_model().objects.filter(first_name=first_name, last_name=last_name, email=email, username=username)
+            send_signal = False
+
+            if users.count() == 1:
+                if hasattr(users.first(), "member") and users.first().member is not None:
+                    return users.first().member
+
+                member.user = users.first()
+
+                if not member.user.is_active:
+                    member.user.is_active = True
+                    member.user.save(update_fields=["is_active"])
+
+            else:
+                user = get_user_model().objects.create(first_name=first_name, last_name=last_name, email=email, username=username, is_active=True)
+                member.user = user
+                send_signal = True
+
+            if commit:
+                member.save()
+
+                if send_signal:
+                    new_member_user_created.send(member, password=password)
 
         return member
 

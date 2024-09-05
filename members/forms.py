@@ -27,6 +27,7 @@ class MemberForm(forms.ModelForm):
             username=self.cleaned_data["email"],
             password=password,
             commit=commit,
+            instance=self.instance,
         )
 
         member.phone = self.cleaned_data["phone"]
