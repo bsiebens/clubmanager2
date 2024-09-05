@@ -6,8 +6,10 @@ from django.db import DEFAULT_DB_ALIAS, models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from rules.contrib.models import RulesModel
-
+from django.conf import settings
 from .rules import is_organization_admin
+
+LICENSE_REQUIRED = not settings.CLUB_ENFORCE_LICENSE
 
 
 class UserManager(models.Manager):
@@ -22,7 +24,7 @@ class Member(RulesModel):
     notes = models.TextField(_("notes"), blank=True)
 
     birthday = models.DateField(_("birthday"), blank=True, null=True)
-    license = models.CharField(_("license"), blank=True, null=True, max_length=250)
+    license = models.CharField(_("license"), blank=LICENSE_REQUIRED, max_length=250)
 
     phone = PhoneNumberField(verbose_name=_("phone"), blank=True, null=True)
     emergency_phone_primary = PhoneNumberField(verbose_name=_("first emergency phone"), blank=True, null=True)
