@@ -20,7 +20,7 @@ def update_group_membership(user_id: int) -> None:
     if admin_memberships > 0 or member.is_organization_admin:
         groups.append("admin")
 
-    if member.user.groups.get(name="editors").exists():
+    if member.user.groups.filter(name="editors").exists():
         groups.append("editors")
 
     groups = Group.objects.filter(name__in=groups)
