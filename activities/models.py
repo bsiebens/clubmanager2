@@ -38,6 +38,8 @@ class Game(RulesModel):
     date = models.DateTimeField()
     location = models.CharField(_("location"), max_length=250, default="Ice Skating Center Mechelen")
 
+    competition = models.ForeignKey("Competition", on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("competition"))
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -64,3 +66,13 @@ class Game(RulesModel):
     @admin.display(description=_("Home game?"), boolean=True)
     def is_home_game(self) -> bool:
         return self.location.lower() == "ice skating center mechelen" or self.location.lower() == "iscm"
+
+
+class Competition(models.Model):
+    """A competition has a name with a specific URL to fetch data from. These are managed centrally."""
+
+    name = models.CharField(max_length=250)
+    module = models.CharField(max_length=250)
+
+    def __name__(self):
+        return self.name
