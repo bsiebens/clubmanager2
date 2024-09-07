@@ -1,17 +1,18 @@
 from typing import TypedDict
+from ..models import Game
 
 
 class GameInformation(TypedDict):
     live: bool
-    home_score: int
-    away_score: int
+    scoreA: int
+    scoreB: int
 
 
-class Competition:
+class CompetitionBaseClass:
     url: str
 
     def __init__(self):
         self.url = "http://localhost"
 
-    def fetch_game_information(self, game_id: str) -> dict[str, bool | int]:
-        return {"live": False, "home_score": 0, "away_score": 0}
+    def update_game_information(self, game: Game) -> None:
+        raise NotImplementedError

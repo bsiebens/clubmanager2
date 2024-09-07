@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Opponent, Game
+from .models import Competition, Opponent, Game
 
 
 @admin.register(Opponent)
@@ -20,4 +20,8 @@ class GameAdmin(admin.ModelAdmin):
     list_display = ["date", "team", "opponent", "season", "location"]
     fieldsets = [
         ["GENERAL INFORMATION", {"fields": ["team", "opponent", "date", "location"]}],
+        ["COMPETITION INFORMATION", {"fields": ["competition", "game_id", "live", "score_team", "score_opponent"]}],
     ]
+
+
+admin.site.register(Competition)

@@ -142,7 +142,7 @@ class GameSchema(ModelSchema):
 
     class Config:
         model = Game
-        model_fields = ["id", "team", "opponent", "date", "location"]
+        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
@@ -288,7 +288,7 @@ class GamesController(ControllerBase):
         games = Game.objects.filter(season=Season.get_season())
 
         if not all_games_for_season:
-            games = games.filter(date__gte=timezone.now())
+            games = games.filter(Q(date__gte=timezone.now()) | Q(live=True))
 
         match team:
             case "main":
