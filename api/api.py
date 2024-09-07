@@ -139,6 +139,7 @@ class GameSchema(ModelSchema):
     team: TeamSchema
     opponent: OpponentSchema
     is_home_game: bool
+    passed: bool
 
     class Config:
         model = Game
@@ -147,6 +148,10 @@ class GameSchema(ModelSchema):
     @staticmethod
     def resolve_is_home_game(obj: Game):
         return obj.is_home_game
+
+    @staticmethod
+    def resolve_passed(obj: Game):
+        return obj.date <= timezone.now()
 
 
 class TeamRoleSchema(ModelSchema):

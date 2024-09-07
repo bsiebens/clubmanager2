@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
-    "django_celery_beat",
+    # "django_celery_beat",
     "ninja",
     "ninja_extra",
     "compressor",
@@ -194,13 +194,13 @@ if DEBUG:
 
 CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["http://localhost"])
 
-CELERY_BROKER_URL = env("CELERY_BROKER_URL")
-CELERY_TIMEZONE = TIME_ZONE
-CELERY_RESULT_EXTENDED = False
-CELERY_TASK_IGNORE_RESULT = True
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-CELERY_RESULT_EXPIRES = timedelta(days=7)
-FLOWER_BROKER_API = env("FLOWER_BROKER_API")
+# CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+# CELERY_TIMEZONE = TIME_ZONE
+# CELERY_RESULT_EXTENDED = False
+# CELERY_TASK_IGNORE_RESULT = True
+# CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+# CELERY_RESULT_EXPIRES = timedelta(days=7)
+# FLOWER_BROKER_API = env("FLOWER_BROKER_API")
 
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
