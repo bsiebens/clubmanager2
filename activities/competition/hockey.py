@@ -71,7 +71,7 @@ class CEHL(CompetitionBaseClass):
         score_req = requests.get(score_url, params=payload, headers=headers)
 
         if timeline_req.status_code == 200:
-            game.live = timeline_req.json()["live"]
+            game.live = timeline_req.json()["live"] == 1
 
         if score_req.status_code == 200:
             game_data = score_req.json()
