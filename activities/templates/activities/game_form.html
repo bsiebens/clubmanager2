@@ -15,7 +15,11 @@
         <div class="flex flex-row items-center gap-2 mt-8">
             <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ game.team }} vs {{ game.opponent }} ({{ game.date|date:"l d b Y H:i" }})</h2>
         
-            <div class="flex justify-end grow">
+            <div class="flex justify-end gap-2 grow">
+                <a href="{% url "clubmanager_admin:activities:games_refresh" game.id %}" class="hidden lg:flex btn btn-neutral btn-outline">
+                    <i class="fa-solid fa-arrows-rotate"></i>{% translate "Refresh game information" %}
+                </a>
+
                 <a href="{% url "clubmanager_admin:activities:games_delete" game.id %}" class="hidden lg:flex btn btn-outline btn-error">
                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
@@ -23,6 +27,10 @@
         </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2">
+            <a href="{% url "clubmanager_admin:activities:games_refresh" game.id %}" class="lg:hidden btn btn-neutral btn-outline">
+                <i class="fa-solid fa-arrows-rotate"></i>{% translate "Refresh game information" %}
+            </a>
+
             <a href="{% url "clubmanager_admin:activities:games_delete" game.id %}" class="lg:hidden btn btn-outline btn-error">
                 <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
             </a>
