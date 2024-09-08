@@ -38,12 +38,30 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <h2 class="subtitle">{% translate "Game information" %}</h2>
+        <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
             {% form_field form.team %}
             {% form_field form.opponent %}
             {% form_field form.date %}
             {% form_field form.location %}
         </div>
+
+        <h2 class="subtitle">{% translate "Competition information" %}</h2>
+        <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+            {% form_field form.competition %}
+            {% form_field form.game_id %}
+        </div>
+
+        {% if game %}
+            <h2 class="subtitle">{% translate "Scoring information" %}</h2>
+            <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+                {% form_field form.score_team %}
+                {% form_field form.score_opponent %}
+
+                {% translate "Tick if current game is live right now" as live_help_text %}
+                {% form_field form.live help_text=live_help_text %}
+            </div>
+        {% endif %}
 
         <button class="w-full mt-8 btn btn-neutral" type="submit">
             <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}

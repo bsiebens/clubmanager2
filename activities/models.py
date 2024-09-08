@@ -41,7 +41,7 @@ class Game(RulesModel):
     location = models.CharField(_("location"), max_length=250, default="Ice Skating Center Mechelen")
 
     competition = models.ForeignKey("Competition", on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("competition"))
-    game_id = models.CharField(_("game_id"), max_length=250)
+    game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
     live = models.BooleanField(_("live"), default=False)
     score_team = models.IntegerField(_("score team"), default=0)
     score_opponent = models.IntegerField(_("score opponent"), default=0)
