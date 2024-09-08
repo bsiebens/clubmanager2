@@ -6151,6 +6151,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   border-radius: 0.5rem;
 }
 
+.rounded{
+  border-radius: 0.25rem;
+}
+
 .rounded-t-lg{
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0.5rem;
@@ -6231,6 +6235,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
      object-fit: scale-down;
 }
 
+.p-1{
+  padding: 0.25rem;
+}
+
 .p-2{
   padding: 0.5rem;
 }
@@ -6241,10 +6249,6 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 
 .p-6{
   padding: 1.5rem;
-}
-
-.p-1{
-  padding: 0.25rem;
 }
 
 .px-2{
