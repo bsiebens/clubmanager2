@@ -31,6 +31,8 @@ urlpatterns = [
     path("", include(two_factor_urls)),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("accounts/profile/", RedirectView.as_view(pattern_name="clubmanager:index"), name="profile"),
+    path("accounts/password_change/", auth_views.PasswordChangeView.as_view(), name="password_change"),
+    path("accounts/password_change/done/", auth_views.PasswordChangeDoneView.as_view(), name="password_change_done"),
     path("api/", api.urls),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),

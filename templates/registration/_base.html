@@ -24,27 +24,27 @@
 
     <body class="flex flex-col h-dvh">
         <!-- Navbar -->
-        <div class="navbar bg-gray-200 dark:bg-gray-700 w-full">
+        <div class="w-full bg-gray-200 navbar dark:bg-gray-700">
             <div class="navbar-start">
-                <div class="mx-2 flex-1 px-2 font-bold text-xl">
+                <div class="flex-1 px-2 mx-2 text-xl font-bold">
                     ClubManager
                 </div>
             </div>
         </div>
 
-        <div class="flex grow justify-center items-center">
-            <div class="border border-neutral w-full max-w-2xl h-fit rounded-lg shadow-xl flex flex-col m-4 lg:m-0">
-                <div class="bg-gray-200 dark:bg-gray-700 w-full rounded-t-lg p-4">
-                    <div class="font-bold text-2xl">
+        <div class="flex items-center justify-center grow">
+            <div class="flex flex-col w-full max-w-2xl m-4 border rounded-lg shadow-xl border-neutral h-fit lg:m-0">
+                <div class="w-full p-4 bg-gray-200 rounded-t-lg dark:bg-gray-700">
+                    <div class="text-2xl font-bold">
                         ClubManager Access
                     </div>
                 </div>
 
-                <div class="p-4 w-full">
-                    <div class="flex flex-row gap-4 items-center my-4 justify-center">
+                <div class="w-full p-4">
+                    <div class="flex flex-row items-center justify-center gap-4 my-4">
                         <img class="w-24 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% get_static_prefix %}{% site_logo %}" />
                         <div class="flex flex-col gap-2">
-                            <h1 class="text-xl lg:text-3xl font-bold">{% site_name %}</h1>
+                            <h1 class="text-xl font-bold lg:text-3xl">{% site_name %}</h1>
                             {% comment %} <h2 class="font-semibold">{% blocktranslate %}Welcome back. Please login to proceed.{% endblocktranslate %} {% endcomment %}
                         </div>
                     </div>
@@ -52,6 +52,16 @@
                     <div class="mt-8">
                         {% block content %}{% endblock content %}
                     </div>
+
+                    {% url "two_factor:login" as login %}
+                    {% url "logout" as logout %}
+
+
+                    {% if login not in request.path and logout not in request.path%}
+                        <div class="mt-8">
+                            <a class="w-full btn btn-neutral" href="{% url "clubmanager:index" %}"><i class="fa-solid fa-arrow-left"></i>{% translate "Back to ClubManager" %}</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

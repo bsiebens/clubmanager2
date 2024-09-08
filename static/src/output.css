@@ -5852,6 +5852,11 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   margin-bottom: 1rem;
 }
 
+.my-8{
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
 .-mt-2{
   margin-top: -0.5rem;
 }
@@ -6137,6 +6142,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   --tw-space-y-reverse: 0;
   margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
+}
+
+.self-start{
+  align-self: flex-start;
 }
 
 .rounded-box{
@@ -7252,6 +7261,11 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
   .lg\:text-xl{
     font-size: 1.25rem;
     line-height: 1.75rem;
+  }
+
+  .lg\:text-7xl{
+    font-size: 4.5rem;
+    line-height: 1;
   }
 }
 

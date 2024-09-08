@@ -79,8 +79,14 @@
                             </div>
                             <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                                 <li>
+                                    <a href="{% url "password_change" %}">
+                                        <i class="fa-solid fa-lock"></i>{% translate "Change password" %}
+                                    </a>
+                                </li>
+
+                                <li>
                                     <a href="{% url "two_factor:profile" %}">
-                                        <i class="fa-solid fa-key"></i>Manage MFA
+                                        <i class="fa-solid fa-key"></i>{% translate "Manage MFA" %}
                                     </a>
                                 </li>
                                 
