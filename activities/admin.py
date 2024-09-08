@@ -22,6 +22,7 @@ class GameAdmin(admin.ModelAdmin):
         ["GENERAL INFORMATION", {"fields": ["team", "opponent", "date", "location"]}],
         ["COMPETITION INFORMATION", {"fields": ["competition", "game_id", "live", "score_team", "score_opponent"]}],
     ]
+    list_editable = ["competition", "game_id"]
 
 
 admin.site.register(Competition)
