@@ -180,7 +180,9 @@ class MassUploadView(PermissionRequiredMixin, SuccessMessageMixin, FormView):
                     username=member_information["email"],
                 )
                 member.license = member_information["license"]
-                member.birthday = member_information["birthday"]
+
+                if member_information["birthday"] is not None and member_information["birthday"] != "":
+                    member.birthday = member_information["birthday"]
 
                 member.save(update_fields=["license", "birthday"])
 
