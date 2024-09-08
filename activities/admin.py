@@ -15,9 +15,9 @@ class OpponentAdmin(admin.ModelAdmin):
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     date_hierarchy = "date"
-    list_filter = ["team", "season", "opponent", "location"]
+    list_filter = ["team", "season", "opponent", "location", "competition"]
     search_fields = ["team__name", "opponent__name", "location"]
-    list_display = ["date", "team", "opponent", "season", "location"]
+    list_display = ["date", "team", "opponent", "season", "location", "competition", "game_id"]
     fieldsets = [
         ["GENERAL INFORMATION", {"fields": ["team", "opponent", "date", "location"]}],
         ["COMPETITION INFORMATION", {"fields": ["competition", "game_id", "live", "score_team", "score_opponent"]}],
