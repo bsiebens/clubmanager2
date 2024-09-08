@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests
 import json
+from requests.adapters import HTTPAdapter
 
 
 class RBIHF(CompetitionBaseClass):
@@ -50,7 +51,7 @@ class CEHL(CompetitionBaseClass):
     def update_game_information(self, game: Game) -> None:
         season = "{start}{end}".format(start=game.season.start_date.strftime("%y"), end=game.season.end_date.strftime("%y"))
 
-        referer_url = urljoin("https://www.cehl.eu", season, game.game_id)
+        referer_url = urljoin("https://www.cehl.eu", "game/%s/%s" % (season, game.game_id))
         timeline_url = urljoin(self.url, "timeline.php")
         score_url = urljoin(self.url, "score.php")
 
@@ -58,11 +59,11 @@ class CEHL(CompetitionBaseClass):
         headers = {
             "Cookie": "language=en",
             "Postman-Token": "clubmanager",
-            "Host": "www.rbihf.be",
+            "Host": "www.cehl.eu",
             "User-Agent": "PostmanRuntime/7.37.0",
-            "Accept": "application/json",
+            "Accept": "*/*",
             "Accept-Encoding": "gzip,deflate,br",
-            "Connection": "keep-alive",
+            "Connection": "close",
             "Referer": referer_url,
             "X-Requested-With": "XMLHttpRequest",
         }
