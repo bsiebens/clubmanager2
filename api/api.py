@@ -1,5 +1,5 @@
 import random
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import chain
 from typing import List
 
@@ -286,7 +286,7 @@ class GamesController(ControllerBase):
         games = Game.objects.filter(season=Season.get_season())
 
         if not all_games_for_season:
-            games = games.filter(Q(date__gte=timezone.now()) | Q(live=True) | Q(date__gte=timezone.now() - datetime.timedelta(hours=3)))
+            games = games.filter(Q(date__gte=timezone.now()) | Q(live=True) | Q(date__gte=timezone.now() - timedelta(hours=3)))
 
         match team:
             case "main":
