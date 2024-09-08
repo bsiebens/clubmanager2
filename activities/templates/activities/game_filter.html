@@ -44,6 +44,8 @@
                     <th>{% translate "Opponent" %}</th>
                     <th>{% translate "Location" %}</th>
                     <th>{% translate "Season" %}</th>
+                    <th>{% translate "Game ID" %}</th>
+                    <th>{% translate "Competition" %}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -68,6 +70,8 @@
                             <td>{{ game.opponent }}</td>
                             <td>{{ game.location }}</td>
                             <td>{{ game.season }}</td>
+                            <td>{{ game.game_id|default:"-" }}</td>
+                            <td>{{ game.competition.name|default:"-" }}</td>
                             <td>
                                 <a class="mr-2 btn btn-outline btn-sm" href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
