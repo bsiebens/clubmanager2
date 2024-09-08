@@ -198,4 +198,4 @@ def update_game_information(request, pk: int) -> HttpResponse:
 
     messages.success(request, _("Game <strong>%(game)s</strong> refreshed" % ({"game": game})))
 
-    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:activities:games_edit", pk))
