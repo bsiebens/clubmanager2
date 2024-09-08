@@ -184,17 +184,18 @@ class MassUploadView(PermissionRequiredMixin, SuccessMessageMixin, FormView):
 
                 member.save(update_fields=["license", "birthday"])
 
-                team_memberships.append(
-                    TeamMembership(
-                        team=teams[member_information["team"]],
-                        role=roles[member_information["role"]],
-                        season=season,
-                        member=member,
-                        number=member_information["number"],
-                        captain=member_information["captain"],
-                        assistant_captain=member_information["assistant_captain"],
+                if member_information["team"] is not None and member_information["team"] != "":
+                    team_memberships.append(
+                        TeamMembership(
+                            team=teams[member_information["team"]],
+                            role=roles[member_information["role"]],
+                            season=season,
+                            member=member,
+                            number=member_information["number"],
+                            captain=member_information["captain"],
+                            assistant_captain=member_information["assistant_captain"],
+                        )
                     )
-                )
 
         TeamMembership.objects.bulk_create(team_memberships)
 
