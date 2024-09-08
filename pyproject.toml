@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clubmanager"
-version = "0.1.0"
+version = "0.2.0"
 description = "Club Management software"
 authors = ["Bernard Siebens <bernard@siebens.org>"]
 license = "MIT"
@@ -23,14 +23,13 @@ django-ninja = "^1.3.0"
 django-ninja-extra = "^0.21.4"
 django-cors-headers = "^4.4.0"
 beautifulsoup4 = "^4.12.3"
-celery = "^5.4.0"
-django-celery-beat = "^2.7.0"
 flower = "^2.0.1"
 django-model-utils = "^5.0.0"
 django-two-factor-auth = {extras = ["webauthn"], version = "^1.17.0"}
 django-environ = "^0.11.2"
 pillow = "^10.4.0"
 gunicorn = "^23.0.0"
+requests = "^2.32.3"
 
 [tool.poetry.dev-dependencies]
 black = "^24.8.0"

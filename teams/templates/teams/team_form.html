@@ -48,7 +48,7 @@
         {% csrf_token %}
 
         <h2 class="subtitle">{% translate "Team information" %}</h2>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
             {% form_field form.name %}
             {% form_field form.short_name %}
             {% form_field form.slug %}
@@ -59,11 +59,11 @@
         <h2 class="subtitle">{% translate "Pictures" %}</h2>
         <div class="pb-4">
             {% form_field form.logo %}
-        </div
+        </div>
 
         <!-- TODO Add interface for mobile devices -->
-        <div class="lg:hidden text-sm text-justify text-gray-500">{% blocktranslate %}Adding pictures is currently not possible throught the mobile interface. Please use a desktop to add pictures.{% endblocktranslate %}</div>
-        <div class="mt-2 hidden lg:flex">
+        <div class="text-sm text-justify text-gray-500 lg:hidden">{% blocktranslate %}Adding pictures is currently not possible throught the mobile interface. Please use a desktop to add pictures.{% endblocktranslate %}</div>
+        <div class="hidden mt-2 lg:flex">
             {{ pictures.management_form }}
 
             <table class="table">
@@ -77,7 +77,7 @@
                 </thead>
                 <tbody>
                     {% for form in pictures.forms %}
-                        <tr class="formset-row border-b">
+                        <tr class="border-b formset-row">
                             <td class="font-bold">{% if not forloop.last %}{{ forloop.counter }}{% endif %}</td>
                             {% for field in form.visible_fields %}
                                 <td>

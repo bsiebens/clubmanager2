@@ -3,14 +3,14 @@ from typing import Any
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import BaseModelForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django_filters.views import FilterView
-from rules.contrib.views import PermissionRequiredMixin
+from rules.contrib.views import PermissionRequiredMixin, permission_required
 
 from teams.models import Season, Team
 
@@ -110,7 +110,7 @@ class GamesListView(PermissionRequiredMixin, FilterView):
 
 class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Game
-    fields = ["team", "opponent", "date", "location"]
+    fields = ["team", "opponent", "date", "location", "competition", "game_id"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> created succesfully")
     permission_required = "activities.add_game"
@@ -134,7 +134,7 @@ class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Game
-    fields = ["team", "opponent", "date", "location"]
+    fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> updated succesfully")
     permission_required = "activities.edit_game"
@@ -189,3 +189,13 @@ class GamePreviewView(PermissionRequiredMixin, DetailView):
     def handle_no_permission(self) -> HttpResponseRedirect:
         messages.error(self.request, self.get_permission_denied_message())
         return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+
+@permission_required("activities.edit_game")
+def update_game_information(request, pk: int) -> HttpResponse:
+    game = Game.objects.get(pk=pk)
+    game.update_game_information()
+
+    messages.success(request, _("Game <strong>%(game)s</strong> refreshed" % ({"game": game})))
+
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))

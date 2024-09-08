@@ -1,20 +1,18 @@
-from typing import List
-from typing_extensions import TypedDict
-from django.db.models import Q
-from django.utils import timezone
-from ninja import ModelSchema, Redoc, Schema
-from ninja_extra import ControllerBase, NinjaExtraAPI, api_controller, route, pagination
-from datetime import datetime
-from django.contrib.auth import get_user_model
-from news.models import NewsItem
-from bs4 import BeautifulSoup
-from django.utils import text
-from frontend.models import Sponsor
 import random
-from django.db.models import Q
-from teams.models import Team, TeamMembership, Season, TeamPicture, TeamRole
+from datetime import datetime
 from itertools import chain
+from typing import List
+
+from bs4 import BeautifulSoup
+from django.db.models import Q
+from django.utils import text, timezone
+from ninja import ModelSchema, Redoc, Schema
+from ninja_extra import ControllerBase, NinjaExtraAPI, api_controller, pagination, route
+
 from activities.models import Game, Opponent
+from frontend.models import Sponsor
+from news.models import NewsItem
+from teams.models import Season, Team, TeamMembership, TeamPicture, TeamRole
 
 api = NinjaExtraAPI(title="clubmanager", docs=Redoc())
 
@@ -142,7 +140,7 @@ class GameSchema(ModelSchema):
 
     class Config:
         model = Game
-        model_fields = ["id", "team", "opponent", "date", "location"]
+        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
@@ -288,7 +286,7 @@ class GamesController(ControllerBase):
         games = Game.objects.filter(season=Season.get_season())
 
         if not all_games_for_season:
-            games = games.filter(date__gte=timezone.now())
+            games = games.filter(Q(date__gte=timezone.now()) | Q(live=True) | Q(date__gte=timezone.now() - datetime.timedelta(hours=3)))
 
         match team:
             case "main":

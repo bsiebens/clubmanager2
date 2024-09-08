@@ -1,4 +1,4 @@
-from celery import shared_task
+# from celery import shared_task
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
@@ -19,6 +19,9 @@ def update_group_membership(user_id: int) -> None:
     groups = [team.slug for team in memberships.distinct()]
     if admin_memberships > 0 or member.is_organization_admin:
         groups.append("admin")
+
+    if member.user.groups.filter(name="editors").exists():
+        groups.append("editors")
 
     groups = Group.objects.filter(name__in=groups)
     user.groups.set(groups)

@@ -1,3 +1,5 @@
+import importlib
+
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -38,6 +40,12 @@ class Game(RulesModel):
     date = models.DateTimeField()
     location = models.CharField(_("location"), max_length=250, default="Ice Skating Center Mechelen")
 
+    competition = models.ForeignKey("Competition", on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("competition"))
+    game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
+    live = models.BooleanField(_("live"), default=False)
+    score_team = models.IntegerField(_("score team"), default=0)
+    score_opponent = models.IntegerField(_("score opponent"), default=0)
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -64,3 +72,20 @@ class Game(RulesModel):
     @admin.display(description=_("Home game?"), boolean=True)
     def is_home_game(self) -> bool:
         return self.location.lower() == "ice skating center mechelen" or self.location.lower() == "iscm"
+
+    def update_game_information(self):
+        if self.competition is not None:
+            module = importlib.import_module(self.competition.module)
+            competition = getattr(module, self.competition.name)
+
+            competition().update_game_information(game=self)
+
+
+class Competition(models.Model):
+    """A competition has a name with a specific URL to fetch data from. These are managed centrally."""
+
+    name = models.CharField(max_length=250)
+    module = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.name

@@ -13,4 +13,5 @@ urlpatterns = [
     path("games/edit/<int:pk>", views_admin.GamesEditView.as_view(), name="games_edit"),
     path("games/delete/<int:pk>", views_admin.GamesDeleteView.as_view(), name="games_delete"),
     path("games/view/<int:pk>", views_admin.GamePreviewView.as_view(), name="games_view"),
+    path("games/refresh/<int:pk>", views_admin.update_game_information, name="games_refresh"),
 ]
