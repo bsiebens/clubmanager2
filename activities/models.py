@@ -74,10 +74,11 @@ class Game(RulesModel):
         return self.location.lower() == "ice skating center mechelen" or self.location.lower() == "iscm"
 
     def update_game_information(self):
-        module = importlib.import_module(self.competition.module)
-        competition = getattr(module, self.competition.name)
+        if self.competition is not None:
+            module = importlib.import_module(self.competition.module)
+            competition = getattr(module, self.competition.name)
 
-        competition().update_game_information(game=self)
+            competition().update_game_information(game=self)
 
 
 class Competition(models.Model):

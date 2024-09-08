@@ -1,0 +1,11 @@
+[Unit]
+Description = Run manage.py update_scores every 2 minutes
+Requires = clubmanager-update-scores.service
+
+[Timer]
+Unit = clubmanager-update-scores.service
+OnBootSec = 15min
+OnUnitActiveSec = 2min
+
+[Install]
+WantedBy = timers.target

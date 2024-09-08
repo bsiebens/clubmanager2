@@ -1,0 +1,12 @@
+[Unit]
+Description = Update scores from competition websites
+After = network.target
+Wants = clubmanager-update-scores.timer
+
+[Service]
+ExecStart = /home/ec2-user/.cache/pypoetry/virtualenvs/clubmanager-wnM1rr7f-py3.11/bin/python /home/ec2-user/clubmanager/manage.py update_scores
+Environment = 
+WorkingDirectory = /home/ec2-user/clubmanager
+
+[Install]
+WantedBy = multi-user.target
