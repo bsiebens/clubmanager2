@@ -14,7 +14,12 @@ LICENSE_REQUIRED = not settings.CLUB_ENFORCE_LICENSE
 
 class UserManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
-        return super().get_queryset().select_related("user")
+        return super(UserManager, self).get_queryset().select_related("user")
+
+
+class FamilyManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super(FamilyManager, self).get_queryset().prefetch_related("members")
 
 
 class Member(RulesModel):
@@ -135,6 +140,8 @@ class Family(RulesModel):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    objects = FamilyManager()
 
     def __str__(self):
         return _("Family {i.id}").format(i=self)
