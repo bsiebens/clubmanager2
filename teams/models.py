@@ -59,7 +59,9 @@ class Season(RulesModel):
     @property
     @admin.display(description=_("Current Season"), boolean=True)
     def current_season(self):
-        return self == Season.get_season()
+        today = timezone.now().date()
+
+        return self.start_date <= today and self.end_date >= today
 
     @property
     def start_year(self) -> int:
