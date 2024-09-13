@@ -20,6 +20,16 @@ def team_season_path(instance: "TeamPicture", filename: str) -> str:
     return "groups/picture/{instance.team.slug}/{instance.season.start_year}/{filename}".format(instance=instance, filename=filename)
 
 
+class TeamManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super(TeamManager, self).get_queryset().select_related("number_pool").prefetch_related("members")
+
+
+class TeamMembershipManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super(TeamMembershipManager, self).get_queryset().select_related("team", "member__user", "role", "season")
+
+
 class Season(RulesModel):
     """A season of play"""
 
@@ -59,7 +69,9 @@ class Season(RulesModel):
     @property
     @admin.display(description=_("Current Season"), boolean=True)
     def current_season(self):
-        return self == Season.get_season()
+        today = timezone.now().date()
+
+        return self.start_date <= today and self.end_date >= today
 
     @property
     def start_year(self) -> int:
@@ -139,6 +151,8 @@ class Team(RulesModel):
 
     tracker = FieldTracker(fields=["slug"])
 
+    objects = TeamManager()
+
     def __str__(self):
         return self.name
 
@@ -172,13 +186,7 @@ class TeamMembership(RulesModel):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    __original_team = None
-
-    def __init__(self, *args, **kwargs):
-        super(TeamMembership, self).__init__(*args, **kwargs)
-
-        if hasattr(self, "team"):
-            self.__original_team = self.team
+    objects = TeamMembershipManager()
 
     def __str__(self):
         return _("{team} - {member}").format(team=self.team, member=self.member)
@@ -206,9 +214,11 @@ class TeamMembership(RulesModel):
             "delete": is_team_admin | is_organization_admin,
         }
 
-    def save(self, *args, **kwargs) -> None:
-        if self.team != self.__original_team:
-            if self.__original_team is None:
+    """ def save(self, *args, **kwargs) -> None:
+        update_group_membership(self.member.user.id)
+
+        if self.tracker.has_changed("team"):
+            if self.tracker.previous("team") is None:
                 group = Group.objects.get(name=self.team.slug)
 
                 self.member.user.groups.add(group)
@@ -221,8 +231,7 @@ class TeamMembership(RulesModel):
 
                 self.member.user.groups.set(Group.objects.filter(name__in=teams))
 
-        super(TeamMembership, self).save(*args, **kwargs)
-        self.__original_team = self.team
+        super(TeamMembership, self).save(*args, **kwargs) """
 
     def clean(self) -> None:
         if self.number is not None and self.team.number_pool.enforce_unique:
