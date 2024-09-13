@@ -20,6 +20,11 @@ def team_season_path(instance: "TeamPicture", filename: str) -> str:
     return "groups/picture/{instance.team.slug}/{instance.season.start_year}/{filename}".format(instance=instance, filename=filename)
 
 
+class TeamManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super(TeamManager, self).get_queryset().select_related("number_pool").prefetch_related("members")
+
+
 class Season(RulesModel):
     """A season of play"""
 
@@ -140,6 +145,8 @@ class Team(RulesModel):
     modified = models.DateTimeField(auto_now=True)
 
     tracker = FieldTracker(fields=["slug"])
+
+    objects = TeamManager()
 
     def __str__(self):
         return self.name
