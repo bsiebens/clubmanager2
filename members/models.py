@@ -93,8 +93,7 @@ class Member(RulesModel):
             member.user.username = email
             member.user.email = email
 
-            if password is None or password == "":
-                new_member_user_created.send(member, password=password)
+            new_member_user_created.send(member, password=password)
 
             member.user.save(update_fields=["first_name", "last_name", "username", "email"])
 
