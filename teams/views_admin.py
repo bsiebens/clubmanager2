@@ -2,6 +2,7 @@ from typing import Any
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy

@@ -12,6 +12,11 @@ from teams.models import Season, Team
 from .rules import is_team_admin
 
 
+class GameManager(models.Manager):
+    def get_queryset(self) -> models.QuerySet:
+        return super(GameManager, self).get_queryset().select_related("team", "opponent", "competition", "season")
+
+
 class Opponent(RulesModel):
     """A class holding data on opponents"""
 
@@ -48,6 +53,8 @@ class Game(RulesModel):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    objects = GameManager()
 
     def __str__(self):
         return "{i.team} vs {i.opponent}".format(i=self)

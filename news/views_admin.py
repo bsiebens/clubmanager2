@@ -117,6 +117,9 @@ class NewsListView(PermissionRequiredMixin, FilterView):
 
         return context
 
+    def get_queryset(self) -> QuerySet[Any]:
+        return super(NewsListView, self).get_queryset().select_related("author")
+
 
 class NewsAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = NewsItem

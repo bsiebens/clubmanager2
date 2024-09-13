@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div class="mt-2 hidden lg:block">
+    <div class="hidden mt-2 lg:block">
         <table class="table table-zebra">
             <thead>
                 <tr>
@@ -76,7 +76,7 @@
                             <td>{{ team.number_pool.name|capfirst }}</td>
                             <td>{{ team.members.count }}</td>
                             <td>
-                                <a class="btn btn-outline btn-sm mr-2" href="{% url "clubmanager_admin:teams:teams_edit" team.id %}">
+                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:teams:teams_edit" team.id %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
                                 <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:teams:teams_delete" team.id %}">
@@ -90,7 +90,7 @@
         </table>
     </div>
 
-    <div class="mt-2 lg:hidden flex flex-col gap-2">
+    <div class="flex flex-col gap-2 mt-2 lg:hidden">
         {% if object_list|length == 0 %}
             <div>{% translate "No teams found" %}</div>
         {% else %}
@@ -99,7 +99,7 @@
                     <div class="data-card">
                         <div class="data">
                             <div>{{ team.name }}</div>
-                            <div class="mt-2 flex flex-row gap-2">
+                            <div class="flex flex-row gap-2 mt-2">
                                 {% if team.type == "INT" %}
                                     <div class="badge badge-info">
                                 {% else %}
@@ -122,7 +122,7 @@
     </div>
 
     {% if is_paginated %}
-        <div class="mt-4 flex justify-center">
+        <div class="flex justify-center mt-4">
             <div class="join">
                 {% if page_obj.has_previous %}
                     <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
