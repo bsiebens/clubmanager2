@@ -120,15 +120,15 @@
         <div class="flex justify-center mt-4">
             <div class="join">
                 {% if page_obj.has_previous %}
-                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.previous_page_number %}"><span class="hidden lg:inline">{% translate "previous" %}</span><span class="lg:hidden">&lt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" 1 "season" filter.form.season.value %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.previous_page_number "season" filter.form.season.value %}"><span class="hidden lg:inline">{% translate "previous" %}</span><span class="lg:hidden">&lt;</span></a>
                 {% endif %}
 
                 <button class="join-item btn btn-disabled">{% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }} of {{ num_pages }}{% endblocktranslate %}</button>
 
                 {% if page_obj.has_next %}
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}"><span class="hidden lg:inline">{% translate "next" %}</span><span class="lg:hidden">&gt;</span></a>
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}"><span class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number "season" filter.form.season.value %}"><span class="hidden lg:inline">{% translate "next" %}</span><span class="lg:hidden">&gt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages "season" filter.form.season.value %}"><span class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
                 {% endif %}
             </div>
         </div>

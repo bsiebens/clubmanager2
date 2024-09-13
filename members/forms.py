@@ -18,7 +18,8 @@ class MemberForm(forms.ModelForm):
         localized_fields = fields
 
     def save(self, commit: bool = True) -> Member:
-        password = self.cleaned_data["password"] and self.cleaned_data["password"] == self.cleaned_data["password_confirmation"]
+        if self.cleaned_data["password"] is not None and self.cleaned_data["password"] != "" and self.cleaned_data["password"] == self.cleaned_data["password_confirmation"]:
+            password = self.cleaned_data["password"]
 
         member = Member.create_member(
             first_name=self.cleaned_data["first_name"],
