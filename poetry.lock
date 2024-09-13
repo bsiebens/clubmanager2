@@ -1,12 +1,4 @@
 [[package]]
-name = "annotated-types"
-version = "0.7.0"
-description = "Reusable constraint types to use with typing.Annotated"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[[package]]
 name = "asgiref"
 version = "3.8.1"
 description = "ASGI specs, helper code, and adapters"
@@ -143,14 +135,6 @@ description = "Cross-platform colored terminal text."
 category = "main"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
-
-[[package]]
-name = "contextlib2"
-version = "21.6.0"
-description = "Backports and enhancements for the contextlib module"
-category = "main"
-optional = false
-python-versions = ">=3.6"
 
 [[package]]
 name = "coverage"
@@ -352,38 +336,6 @@ python-versions = ">=3.8"
 Django = ">=3.2"
 
 [[package]]
-name = "django-ninja"
-version = "1.3.0"
-description = "Django Ninja - Fast Django REST framework"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-Django = ">=3.1"
-pydantic = ">=2.0,<3.0.0"
-
-[package.extras]
-dev = ["pre-commit"]
-doc = ["mkdocs", "mkdocs-material", "markdown-include", "mkdocstrings"]
-test = ["pytest", "pytest-cov", "pytest-django", "pytest-asyncio", "psycopg2-binary", "mypy (==1.7.1)", "ruff (==0.5.7)", "django-stubs"]
-
-[[package]]
-name = "django-ninja-extra"
-version = "0.21.4"
-description = "Django Ninja Extra - Class Based Utility and more for Django Ninja(Fast Django REST framework)"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-asgiref = "*"
-contextlib2 = "*"
-Django = ">=2.2"
-django-ninja = "1.3.0"
-injector = ">=0.19.0"
-
-[[package]]
 name = "django-otp"
 version = "1.5.4"
 description = "A pluggable framework for adding two-factor authentication to Django using one-time passwords."
@@ -439,6 +391,17 @@ phonenumbers = ["phonenumbers (>=7.0.9,<8.99)"]
 phonenumberslite = ["phonenumberslite (>=7.0.9,<8.99)"]
 tests = ["coverage", "freezegun", "tox"]
 linting = ["ruff", "isort (<=5.99)"]
+
+[[package]]
+name = "djangorestframework"
+version = "3.15.2"
+description = "Web APIs for Django, made easy."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+django = ">=4.2"
 
 [[package]]
 name = "exceptiongroup"
@@ -509,17 +472,6 @@ description = "brain-dead simple config-ini parsing"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "injector"
-version = "0.22.0"
-description = "Injector - Python dependency injection framework, inspired by Guice"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.extras]
-dev = ["build (==1.0.3)", "check-manifest (==0.49)", "click (==8.1.7)", "coverage[toml] (==7.3.2)", "exceptiongroup (==1.2.0)", "importlib-metadata (==7.0.0)", "iniconfig (==2.0.0)", "mypy-extensions (==1.0.0)", "packaging (==23.2)", "pathspec (==0.12.1)", "platformdirs (==4.1.0)", "pluggy (==1.3.0)", "pyproject-hooks (==1.0.0)", "pytest (==7.4.3)", "pytest-cov (==4.1.0)", "tomli (==2.0.1)", "zipp (==3.17.0)", "black (==24.3.0)", "mypy (==1.7.1)", "typing-extensions (==4.9.0)"]
 
 [[package]]
 name = "lazy-object-proxy"
@@ -637,37 +589,6 @@ description = "C parser in Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
-
-[[package]]
-name = "pydantic"
-version = "2.9.1"
-description = "Data validation using Python type hints"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-annotated-types = ">=0.6.0"
-pydantic-core = "2.23.3"
-typing-extensions = [
-    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
-    {version = ">=4.6.1", markers = "python_version < \"3.13\""},
-]
-
-[package.extras]
-email = ["email-validator (>=2.0.0)"]
-timezone = ["tzdata"]
-
-[[package]]
-name = "pydantic-core"
-version = "2.23.3"
-description = "Core functionality for Pydantic validation and serialization"
-category = "main"
-optional = false
-python-versions = ">=3.8"
-
-[package.dependencies]
-typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "pyflakes"
@@ -898,10 +819,9 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "5459999f31353266dc7aaa3c97b6bf7b53b0ac818df7ba916ab3bcdf1c5320d1"
+content-hash = "8f982b028a50c92f45638431c4ab741cf18425880c326625bb517ce5abc3c034"
 
 [metadata.files]
-annotated-types = []
 asgiref = []
 asn1crypto = []
 astroid = []
@@ -913,7 +833,6 @@ cffi = []
 charset-normalizer = []
 click = []
 colorama = []
-contextlib2 = []
 coverage = []
 cryptography = []
 django = []
@@ -930,18 +849,16 @@ django-formtools = []
 django-initials-avatar = []
 django-markdownx = []
 django-model-utils = []
-django-ninja = []
-django-ninja-extra = []
 django-otp = []
 django-phonenumber-field = []
 django-two-factor-auth = []
+djangorestframework = []
 exceptiongroup = []
 flake8 = []
 flake8-django = []
 gunicorn = []
 idna = []
 iniconfig = []
-injector = []
 lazy-object-proxy = []
 markdown = []
 mccabe = []
@@ -954,8 +871,6 @@ platformdirs = []
 pluggy = []
 pycodestyle = []
 pycparser = []
-pydantic = []
-pydantic-core = []
 pyflakes = []
 pyopenssl = []
 pypng = []

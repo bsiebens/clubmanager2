@@ -18,14 +18,9 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
-from two_factor.admin import AdminSiteOTPRequired
 from two_factor.urls import urlpatterns as two_factor_urls
 from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView
-
-from api.api import api
-
-# admin.site.__class__ = AdminSiteOTPRequired
 
 urlpatterns = [
     path("", include(two_factor_urls)),
@@ -33,7 +28,6 @@ urlpatterns = [
     path("accounts/profile/", RedirectView.as_view(pattern_name="clubmanager:index"), name="profile"),
     path("accounts/password_change/", auth_views.PasswordChangeView.as_view(), name="password_change"),
     path("accounts/password_change/done/", auth_views.PasswordChangeDoneView.as_view(), name="password_change_done"),
-    path("api/", api.urls),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),
     path("initials-avatar/", include("django_initials_avatar.urls")),
