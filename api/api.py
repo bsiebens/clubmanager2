@@ -10,7 +10,7 @@ from ninja import ModelSchema, Redoc, Schema
 from ninja_extra import ControllerBase, NinjaExtraAPI, api_controller, pagination, route
 
 from activities.models import Game, Opponent
-from frontend.models import Sponsor
+from finance.models import Sponsor
 from news.models import NewsItem
 from teams.models import Season, Team, TeamMembership, TeamPicture, TeamRole
 

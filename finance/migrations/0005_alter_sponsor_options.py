@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("frontend", "0004_sponsor_end_date"),
+        ("finance", "0004_sponsor_end_date"),
     ]
 
     operations = [
