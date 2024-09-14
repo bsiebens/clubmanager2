@@ -22,4 +22,4 @@ def index(request):
         .select_related("teams")
     )
 
-    return render(request, "frontend/frontend/index.html", {"sponsors": sponsors, "news_items": news_items})
+    return render(request, "finance/finance/index.html", {"sponsors": sponsors, "news_items": news_items})

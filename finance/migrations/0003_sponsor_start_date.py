@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("frontend", "0002_sponsor_logo_sponsor_url"),
+        ("finance", "0002_sponsor_logo_sponsor_url"),
     ]
 
     operations = [

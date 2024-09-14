@@ -4,7 +4,7 @@
 {% has_perm 'members' request.user as has_member_rights %}
 {% has_perm 'news' request.user as has_news_rights %}
 {% has_perm 'editors' request.user as has_editor_rights %}
-{% has_perm 'frontend' request.user as has_frontend_rights %}
+{% has_perm 'finance' request.user as has_finance_rights %}
 {% has_perm 'teams' request.user as has_team_rights %}
 {% has_perm 'teams.view_team' request.user as has_team_admin_rights %}
 {% has_perm 'teams.view_teammembership' request.user as has_teammembership_admin_rights %}
@@ -94,9 +94,9 @@
         <span class="mt-1">{% translate "Games" %}</span>
     </a>
 
-    {% if has_frontend_rights %}
-        <span class="menu_title">Frontend</span>
-        {% url "clubmanager_admin:frontend:sponsors_index" as sponsors_index %}
+    {% if has_finance_rights %}
+        <span class="menu_title">Finance</span>
+        {% url "clubmanager_admin:finance:sponsors_index" as sponsors_index %}
         <a href="{{ sponsors_index }}" {% if sponsors_index in request.path %}class="active"{% endif %}>
             <i class="fa-solid fa-euro min-w-5"></i>
             <span class="mt-1">{% translate "Sponsors" %}</span>

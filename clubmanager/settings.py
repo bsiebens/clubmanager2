@@ -59,10 +59,11 @@ INSTALLED_APPS = [
     "members",
     "news",
     "teams",
-    "frontend",
+    "finance",
     "activities",
     "api",
     "django_cleanup.apps.CleanupConfig",
+    "django_rename_app",
 ]
 
 if DEBUG:

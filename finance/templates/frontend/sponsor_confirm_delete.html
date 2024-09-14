@@ -15,11 +15,11 @@
         {% endblocktranslate %}
     </div>
 
-    <form method="post" action="{% url "clubmanager_admin:frontend:sponsors_delete" object.id %}">
+    <form method="post" action="{% url "clubmanager_admin:finance:sponsors_delete" object.id %}">
         {% csrf_token %}
 
         <div class="flex flex-row gap-2 mt-4">
-            <a href="{% url "clubmanager_admin:frontend:sponsors_index" %}" class="btn">{% translate "Cancel" %}</a>
+            <a href="{% url "clubmanager_admin:finance:sponsors_index" %}" class="btn">{% translate "Cancel" %}</a>
             <button type="submit" class="btn btn-error">{% translate "Delete" %}</button>
         </div>
     </form>

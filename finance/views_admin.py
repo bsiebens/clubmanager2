@@ -16,7 +16,7 @@ from .models import Sponsor
 class SponsorListView(PermissionRequiredMixin, ListView):
     model = Sponsor
     paginate_by = 50
-    permission_required = "frontend"
+    permission_required = "finance"
     permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
@@ -27,9 +27,9 @@ class SponsorListView(PermissionRequiredMixin, ListView):
 class SponsorAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Sponsor
     fields = ["name", "url", "logo", "start_date", "end_date"]
-    success_url = reverse_lazy("clubmanager_admin:frontend:sponsors_index")
+    success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> added succesfully")
-    permission_required = "frontend"
+    permission_required = "finance"
     permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
@@ -50,9 +50,9 @@ class SponsorAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 class SponsorEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Sponsor
     fields = ["name", "url", "logo", "start_date", "end_date"]
-    success_url = reverse_lazy("clubmanager_admin:frontend:sponsors_index")
+    success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> updated succesfully")
-    permission_required = "frontend"
+    permission_required = "finance"
     permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
@@ -65,9 +65,9 @@ class SponsorEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
 class SponsorDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Sponsor
-    success_url = reverse_lazy("clubmanager_admin:frontend:sponsors_index")
+    success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> deleted succesfully")
-    permission_required = "frontend"
+    permission_required = "finance"
     permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:

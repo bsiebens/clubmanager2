@@ -415,6 +415,17 @@ phonenumbers = ["phonenumbers (>=7.0.2)"]
 phonenumberslite = ["phonenumberslite (>=7.0.2)"]
 
 [[package]]
+name = "django-rename-app"
+version = "0.1.7"
+description = "A Django Management Command to rename existing Django Applications."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-two-factor-auth"
 version = "1.17.0"
 description = "Complete Two-Factor Authentication for Django"
@@ -898,7 +909,7 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "5459999f31353266dc7aaa3c97b6bf7b53b0ac818df7ba916ab3bcdf1c5320d1"
+content-hash = "bbd4b7f3ec260777e9b3cd3792456226418b1f9681c2cb503d342142f2c1b3dc"
 
 [metadata.files]
 annotated-types = []
@@ -934,6 +945,7 @@ django-ninja = []
 django-ninja-extra = []
 django-otp = []
 django-phonenumber-field = []
+django-rename-app = []
 django-two-factor-auth = []
 exceptiongroup = []
 flake8 = []
