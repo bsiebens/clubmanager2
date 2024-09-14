@@ -22,6 +22,8 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 from two_factor.urls import urlpatterns as two_factor_urls
 
+from .api import router
+
 urlpatterns = [
     path("", include(two_factor_urls)),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
@@ -33,6 +35,7 @@ urlpatterns = [
     path("initials-avatar/", include("django_initials_avatar.urls")),
     path("markdownx/", include("markdownx.urls")),
     path("admin/", admin.site.urls),
+    path("api/", include(router.urls)),
     path("", RedirectView.as_view(pattern_name="clubmanager:index")),
 ]
 

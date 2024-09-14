@@ -194,3 +194,9 @@ CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["http://
 
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
+
+DJANGO_REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+    ]
+}
