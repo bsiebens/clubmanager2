@@ -44,6 +44,7 @@ class Game(RulesModel):
     opponent = models.ForeignKey(Opponent, on_delete=models.CASCADE, verbose_name=_("opponent"), related_name="games")
     date = models.DateTimeField()
     location = models.CharField(_("location"), max_length=250, default="Ice Skating Center Mechelen")
+    friendly_game = models.BooleanField(_("friendly game"), default=False)
 
     competition = models.ForeignKey("Competition", on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("competition"))
     game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
