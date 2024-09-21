@@ -259,13 +259,13 @@ class TeamSchema(ModelSchema):
         return list(chain(head_coach, assistant_coach, general_manager, team_manager, others))
 
 
-@api_controller("/sponsors")
+""" @api_controller("/sponsors")
 class SponsorController(ControllerBase):
     @route.get("", response={200: List[SponsorSchema]})
     def get_sponsors(self):
         sponsors = list(Sponsor.objects.filter(start_date__lte=timezone.now()).filter(Q(end_date__gte=timezone.now()) | Q(end_date=None)))
         random.shuffle(sponsors)
-        return sponsors
+        return sponsors """
 
 
 @api_controller("/news")
