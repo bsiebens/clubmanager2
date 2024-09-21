@@ -141,7 +141,7 @@ class GameSchema(ModelSchema):
 
     class Config:
         model = Game
-        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent"]
+        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "friendly_game"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
