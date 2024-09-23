@@ -14,4 +14,7 @@ urlpatterns = [
     path("games/delete/<int:pk>", views_admin.GamesDeleteView.as_view(), name="games_delete"),
     path("games/view/<int:pk>", views_admin.GamePreviewView.as_view(), name="games_view"),
     path("games/refresh/<int:pk>", views_admin.update_game_information, name="games_refresh"),
+    path("gametypes/", views_admin.GameTypeListView.as_view(), name="gametypes_index"),
+    path("gametypes/add", views_admin.GameTypeAddView.as_view(), name="gametypes_add"),
+    path("gametypes/delete/<int:pk>", views_admin.GameTypeDeleteView.as_view(), name="gametypes_delete"),
 ]
