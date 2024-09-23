@@ -88,6 +88,12 @@
         <span class="mt-1">{% translate "Opponents" %}</span>
     </a>
 
+    {% url "clubmanager_admin:activities:gametypes_index" as gametypes_index %}
+    <a href="{{ gametypes_index }}" {% if gametypes_index in request.path %}class="active"{% endif %}>
+        <i class="fa-solid fa-list min-w-5"></i>
+        <span class="mt-1">{% translate "Game Types" %}</span>
+    </a>
+
     {% url "clubmanager_admin:activities:games_index" as games_index %}
     <a href="{{ games_index }}" {% if games_index in request.path %}class="active"{% endif %}>
         <i class="fa-solid fa-medal min-w-5"></i>
