@@ -138,6 +138,7 @@ class GameSchema(ModelSchema):
     opponent: OpponentSchema
     is_home_game: bool
     passed: bool
+    game_type: str
 
     class Config:
         model = Game
