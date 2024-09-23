@@ -141,7 +141,7 @@ class GameSchema(ModelSchema):
 
     class Config:
         model = Game
-        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "friendly_game"]
+        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "game_type"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
@@ -150,6 +150,10 @@ class GameSchema(ModelSchema):
     @staticmethod
     def resolve_passed(obj: Game):
         return obj.date <= timezone.now()
+
+    @staticmethod
+    def resolve_game_type(obj: Game):
+        return obj.game_type.name
 
 
 class TeamRoleSchema(ModelSchema):
