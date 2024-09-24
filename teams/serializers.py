@@ -6,6 +6,17 @@ from rest_framework import serializers
 from .models import Season, Team, TeamMembership, TeamPicture, TeamRole
 
 
+class TeamNameSerializer(serializers.ModelSerializer):
+    logo = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Team
+        fields = ["name", "logo"]
+
+    def get_logo(self, obj: Team) -> dict[str, str | int]:
+        return {"url": obj.logo.url, "width": obj.logo.width, "height": obj.logo.height}
+
+
 class TeamRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamRole
