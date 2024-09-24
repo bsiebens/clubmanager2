@@ -1,10 +1,9 @@
-from .models import Season, Team, TeamMembership, TeamPicture, TeamRole
+from itertools import chain
+
+from django.db.models import Q
 from rest_framework import serializers
 
-
-class TeamSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Team
+from .models import Season, Team, TeamMembership, TeamPicture, TeamRole
 
 
 class TeamRoleSerializer(serializers.ModelSerializer):
@@ -27,11 +26,15 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     picture = serializers.SerializerMethodField()
-    goalie = TeamMembershipSerializer(many=True)
+    goalie = serializers.SerializerMethodField()
+    forward = serializers.SerializerMethodField()
+    defense = serializers.SerializerMethodField()
+    staff = serializers.SerializerMethodField()
 
     class Meta:
         model = Team
-        fields = ["slug", "name", "short_name", "picture", "goalie"]
+        fields = ["slug", "name", "short_name", "picture", "goalie", "forward", "defense", "staff"]
+        lookup_field = "slug"
 
     def get_picture(self, obj: Team) -> str:
         try:
@@ -42,4 +45,39 @@ class TeamSerializer(serializers.ModelSerializer):
             return {"url": "", "height": 0, "width": 0}
 
     def get_goalie(self, obj: Team) -> list[TeamMembership]:
-        return obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="GO").order_by("number")
+        return TeamMembershipSerializer(obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="GO").order_by("number"), many=True).data
+
+    def get_forward(self, obj: Team) -> list[TeamMembership]:
+        return TeamMembershipSerializer(obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="F").order_by("number"), many=True).data
+
+    def get_defense(self, obj: Team) -> list[TeamMembership]:
+        return TeamMembershipSerializer(obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="D").order_by("number"), many=True).data
+
+    def get_staff(self, obj: Team) -> list[TeamMembership]:
+        head_coach = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="CO").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        assistant_coach = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="AC").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        general_manager = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="GM").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        team_manager = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="TM").order_by(
+            "member__user__last_name", "member__user__first_name", "member__license"
+        )
+        others = (
+            obj.teammembership_set.filter(season=Season.get_season(), number=None)
+            .exclude(
+                Q(role__abbreviation="GO")
+                | Q(role__abbreviation="F")
+                | Q(role__abbreviation="D")
+                | Q(role__abbreviation="CO")
+                | Q(role__abbreviation="AC")
+                | Q(role__abbreviation="GM")
+                | Q(role__abbreviation="TM")
+            )
+            .order_by("member__user__last_name", "member__user__first_name", "member__license")
+        )
+
+        return TeamMembershipSerializer(list(chain(head_coach, assistant_coach, general_manager, team_manager, others)), many=True).data
