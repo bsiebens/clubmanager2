@@ -4,23 +4,25 @@ from django.contrib.auth.models import Group
 
 from members.models import Member
 
-from .models import Season, Team
+from .models import Season, Team, TeamMembership
 
 
 # @shared_task
 def update_group_membership(user_id: int) -> None:
-    # TODO this seems to give admin userrights to all users create via the admin
-
     user = get_user_model().objects.get(pk=user_id)
     member = Member.objects.get(user=user)
     season = Season.get_season()
 
-    memberships = Team.objects.filter(teammembership__member__user=user, teammembership__season=season)
-    admin_memberships = memberships.filter(teammembership__role__admin_role=True).count()
+    teams = Team.objects.filter(teammembership__member=member, teammembership__season=season)
+    admin_memberships = TeamMembership.objects.filter(member=member, season=season, role__admin_role=True).count()
+    groups = [team.slug for team in teams.distinct()]
 
-    groups = [team.slug for team in memberships.distinct()]
-    if admin_memberships > 0 or member.is_organization_admin:
+    if (admin_memberships > 0 or member.is_organization_admin) and "admin" not in groups:
         groups.append("admin")
+
+    if admin_memberships == 0 and not member.is_organization_admin:
+        while "admin" in groups:
+            groups.remove("admin")
 
     if member.user.groups.filter(name="editors").exists():
         groups.append("editors")
