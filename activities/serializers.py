@@ -35,4 +35,4 @@ class GameSerializer(serializers.ModelSerializer):
         return obj.date <= timezone.now()
 
     def is_home_game(self, obj: Game) -> bool:
-        return obj.location.lower() == "ice skating center mechelen" or obj.location.lower() == "iscm"
+        return obj.is_home_game
