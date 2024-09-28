@@ -138,10 +138,11 @@ class GameSchema(ModelSchema):
     opponent: OpponentSchema
     is_home_game: bool
     passed: bool
+    game_type: str
 
     class Config:
         model = Game
-        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent"]
+        model_fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "game_type"]
 
     @staticmethod
     def resolve_is_home_game(obj: Game):
@@ -150,6 +151,10 @@ class GameSchema(ModelSchema):
     @staticmethod
     def resolve_passed(obj: Game):
         return obj.date <= timezone.now()
+
+    @staticmethod
+    def resolve_game_type(obj: Game):
+        return obj.game_type.name
 
 
 class TeamRoleSchema(ModelSchema):
@@ -259,13 +264,13 @@ class TeamSchema(ModelSchema):
         return list(chain(head_coach, assistant_coach, general_manager, team_manager, others))
 
 
-@api_controller("/sponsors")
+""" @api_controller("/sponsors")
 class SponsorController(ControllerBase):
     @route.get("", response={200: List[SponsorSchema]})
     def get_sponsors(self):
         sponsors = list(Sponsor.objects.filter(start_date__lte=timezone.now()).filter(Q(end_date__gte=timezone.now()) | Q(end_date=None)))
         random.shuffle(sponsors)
-        return sponsors
+        return sponsors """
 
 
 @api_controller("/news")

@@ -45,6 +45,7 @@
                     <th>{% translate "Location" %}</th>
                     <th>{% translate "Season" %}</th>
                     <th>{% translate "Game ID" %}</th>
+                    <th>{% translate "Friendly Game?" %}</th>
                     <th>{% translate "Competition" %}</th>
                     <th></th>
                 </tr>
@@ -71,6 +72,13 @@
                             <td>{{ game.location }}</td>
                             <td>{{ game.season }}</td>
                             <td>{{ game.game_id|default:"-" }}</td>
+                            <td>
+                                {% if game.friendly_game %}
+                                    <i class="fa-solid fa-circle-check text-success"></i>
+                                {% else %}
+                                    <i class="fa-solid fa-circle-xmark text-error"></i>
+                                {% endif %}
+                            </td>
                             <td>{{ game.competition.name|default:"-" }}</td>
                             <td>
                                 <a class="mr-2 btn btn-outline btn-sm" href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
@@ -117,8 +125,6 @@
             {% endfor %}
         {% endif %}
     </div>
-
-    {{ filter.form.season.value }}
 
     {% if is_paginated %}
         <div class="flex justify-center mt-4">

@@ -18,7 +18,7 @@ def is_released(user: AbstractUser | None, news_item) -> bool:
     from .models import NewsItem
 
     if news_item is not None:
-        return news_item.status == NewsItem.StatusChoices.RELEASED and news_item.publish_on >= timezone.now()
+        return news_item.status == NewsItem.StatusChoices.RELEASED and news_item.publish_on <= timezone.now()
 
     return False
 

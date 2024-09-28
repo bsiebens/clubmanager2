@@ -15,7 +15,55 @@ from rules.contrib.views import PermissionRequiredMixin, permission_required
 from teams.models import Season, Team
 
 from .filters import GameFilter
-from .models import Game, Opponent
+from .models import Game, Opponent, GameType
+from .forms import GameTypeForm
+
+
+class GameTypeListView(PermissionRequiredMixin, ListView):
+    model = GameType
+    permission_required = "activities.view_gametype"
+    permission_denied_message = _("You do not have sufficient access rights to access the game type list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super(GameTypeListView, self).get_context_data(**kwargs)
+        context["form"] = GameTypeForm
+
+        return context
+
+
+class GameTypeAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    model = GameType
+    form_class = GameTypeForm
+    success_url = reverse_lazy("clubmanager_admin:activities:gametypes_index")
+    success_message = _("Game type <strong>%(name)s</strong> created succesfully")
+    permission_required = "activities.edit_gametype"
+    permission_denied_message = _("You do not have sufficient access rights to access the game type list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
+
+
+class GameTypeDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    success_url = reverse_lazy("clubmanager_admin:activities:gametypes_index")
+    success_message = _("Game type <strong>%(name)s</strong> deleted succesfully")
+    model = GameType
+    permission_required = "activities.delete_gametype"
+    permission_denied_message = _("You do not have sufficient access rights to access the game type list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
 class OpponentsListView(PermissionRequiredMixin, ListView):
@@ -110,7 +158,7 @@ class GamesListView(PermissionRequiredMixin, FilterView):
 
 class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Game
-    fields = ["team", "opponent", "date", "location", "competition", "game_id"]
+    fields = ["team", "opponent", "date", "location", "competition", "game_id", "friendly_game"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> created succesfully")
     permission_required = "activities.add_game"
@@ -134,7 +182,7 @@ class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Game
-    fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id"]
+    fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id", "friendly_game"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> updated succesfully")
     permission_required = "activities.edit_game"
