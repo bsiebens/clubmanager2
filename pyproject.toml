@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clubmanager"
-version = "0.4.3"
+version = "0.4.4"
 description = "Club Management software"
 authors = ["Bernard Siebens <bernard@siebens.org>"]
 license = "MIT"
