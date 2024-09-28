@@ -231,7 +231,7 @@ class TeamSchema(ModelSchema):
 
     @staticmethod
     def resolve_players(obj: Team):
-        return obj.teammembership_set.filter(season=Season.get_season()).filter(role=None).order_by("number")
+        return obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="P").order_by("number")
 
     @staticmethod
     def resolve_staff(obj: Team):
