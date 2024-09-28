@@ -1,13 +1,10 @@
-from .serializers import TeamMembershipSerializer, TeamSerializer
 from rest_framework import viewsets
-from .models import TeamMembership, Team
 
-
-class TeamMembersViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = TeamMembership.objects.all()
-    serializer_class = TeamMembershipSerializer
+from .models import Team
+from .serializers import TeamSerializer
 
 
 class TeamsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Team.objects.all()
+    lookup_field = "slug"
     serializer_class = TeamSerializer
