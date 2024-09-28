@@ -158,7 +158,7 @@ class GamesListView(PermissionRequiredMixin, FilterView):
 
 class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Game
-    fields = ["team", "opponent", "date", "location", "competition", "game_id", "friendly_game"]
+    fields = ["team", "opponent", "date", "location", "competition", "game_id", "game_type"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> created succesfully")
     permission_required = "activities.add_game"
@@ -182,7 +182,7 @@ class GamesAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
 
 class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Game
-    fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id", "friendly_game"]
+    fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id", "game_type"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> updated succesfully")
     permission_required = "activities.edit_game"
