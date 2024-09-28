@@ -2,6 +2,7 @@ import secrets
 import string
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.db.models.signals import m2m_changed, post_save
 from django.dispatch import Signal, receiver
 
@@ -39,12 +40,12 @@ def group_removed(sender, **kwargs):
 
     if isinstance(instance, get_user_model()) and not instance.is_superuser:
         if action == "post_remove":
-            if instance.groups.count() == 0:
+            if instance.is_staff and not instance.groups.filter(name="admin").exists():
                 instance.is_staff = False
                 instance.save(update_fields=["is_staff"])
 
         if action == "post_add":
-            if not instance.is_staff:
+            if not instance.is_staff and instance.groups.filter(name="admin").exists():
                 instance.is_staff = True
                 instance.save(update_fields=["is_staff"])
 
