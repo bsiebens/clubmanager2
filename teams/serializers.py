@@ -44,7 +44,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Team
-        fields = ["slug", "name", "short_name", "picture", "goalie", "forward", "defense", "staff"]
+        fields = ["slug", "name", "short_name", "picture", "goalie", "forward", "defense", "staff", "players"]
         lookup_field = "slug"
 
     def get_picture(self, obj: Team) -> str:
