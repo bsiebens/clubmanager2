@@ -11,28 +11,28 @@
 
 {% block content %}
     <div class="flex flex-row items-center gap-2 mt-8">
-        <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ game.team }} vs {{ game.opponent }} ({{ game.date|date:"l d b Y H:i" }})</h2>
+        <h2 class="mt-0 text-2xl border-b-0 subtitle">{{ game.team }} vs {{ game.opponent }} ({{ game.date|date:"l d b Y H:i" }} - {{ game.game_type.name }})</h2>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
-            <div class="label-text font-light text-gray-500">{% translate "Team" %}</div>
-            <div class="p-2 border border-base-content/20 rounded-lg">{{ game.team.name }}</div>
+    <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+        <div class="flex flex-col w-full gap-1 mt-3 max-w-7xl">
+            <div class="font-light text-gray-500 label-text">{% translate "Team" %}</div>
+            <div class="p-2 border rounded-lg border-base-content/20">{{ game.team.name }}</div>
         </div>
 
-        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
-            <div class="label-text font-light text-gray-500">{% translate "Opponent" %}</div>
-            <div class="p-2 border border-base-content/20 rounded-lg">{{ game.opponent.name }}</div>
+        <div class="flex flex-col w-full gap-1 mt-3 max-w-7xl">
+            <div class="font-light text-gray-500 label-text">{% translate "Opponent" %}</div>
+            <div class="p-2 border rounded-lg border-base-content/20">{{ game.opponent.name }}</div>
         </div>
 
-        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
-            <div class="label-text font-light text-gray-500">{% translate "Date" %}</div>
-            <div class="p-2 border border-base-content/20 rounded-lg">{{ game.date }}</div>
+        <div class="flex flex-col w-full gap-1 mt-3 max-w-7xl">
+            <div class="font-light text-gray-500 label-text">{% translate "Date" %}</div>
+            <div class="p-2 border rounded-lg border-base-content/20">{{ game.date }}</div>
         </div>
 
-        <div class="w-full max-w-7xl mt-3 flex flex-col gap-1">
-            <div class="label-text font-light text-gray-500">{% translate "Location" %}</div>
-            <div class="p-2 border border-base-content/20 rounded-lg">{{ game.location }}</div>
+        <div class="flex flex-col w-full gap-1 mt-3 max-w-7xl">
+            <div class="font-light text-gray-500 label-text">{% translate "Location" %}</div>
+            <div class="p-2 border rounded-lg border-base-content/20">{{ game.location }}</div>
         </div>
     </div>
 {% endblock content %}
