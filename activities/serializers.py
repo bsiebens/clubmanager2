@@ -1,4 +1,4 @@
-from .models import Opponent, Game, GameType
+from .models import Opponent, Game
 from teams.serializers import TeamNameSerializer
 from rest_framework import serializers
 

@@ -198,5 +198,5 @@ TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
 DJANGO_REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    ]
+    ],
 }
