@@ -39,6 +39,7 @@ class TeamSerializer(serializers.ModelSerializer):
     goalie = serializers.SerializerMethodField()
     forward = serializers.SerializerMethodField()
     defense = serializers.SerializerMethodField()
+    players = serializers.SerializerMethodField()
     staff = serializers.SerializerMethodField()
 
     class Meta:
@@ -62,6 +63,9 @@ class TeamSerializer(serializers.ModelSerializer):
 
     def get_defense(self, obj: Team) -> list[TeamMembership]:
         return TeamMembershipSerializer(obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="D").order_by("number"), many=True).data
+
+    def get_players(self, obj: Team) -> list[TeamMembership]:
+        return TeamMembershipSerializer(obj.teammembership_set.filter(season=Season.get_season()).filter(role__abbreviation="P").order_by("number"), many=True).data
 
     def get_staff(self, obj: Team) -> list[TeamMembership]:
         head_coach = obj.teammembership_set.filter(season=Season.get_season(), role__abbreviation="CO").order_by(
