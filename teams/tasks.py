@@ -9,6 +9,8 @@ from .models import Season, Team
 
 # @shared_task
 def update_group_membership(user_id: int) -> None:
+    # TODO this seems to give admin userrights to all users create via the admin
+
     user = get_user_model().objects.get(pk=user_id)
     member = Member.objects.get(user=user)
     season = Season.get_season()

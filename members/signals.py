@@ -34,6 +34,8 @@ def create_and_set_initial_password(sender, *args, **kwargs):
 
 @receiver(m2m_changed)
 def group_removed(sender, **kwargs):
+    # TODO probably needs to check which groups a user belongs to before blindly giving them staff status
+
     instance = kwargs["instance"]
     action = kwargs["action"]
 
