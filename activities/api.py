@@ -14,9 +14,9 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = Game.objects.all()
         team = self.request.query_params.get("team", "all")
-        count = self.request.query_params.get("count", 5)
-        home_games_only = self.request.query_params.get("home_games_only", False)
-        all_games_for_season = self.request.query_params.get("all_games_for_season", False)
+        count = int(self.request.query_params.get("count", 5))
+        home_games_only = False if self.request.query_params.get("home_games_only", "false") == "false" else True
+        all_games_for_season = False if self.request.query_params.get("all_games_for_season", "false") == "false" else True
 
         queryset = queryset.filter(season=Season.get_season())
 
