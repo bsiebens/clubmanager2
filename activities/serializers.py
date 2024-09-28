@@ -22,13 +22,17 @@ class GameSerializer(serializers.ModelSerializer):
     opponent = OpponentNameSerializer()
     game_type = serializers.SerializerMethodField()
     passed = serializers.SerializerMethodField()
+    is_home_game = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
-        fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "game_type", "passed"]
+        fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "game_type", "passed", "is_home_game"]
 
     def get_game_type(self, obj: Game) -> str:
         return obj.game_type.name
 
     def get_passed(self, obj: Game) -> bool:
         return obj.date <= timezone.now()
+
+    def is_home_game(self, obj: Game) -> bool:
+        return obj.is_home_game
