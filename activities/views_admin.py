@@ -185,7 +185,7 @@ class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     fields = ["team", "opponent", "date", "location", "live", "score_team", "score_opponent", "competition", "game_id", "game_type"]
     success_url = reverse_lazy("clubmanager_admin:activities:games_index")
     success_message = _("Game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong> updated succesfully")
-    permission_required = "activities.edit_game"
+    permission_required = "activities.change_game"
     permission_denied_message = _(
         "You do not have sufficient access rights to edit game <strong>%(team)s</strong> versus <strong>%(opponent)s</strong> <strong>(%(date)s)</strong>"
     )
@@ -198,7 +198,7 @@ class GamesEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
         return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
 
     def get_permission_denied_message(self) -> str:
-        return self.success_message % dict(team=self.get_object().team, opponent=self.get_object().opponent, date=self.get_object().date.strftime("%d %b %Y %H:%M"))
+        return self.permission_denied_message % dict(team=self.get_object().team, opponent=self.get_object().opponent, date=self.get_object().date.strftime("%d %b %Y %H:%M"))
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         form = super(GamesEditView, self).get_form(form_class)
