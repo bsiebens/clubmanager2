@@ -21,7 +21,7 @@ from .models import NumberPool, Season, Team, TeamMembership, TeamRole
 
 class TeamsListView(PermissionRequiredMixin, FilterView):
     filterset_class = TeamFilter
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "teams.view_team"
     permission_denied_message = _("You do not have sufficient access rights to access the team list")
 
@@ -291,7 +291,7 @@ class TeamRoleDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteVie
 
 class TeamMembersListView(PermissionRequiredMixin, FilterView):
     filterset_class = TeamMembershipFilter
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "teams.view_teammembership"
     permission_denied_message = _("You do not have sufficient access rights to access the team membership list")
 

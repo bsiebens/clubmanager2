@@ -15,7 +15,7 @@ from .models import Sponsor
 
 class SponsorListView(PermissionRequiredMixin, ListView):
     model = Sponsor
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "frontend"
     permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 

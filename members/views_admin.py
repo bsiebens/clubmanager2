@@ -19,7 +19,7 @@ from .models import Family, Member
 
 class MemberListView(PermissionRequiredMixin, FilterView):
     filterset_class = MemberFilter
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "members"
     permission_denied_message = _("You do not have sufficient access rights to access the member list")
 
@@ -86,7 +86,7 @@ class MemberEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
 
 class FamilyListView(PermissionRequiredMixin, FilterView):
     filterset_class = FamilyFilter
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "members"
     permission_denied_message = _("You do not have sufficient access rights to access the member list")
 

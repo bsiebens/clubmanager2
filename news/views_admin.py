@@ -93,7 +93,7 @@ class EditorDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView)
 
 class NewsListView(PermissionRequiredMixin, FilterView):
     model = NewsItem
-    paginate_by = 50
+    paginate_by = 25
     filterset_class = NewsItemFilter
     permission_required = "news.add_newsitem"
 

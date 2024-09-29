@@ -68,7 +68,7 @@ class GameTypeDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteVie
 
 class OpponentsListView(PermissionRequiredMixin, ListView):
     model = Opponent
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "activities.view_opponent"
     permission_denied_message = _("You do not have sufficient access rights to access the opponent list")
 
@@ -132,7 +132,7 @@ class OpponentsDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteVi
 
 class GamesListView(PermissionRequiredMixin, FilterView):
     filterset_class = GameFilter
-    paginate_by = 50
+    paginate_by = 25
     permission_required = "activities.view_game"
     permission_denied_message = _("You do not have sufficient access rights to access the game list")
 
