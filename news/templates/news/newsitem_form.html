@@ -43,7 +43,7 @@
                     </a>
                 {% endif %}
 
-                <a href="{% url "clubmanager_admin:news:news_preview" newsitem.id %}" class="btn btn-outline hidden lg:flex">
+                <a href="{% url "clubmanager_admin:news:news_preview" newsitem.id %}" class="hidden btn btn-outline lg:flex">
                     <i class="mr-1 fa-solid fa-eye"></i>{% translate "Preview" %}
                 </a>
 
@@ -102,12 +102,39 @@
         </div>
 
         <h2 class="subtitle">{% translate "Pictures" %}</h2>
+        {{ pictures.management_form }}
 
         <!-- TODO Add interface for mobile devices -->
-        <div class="lg:hidden text-sm text-justify text-gray-500">{% blocktranslate %}Adding pictures is currently not possible throught the mobile interface. Please use a desktop to add pictures.{% endblocktranslate %}</div>
-        <div class="mt-2 hidden lg:flex">
-            {{ pictures.management_form }}
+        <div class="text-sm text-justify text-gray-500 lg:hidden">{% blocktranslate %}Adding pictures is currently not possible throught the mobile interface. Please use a desktop to add pictures.{% endblocktranslate %}</div>
+        
+        <div class="mt-2 lg:hidden">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in pictures.forms %}
+                        <tr class="border-b formset-row">
+                            <td>
+                                {% for field in form.visible_fields %}
+                                    {% if forloop.first %}
+                                        {% for hidden in form.hidden_fields %}
+                                            {{ hidden }}
+                                        {% endfor %}
+                                    {% endif %}
 
+                                    {% form_field field %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="hidden mt-2 lg:flex">
             <table class="table">
                 <thead>
                     <tr>
@@ -119,7 +146,7 @@
                 </thead>
                 <tbody>
                     {% for form in pictures.forms %}
-                        <tr class="formset-row border-b">
+                        <tr class="border-b formset-row">
                             <td class="font-bold">{% if not forloop.last %}{{ forloop.counter }}{% endif %}</td>
                             {% for field in form.visible_fields %}
                                 <td>
