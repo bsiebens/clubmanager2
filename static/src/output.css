@@ -7193,8 +7193,21 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
   opacity: 0.5;
 }
 
+.hover\:border:hover{
+  border-width: 1px;
+}
+
 .hover\:border-b-2:hover{
   border-bottom-width: 2px;
+}
+
+.hover\:border-b:hover{
+  border-bottom-width: 1px;
+}
+
+.hover\:border-neutral:hover{
+  --tw-border-opacity: 1;
+  border-color: var(--fallback-n,oklch(var(--n)/var(--tw-border-opacity)));
 }
 
 @media (min-width: 1024px){
