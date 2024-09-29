@@ -9,4 +9,4 @@ class GameFilter(django_filters.FilterSet):
 
     class Meta:
         model = Game
-        fields = ["team", "season", "opponent", "date", "competition", "game_type"]
+        fields = ["team", "season", "opponent", "date", "game_type"]
