@@ -11,10 +11,12 @@ class PaginationClass(PageNumberPagination):
 
 class NewsItemViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = NewsItemSerializer
-    queryset = (
-        NewsItem.objects.filter(status=NewsItem.StatusChoices.RELEASED, publish_on__lte=timezone.now())
-        .exclude(type=NewsItem.NewsItemTypeChoices.INTERNAL)
-        .order_by("-publish_on")
-    )
     lookup_field = "slug"
     pagination_class = PaginationClass
+
+    def get_queryset(self, *args, **kwargs):
+        return (
+            NewsItem.objects.filter(status=NewsItem.StatusChoices.RELEASED, publish_on__lte=timezone.now())
+            .exclude(type=NewsItem.NewsItemTypeChoices.INTERNAL)
+            .order_by("-publish_on")
+        )
