@@ -93,20 +93,20 @@
                                     </div>
                                     <div class="flex flex-row gap-2">
                                         {% if news_item.status == 0 %}
-                                            <div class="badge badge-error">
+                                            <div class="badge badge-error badge-sm">
                                         {% elif news_item.status == 1 %}
-                                            <div class="badge badge-warning">
+                                            <div class="badge badge-warning badge-sm">
                                         {% else %}
-                                            <div class="badge badge-success">
+                                            <div class="badge badge-success badge-sm">
                                         {% endif %}
                                         {{ news_item.get_status_display }}</div>
 
                                         {% if news_item.type == 0 %}
-                                            <div class="badge badge-info">
+                                            <div class="badge badge-info badge-sm">
                                         {% elif news_item.type == 1 %}
-                                            <div class="badge badge-accent">
+                                            <div class="badge badge-accent badge-sm">
                                         {% else %}
-                                            <div class="badge badge-neutral">
+                                            <div class="badge badge-neutral badge-sm">
                                         {% endif %}
                                         {{ news_item.get_type_display }}</div>
                                     </div>

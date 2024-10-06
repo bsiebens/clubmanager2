@@ -43,7 +43,6 @@
                     <th>{% translate "Team" %}</th>
                     <th>{% translate "Opponent" %}</th>
                     <th>{% translate "Location" %}</th>
-                    <th>{% translate "Season" %}</th>
                     <th>{% translate "Game ID" %}</th>
                     <th>{% translate "Game Type" %}</th>
                     <th>{% translate "Competition" %}</th>
@@ -53,7 +52,7 @@
             <tbody>
                 {% if object_list|length == 0 %}
                     <tr>
-                        <td colspan="6">
+                        <td colspan="8">
                             {% translate "No games found" %}
                         </td>
                     </tr>
@@ -62,15 +61,21 @@
                         {% has_perm 'activities.change_game' request.user game as has_team_rights %}
 
                         <tr class="hover">
-                            <td class="font-bold">
+                            <td>
                                 <a href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">
-                                    {{ game.date|date:"l d M Y H:i" }}
+                                    <div class="flex flex-col">
+                                        <div class="font-bold">
+                                            {{ game.date|date:"l d M Y H:i" }}
+                                        </div>
+                                        <div class="text-sm opacity-50">
+                                            {{ game.season }}
+                                        </div>
+                                    </div>
                                 </a>
                             </td>
                             <td>{{ game.team }}</td>
                             <td>{{ game.opponent }}</td>
                             <td>{{ game.location }}</td>
-                            <td>{{ game.season }}</td>
                             <td>{{ game.game_id|default:"-" }}</td>
                             <td>{{ game.game_type.name }}</td>
                             <td>{{ game.competition.name|default:"-" }}</td>
