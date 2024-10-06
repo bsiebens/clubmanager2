@@ -45,12 +45,23 @@
                 {% else %}
                     {% for sponsor in object_list %}
                         <tr class="hover">
-                            <td class="font-bold">
+                            <td class="flex flex-row items-center gap-2 font-bold">
+                                <div class="avatar">
+                                    <div class="w-12 h-12 p-1 border rounded-lg border-neutral">
+                                        <img alt="{{ sponsor.name }} avatar" src="{{ sponsor.logo.url }}" class="w-12 h-12" />
+                                    </div>
+                                </div>
                                 <a href="{% url "clubmanager_admin:finance:sponsors_edit" sponsor.id %}">
                                     {{ sponsor.name }}
                                 </a>
                             </td>
-                            <td><a class="border-b border-neutral" href="{{ sponsor.url }}">{{ sponsor.url }}</a></td>
+                            <td>
+                                {% if sponsor.url %}
+                                    <a class="border-b border-neutral" href="{{ sponsor.url }}">{{ sponsor.url }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if sponsor.active %}
                                     <i class="fa-solid fa-circle-check text-success"></i>
