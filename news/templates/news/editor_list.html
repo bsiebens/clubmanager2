@@ -12,7 +12,7 @@
 {% endblock pagetitle %}
 
 {% block content %}
-    <div class="action-bar justify-end">
+    <div class="justify-end action-bar">
         <form class="add-form" method="post" action="{% url "clubmanager_admin:news:editors_add" %}">
             {% csrf_token %}
 
@@ -37,11 +37,60 @@
         {% endblocktranslate %}
     </div>
 
-    <div class="mt-2 grid grid-cols-1 lg:grid-cols-4 gap-2">
+    <div class="hidden mt-2 lg:block">
+        <table class="table table-zebra">
+            <thead>
+                <tr>
+                    {% comment %} <th>
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-sm" />
+                        </label>
+                    </th> {% endcomment %}
+                    <th>{% translate "Editor" %}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if object_list|length == 0 %}
+                    <tr>
+                        <td colspan="2">
+                            {% translate "No editors found" %}
+                        </td>
+                    </tr>
+                {% else %}
+                    {% for user in object_list %}
+                        <tr class="hover">
+                            <td>
+                                <div class="flex flex-row items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="w-12 h-12 mask mask-squircle">
+                                            <img alt="{{ user.get_full_name }} avatar" src="{% render_initials_avatar user.get_full_name %}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col grow">
+                                        <div class="font-bold">{{ user.get_full_name }}</div>
+                                        <div class="text-sm opacity-50">{{ user.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline btn-error btn-sm {% if user.is_superuser %}btn-disabled{% endif %}" href="{% url "clubmanager_admin:news:editors_delete" user.id %}">
+                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 mt-2 lg:hidden">
         {% for user in object_list %}
             <div class="data-card">
                 <div class="avatar">
-                    <div class="mask mask-squircle h-12 w-12">
+                    <div class="w-12 h-12 mask mask-squircle">
                         <img alt="{{ user.get_full_name }} avatar" src="{% render_initials_avatar user.get_full_name %}" />
                     </div>
                 </div>
@@ -63,7 +112,7 @@
     </div>
 
     {% if is_paginated %}
-        <div class="mt-4 flex justify-center">
+        <div class="flex justify-center mt-4">
             <div class="join">
                 {% if page_obj.has_previous %}
                     <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>

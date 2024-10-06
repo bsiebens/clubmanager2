@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Catamaran:wght@100..900&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 /*
-! tailwindcss v3.4.9 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.7 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -1060,6 +1060,7 @@ html{
 .prose :where(table):not(:where([class~="not-prose"],[class~="not-prose"] *)){
   width: 100%;
   table-layout: auto;
+  text-align: start;
   margin-top: 2em;
   margin-bottom: 2em;
   font-size: 0.875em;
@@ -1100,10 +1101,6 @@ html{
 
 .prose :where(tfoot td):not(:where([class~="not-prose"],[class~="not-prose"] *)){
   vertical-align: top;
-}
-
-.prose :where(th, td):not(:where([class~="not-prose"],[class~="not-prose"] *)){
-  text-align: start;
 }
 
 .prose :where(figure > *):not(:where([class~="not-prose"],[class~="not-prose"] *)){
@@ -5985,10 +5982,6 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   width: 6rem;
 }
 
-.w-32{
-  width: 8rem;
-}
-
 .w-4{
   width: 1rem;
 }
@@ -6168,6 +6161,11 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   border-top-right-radius: 0.5rem;
 }
 
+.rounded-l-lg{
+  border-top-left-radius: 0.5rem;
+  border-bottom-left-radius: 0.5rem;
+}
+
 .border{
   border-width: 1px;
 }
@@ -6180,8 +6178,16 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   border-bottom-width: 0px;
 }
 
+.border-l-2{
+  border-left-width: 2px;
+}
+
 .border-t{
   border-top-width: 1px;
+}
+
+.border-l-4{
+  border-left-width: 4px;
 }
 
 .border-base-content\/20{
@@ -7193,21 +7199,8 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
   opacity: 0.5;
 }
 
-.hover\:border:hover{
-  border-width: 1px;
-}
-
 .hover\:border-b-2:hover{
   border-bottom-width: 2px;
-}
-
-.hover\:border-b:hover{
-  border-bottom-width: 1px;
-}
-
-.hover\:border-neutral:hover{
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-n,oklch(var(--n)/var(--tw-border-opacity)));
 }
 
 @media (min-width: 1024px){
@@ -7311,13 +7304,13 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 }
 
 @media (prefers-color-scheme: dark){
-  .dark\:bg-gray-700{
-    --tw-bg-opacity: 1;
-    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
-  }
-
   .dark\:bg-gray-200{
     --tw-bg-opacity: 1;
     background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+  }
+
+  .dark\:bg-gray-700{
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
   }
 }
