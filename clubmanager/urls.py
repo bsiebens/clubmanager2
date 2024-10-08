@@ -26,6 +26,7 @@ from .api import router
 
 urlpatterns = [
     path("", include(two_factor_urls)),
+    path("notifications/", include("notifications.urls", namespace="notifications")),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("accounts/profile/", RedirectView.as_view(pattern_name="clubmanager:index"), name="profile"),
     path("accounts/password_change/", auth_views.PasswordChangeView.as_view(), name="password_change"),

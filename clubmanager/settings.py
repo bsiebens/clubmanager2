@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
+    "notifications",
     "corsheaders",
     "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
