@@ -15,6 +15,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateView
 from django.views.generic.list import ListView
 from django_filters.views import FilterView
+from notifications.signals import notify
 from rules.contrib.views import PermissionRequiredMixin, objectgetter, permission_required
 
 from .filters import NewsItemFilter
@@ -242,6 +243,13 @@ def release_newsitem(request, pk: int) -> HttpResponse:
     news_item.save(update_fields=["status"])
 
     messages.success(request, _("News item <strong>%(name)s</strong> succesfully released" % ({"name": news_item.title})))
+    notify.send(
+        request.user,
+        recipient=news_item.author,
+        action_object=news_item,
+        verb="released",
+        description=_("News item <strong>%(title)s</strong> was released") % dict(title=news_item.title),
+    )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
 
@@ -257,5 +265,24 @@ def update_status_newsitem(request, pk: int, status: str) -> HttpResponse:
     news_item.save(update_fields=["status"])
 
     messages.success(request, _("News item <strong>%(name)s</strong> succesfully changed" % ({"name": news_item.title})))
+
+    if news_item.status == NewsItem.StatusChoices.IN_REVIEW:
+        notify.send(
+            request.user,
+            recipient=news_item.author,
+            action_object=news_item,
+            verb=news_item.get_status_display(),
+            description=_("News item <strong>%(title)s</strong> ready for review") % dict(title=news_item.title),
+            url=reverse_lazy("clubmanager_admin:news:news_edit", args=[news_item.id]),
+        )
+    else:
+        notify.send(
+            request.user,
+            recipient=Group.objects.get(name="editors"),
+            action_object=news_item,
+            verb=news_item.get_status_display(),
+            description=_("News item <strong>%(title)s</strong> returned to draft") % dict(title=news_item.title),
+            url=reverse_lazy("clubmanager_admin:news:news_edit", args=[news_item.id]),
+        )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))

@@ -202,3 +202,5 @@ DJANGO_REST_FRAMEWORK = {
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ],
 }
+
+DJANGO_NOTIFICATIONS_CONFIG = {"USE_JSONFIELD": True}
