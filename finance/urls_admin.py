@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views_admin
 
-app_name = "frontend"
+app_name = "finance"
 urlpatterns = [
     path("sponsors", views_admin.SponsorListView.as_view(), name="sponsors_index"),
     path("sponsors/add", views_admin.SponsorAddView.as_view(), name="sponsors_add"),

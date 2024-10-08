@@ -14,7 +14,7 @@ from .rules import is_team_admin
 
 class GameManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
-        return super(GameManager, self).get_queryset().select_related("team", "opponent", "competition", "season")
+        return super(GameManager, self).get_queryset().select_related("team", "opponent", "competition", "season", "game_type")
 
 
 class Opponent(RulesModel):

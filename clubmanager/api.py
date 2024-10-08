@@ -1,6 +1,6 @@
 from rest_framework import routers
 
-from frontend.api import SponsorViewSet
+from finance.api import SponsorViewSet
 from teams.api import TeamsViewSet
 from activities.api import GameViewSet
 from news.api import NewsItemViewSet

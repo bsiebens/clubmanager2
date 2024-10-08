@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
+    "notifications",
     "corsheaders",
     "markdownx",
     "rules.apps.AutodiscoverRulesConfig",
@@ -58,10 +59,11 @@ INSTALLED_APPS = [
     "members",
     "news",
     "teams",
-    "frontend",
+    "finance",
     "activities",
     "api",
     "django_cleanup.apps.CleanupConfig",
+    "django_rename_app",
 ]
 
 if DEBUG:

@@ -12,7 +12,7 @@
 {% block content %}
     <div class="action-bar">
         <div class="flex justify-end action-bar-add grow">
-            <a class="add-btn" href="{% url "clubmanager_admin:frontend:sponsors_add" %}">
+            <a class="add-btn" href="{% url "clubmanager_admin:finance:sponsors_add" %}">
                 <i class="fa-solid fa-plus"></i>{% translate "Add" %}
             </a>
         </div>
@@ -45,12 +45,23 @@
                 {% else %}
                     {% for sponsor in object_list %}
                         <tr class="hover">
-                            <td class="font-bold">
-                                <a href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
+                            <td class="flex flex-row items-center gap-2 font-bold">
+                                <div class="avatar">
+                                    <div class="w-12 h-12 p-1 border rounded-lg border-neutral">
+                                        <img alt="{{ sponsor.name }} avatar" src="{{ sponsor.logo.url }}" class="w-12 h-12" />
+                                    </div>
+                                </div>
+                                <a href="{% url "clubmanager_admin:finance:sponsors_edit" sponsor.id %}">
                                     {{ sponsor.name }}
                                 </a>
                             </td>
-                            <td><a class="border-b border-neutral" href="{{ sponsor.url }}">{{ sponsor.url }}</a></td>
+                            <td>
+                                {% if sponsor.url %}
+                                    <a class="border-b border-neutral" href="{{ sponsor.url }}">{{ sponsor.url }}</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if sponsor.active %}
                                     <i class="fa-solid fa-circle-check text-success"></i>
@@ -61,10 +72,10 @@
                             <td>{{ sponsor.start_date|date:"d M Y"|default:"-" }}</td>
                             <td>{{ sponsor.end_date|date:"d M Y"|default:"-" }}</td>
                             <td>
-                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
+                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:finance:sponsors_edit" sponsor.id %}">
                                     <i class="fa-solid fa-eye"></i>{% translate "Details" %}
                                 </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id %}">
+                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:finance:sponsors_delete" sponsor.id %}">
                                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                                 </a>
                             </td>
@@ -80,7 +91,7 @@
             <div>{% translate "No sponsors found" %}</div>
         {% else %}
             {% for sponsor in object_list %}
-                <a class="grow" href="{% url "clubmanager_admin:frontend:sponsors_edit" sponsor.id %}">
+                <a class="grow" href="{% url "clubmanager_admin:finance:sponsors_edit" sponsor.id %}">
                     <div class="data-card {% if sponsor.active %}border-l-success{% else %}border-l-error{% endif %}">
                         <div class="data">
                             <div>{{ sponsor.name }}</div>
@@ -90,7 +101,7 @@
                         </div>
 
                         <div>
-                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:frontend:sponsors_delete" sponsor.id %}">
+                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:finance:sponsors_delete" sponsor.id %}">
                                 <i class="fa-solid fa-trash"></i>
                             </a>
                         </div>
