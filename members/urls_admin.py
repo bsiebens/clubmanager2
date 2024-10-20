@@ -9,8 +9,4 @@ urlpatterns = [
     path("members/add/bulk", views_admin.MassUploadView.as_view(), name="members_add_bulk"),
     path("members/edit/<int:pk>", views_admin.MemberEditView.as_view(), name="members_edit"),
     path("members/delete/<int:pk>", views_admin.MemberDeleteView.as_view(), name="members_delete"),
-    path("families", views_admin.FamilyListView.as_view(), name="families_index"),
-    path("families/add", views_admin.FamilyAddView.as_view(), name="families_add"),
-    path("families/edit/<int:pk>", views_admin.FamilyEditView.as_view(), name="families_edit"),
-    path("families/delete/<int:pk>", views_admin.FamilyDeleteView.as_view(), name="families_delete"),
 ]

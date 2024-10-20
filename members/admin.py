@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Member, Family
+from .models import Member
 
 
 @admin.register(Member)
@@ -17,13 +17,4 @@ class MemberAdmin(admin.ModelAdmin):
         ["EMERGENCY CONTACTS", {"fields": ["emergency_phone_primary", "emergency_phone_secondary"]}],
         ["CLUB INFORMATION", {"fields": ["license", "is_organization_admin"]}],
         ["OTHER", {"fields": ["password_change_required", "notes"]}],
-    ]
-
-
-@admin.register(Family)
-class FamilyAdmin(admin.ModelAdmin):
-    list_display = ["id", "created", "modified"]
-    filter_horizontal = ["members"]
-    fieldsets = [
-        ["GENERAL INFORMATION", {"fields": ["members"]}],
     ]

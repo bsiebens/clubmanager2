@@ -135,25 +135,5 @@ class Member(RulesModel):
         return member
 
 
-class Family(RulesModel):
-    """A family is a collection of members that belong together. A member can be a part of multiple families, within a family all information is shared."""
-
-    members = models.ManyToManyField(Member, verbose_name=_("members"))
-
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    objects = FamilyManager()
-
-    def __str__(self):
-        return _("Family {i.id}").format(i=self)
-
-    class Meta:
-        verbose_name = _("family")
-        verbose_name_plural = _("families")
-        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
-
-
 # Log both models into the audit log to maintain track of changes and who made them.
 auditlog.register(Member)
-auditlog.register(Family)

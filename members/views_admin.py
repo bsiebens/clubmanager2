@@ -4,7 +4,6 @@ from typing import Any
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models.query import QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -12,9 +11,9 @@ from django.views.generic.edit import CreateView, DeleteView, FormView, UpdateVi
 from django_filters.views import FilterView
 from rules.contrib.views import PermissionRequiredMixin
 
-from .filters import FamilyFilter, MemberFilter
+from .filters import MemberFilter
 from .forms import MassUploadForm, MemberForm
-from .models import Family, Member
+from .models import Member
 
 
 class MemberListView(PermissionRequiredMixin, FilterView):
@@ -82,57 +81,6 @@ class MemberEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
         initial_data["email"] = self.object.email
 
         return initial_data
-
-
-class FamilyListView(PermissionRequiredMixin, FilterView):
-    filterset_class = FamilyFilter
-    paginate_by = 25
-    permission_required = "members"
-    permission_denied_message = _("You do not have sufficient access rights to access the member list")
-
-    def handle_no_permission(self) -> HttpResponseRedirect:
-        messages.error(self.request, self.get_permission_denied_message())
-        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
-
-
-class FamilyAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
-    model = Family
-    fields = ["members"]
-    localized_fields = fields
-    success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family added succesfully")
-    permission_required = "members"
-    permission_denied_message = _("You do not have sufficient access rights to access the member list")
-
-    def handle_no_permission(self) -> HttpResponseRedirect:
-        messages.error(self.request, self.get_permission_denied_message())
-        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
-
-
-class FamilyEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
-    model = Family
-    fields = ["members"]
-    localized_fields = fields
-    success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family updated succesfully")
-    permission_required = "members"
-    permission_denied_message = _("You do not have sufficient access rights to access the member list")
-
-    def handle_no_permission(self) -> HttpResponseRedirect:
-        messages.error(self.request, self.get_permission_denied_message())
-        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
-
-
-class FamilyDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
-    model = Family
-    success_url = reverse_lazy("clubmanager_admin:members:families_index")
-    success_message = _("Family deleted succesfully")
-    permission_required = "members"
-    permission_denied_message = _("You do not have sufficient access rights to access the member list")
-
-    def handle_no_permission(self) -> HttpResponseRedirect:
-        messages.error(self.request, self.get_permission_denied_message())
-        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
 
 
 class MassUploadView(PermissionRequiredMixin, SuccessMessageMixin, FormView):
