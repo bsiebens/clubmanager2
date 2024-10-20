@@ -249,6 +249,7 @@ def release_newsitem(request, pk: int) -> HttpResponse:
         action_object=news_item,
         verb="released",
         description=_("News item <strong>%(title)s</strong> was released") % dict(title=news_item.title),
+        url=reverse_lazy("clubmanager_admin:news:news_edit", args=[news_item.id]),
     )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:news:news_index"))
