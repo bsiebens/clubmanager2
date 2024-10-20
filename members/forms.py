@@ -14,7 +14,7 @@ class MemberForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        fields = ["phone", "emergency_phone_primary", "emergency_phone_secondary", "is_organization_admin", "license", "birthday"]
+        fields = ["phone", "emergency_phone_primary", "emergency_phone_secondary", "is_organization_admin", "license", "birthday", "family_members"]
         localized_fields = fields
 
     def save(self, commit: bool = True) -> Member:
@@ -39,7 +39,9 @@ class MemberForm(forms.ModelForm):
         member.is_organization_admin = self.cleaned_data["is_organization_admin"]
         member.license = self.cleaned_data["license"]
         member.birthday = self.cleaned_data["birthday"]
-        member.save(update_fields=self.Meta.fields)
+        member.save(update_fields=["phone", "emergency_phone_primary", "emergency_phone_secondary", "is_organization_admin", "license", "birthday"])
+
+        member.family_members.set(self.cleaned_data["family_members"])
 
         return member
 

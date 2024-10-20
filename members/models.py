@@ -27,6 +27,7 @@ class Member(RulesModel):
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, verbose_name=_("user"))
     notes = models.TextField(_("notes"), blank=True)
+    family_members = models.ManyToManyField("self", blank=True)
 
     birthday = models.DateField(_("birthday"), blank=True, null=True)
     license = models.CharField(_("license"), blank=LICENSE_REQUIRED, max_length=250)
@@ -98,7 +99,8 @@ class Member(RulesModel):
             member.user.username = email
             member.user.email = email
 
-            if password is None or password == "":
+            if password is not None and password != "":
+                print("in creation piece")
                 new_member_user_created.send(member, password=password)
 
             member.user.save(update_fields=["first_name", "last_name", "username", "email"])

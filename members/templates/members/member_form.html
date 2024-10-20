@@ -67,6 +67,7 @@
             {% form_field form.email %}
             {% form_field form.phone %}
             {% form_field form.birthday %}
+            {% form_field form.family_members %}
         </div>
 
         <h2 class="subtitle">{% translate "Emergency contacts" %}</h2>
@@ -82,7 +83,7 @@
         </div>
 
         <h2 class="subtitle">{% translate "Password" %}</h2>
-        <div class="text-sm text-gray-500 text-justify mt-2">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
+        <div class="mt-2 text-sm text-justify text-gray-500">{% blocktranslate %}Setting the password here will overwrite the current password for this member, after changing the member will be prompted to set a new password at the next login.<br />If both fields are empty the current password will not be changed.{% endblocktranslate %}</div>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
             {% form_field form.password %}
             {% form_field form.password_confirmation %}
@@ -92,4 +93,8 @@
             <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
         </button>
     </form>
+    
+    <script type="text/javascript">
+        new Choices(document.querySelector("#id_family_members"));
+    </script>
 {% endblock content %}

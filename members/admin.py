@@ -11,8 +11,9 @@ class MemberAdmin(admin.ModelAdmin):
     date_hierarchy = "birthday"
     search_fields = ["user__last_name", "user__first_name", "user__email", "license", "phone"]
     raw_id_fields = ["user"]
+    filter_horizontal = ["family_members"]
     fieldsets = [
-        ["GENERAL INFORMATION", {"fields": ["user", "birthday", "phone"]}],
+        ["GENERAL INFORMATION", {"fields": ["user", "birthday", "phone", "family_members"]}],
         ["EMERGENCY CONTACTS", {"fields": ["emergency_phone_primary", "emergency_phone_secondary"]}],
         ["CLUB INFORMATION", {"fields": ["license", "is_organization_admin"]}],
         ["OTHER", {"fields": ["password_change_required", "notes"]}],
