@@ -6092,6 +6092,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
+.grid-cols-3{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .flex-row{
   flex-direction: row;
 }
@@ -6390,6 +6394,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 
 .text-opacity-50{
   --tw-text-opacity: 0.5;
+}
+
+.underline{
+  text-decoration-line: underline;
 }
 
 .opacity-50{
@@ -7228,6 +7236,10 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
   border-bottom-width: 2px;
 }
 
+.hover\:font-bold:hover{
+  font-weight: 700;
+}
+
 .hover\:underline:hover{
   text-decoration-line: underline;
 }
@@ -7235,6 +7247,10 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 @media (min-width: 1024px){
   .lg\:m-0{
     margin: 0px;
+  }
+
+  .lg\:mb-0{
+    margin-bottom: 0px;
   }
 
   .lg\:block{
