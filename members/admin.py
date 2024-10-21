@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Member
+from .models import Member, Invoice, Material, LineItem
 
 
 @admin.register(Member)
@@ -18,3 +18,8 @@ class MemberAdmin(admin.ModelAdmin):
         ["CLUB INFORMATION", {"fields": ["license", "is_organization_admin"]}],
         ["OTHER", {"fields": ["password_change_required", "notes"]}],
     ]
+
+
+admin.site.register(Invoice)
+admin.site.register(Material)
+admin.site.register(LineItem)
