@@ -1,12 +1,13 @@
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
+import uuid
+
 from django.contrib import admin
+from django.db import models
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from rules.contrib.models import RulesModel
 
 from members.models import Member
-from teams.models import Team, TeamRole, Season
-from rules.contrib.models import RulesModel
-import uuid
+from teams.models import Season, Team, TeamRole
 
 
 class Sponsor(models.Model):

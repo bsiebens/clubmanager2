@@ -1,15 +1,14 @@
 from typing import Any
 
 from auditlog.registry import auditlog
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import DEFAULT_DB_ALIAS, models
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-from rules.contrib.models import RulesModel, RulesModelMixin, RulesModelBase
-from django.conf import settings
+from rules.contrib.models import RulesModel
+
 from .rules import is_organization_admin
-from django.db.models import Sum
-import uuid
 
 LICENSE_REQUIRED = not settings.CLUB_ENFORCE_LICENSE
 
