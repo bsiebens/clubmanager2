@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Sponsor
+from .models import Sponsor, Invoice, Material, LineItem
 
 
 @admin.register(Sponsor)
@@ -10,3 +10,8 @@ class SponsorAdmin(admin.ModelAdmin):
         ["GENERAL INFORMATION", {"fields": ["name", "url", "logo"]}],
         ["DATE INFORMATION", {"fields": ["start_date", "end_date"]}],
     ]
+
+
+admin.site.register(Invoice)
+admin.site.register(Material)
+admin.site.register(LineItem)
