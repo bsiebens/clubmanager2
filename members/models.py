@@ -17,11 +17,6 @@ class UserManager(models.Manager):
         return super(UserManager, self).get_queryset().select_related("user")
 
 
-class FamilyManager(models.Manager):
-    def get_queryset(self) -> models.QuerySet:
-        return super(FamilyManager, self).get_queryset().prefetch_related("members")
-
-
 class Member(RulesModel):
     """User profile for a given member."""
 
