@@ -8,4 +8,8 @@ urlpatterns = [
     path("sponsors/add", views_admin.SponsorAddView.as_view(), name="sponsors_add"),
     path("sponsors/edit/<int:pk>", views_admin.SponsorEditView.as_view(), name="sponsors_edit"),
     path("sponsors/delete/<int:pk>", views_admin.SponsorDeleteView.as_view(), name="sponsors_delete"),
+    path("materials", views_admin.MaterialListView.as_view(), name="materials_index"),
+    path("materials/add", views_admin.MaterialAddView.as_view(), name="materials_add"),
+    path("materials/edit/<int:pk>", views_admin.MaterialEditView.as_view(), name="materials_edit"),
+    path("materials/delete/<int:pk>", views_admin.MaterialDeleteView.as_view(), name="materials_delete"),
 ]

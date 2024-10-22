@@ -104,5 +104,11 @@
             <i class="fa-solid fa-euro min-w-5"></i>
             <span class="mt-1">{% translate "Sponsors" %}</span>
         </a>
+
+        {% url "clubmanager_admin:finance:materials_index" as materials_index %}
+        <a href="{{ materials_index }}" {% if materials_index in request.path %}class="active"{% endif %}>
+            <i class="fa-solid fa-dumbbell min-w-5"></i>
+            <span class="mt-1">{% translate "Cost Items" %}</span>
+        </a>
     {% endif %}
 </li>
