@@ -48,10 +48,7 @@ class OrderAdmin(admin.ModelAdmin):
     display_order.short_description = "Order"
 
     def display_members(self, obj):
-        members = obj.lineitem_set.all().values("member__user__first_name", "member__user__last_name").distinct()
-        members = ["{first_name} {last_name}".format(first_name=member["member__user__first_name"], last_name=member["member__user__last_name"]) for member in members]
-
-        return mark_safe("<br />".join(members))
+        return mark_safe("<br />".join(["{first_name} {last_name}".format(first_name=member.first_name, last_name=member.last_name) for member in obj.members()]))
 
     display_members.short_description = "Members"
 

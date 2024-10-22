@@ -143,6 +143,21 @@ class Order(RulesModel):
 
         return round(total, 2)
 
+    def currency(self) -> str:
+        return mark_safe(settings.CLUB_DEFAULT_CURRENCY_ENTITY)
+
+    def display_total(self) -> str:
+        return mark_safe("{price} {unit}".format(price=self.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
+
+    def members(self) -> list[Member]:
+        members = []
+
+        for item in self.lineitem_set.exclude(member=None).prefetch_related().order_by("member__user__last_name", "member__user__first_name"):
+            if item.member not in members:
+                members.append(item.member)
+
+        return members
+
 
 class LineItem(RulesModel):
     """A line item on a given invoice"""

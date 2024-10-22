@@ -12,4 +12,8 @@ urlpatterns = [
     path("materials/add", views_admin.MaterialAddView.as_view(), name="materials_add"),
     path("materials/edit/<int:pk>", views_admin.MaterialEditView.as_view(), name="materials_edit"),
     path("materials/delete/<int:pk>", views_admin.MaterialDeleteView.as_view(), name="materials_delete"),
+    path("orders", views_admin.OrderListView.as_view(), name="orders_index"),
+    path("orders/add", views_admin.OrderAddView.as_view(), name="orders_add"),
+    path("orders/edit/<int:pk>", views_admin.OrderEditView.as_view(), name="orders_edit"),
+    path("orders/delete/<int:pk>", views_admin.OrderDeleteView.as_view(), name="orders_delete"),
 ]
