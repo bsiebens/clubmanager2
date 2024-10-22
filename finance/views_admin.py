@@ -172,9 +172,8 @@ class OrderListView(PermissionRequiredMixin, FilterView):
         context["submitted"] = 0
         context["invoiced"] = 0
         context["payed"] = 0
-        context["default_season"] = Season.get_season_id()
 
-        counts = Order.objects.values("status").annotate(Count("status"))
+        counts = Order.objects.filter(season=Season.get_season_id()).values("status").annotate(Count("status"))
         for count in counts:
             match count["status"]:
                 case 0:
@@ -195,4 +194,16 @@ class OrderAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView): ..
 class OrderEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView): ...
 
 
-class OrderDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView): ...
+class OrderDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
+    model = Order
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    success_message = _("Registration <strong>%(name)s</strong> deleted succesfully")
+    permission_required = "finance"
+    permission_denied_message = _("You do not have sufficient access rights to access the registration list")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.uuid)
