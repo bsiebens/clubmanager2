@@ -2,7 +2,8 @@ from typing import Any
 
 from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
+from django.forms import BaseForm
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -12,10 +13,11 @@ from rules.contrib.views import PermissionRequiredMixin
 from django_filters.views import FilterView
 from django.db.models.query import QuerySet
 from django.db.models import Count
-
+from django.db import transaction
 from .filters import OrderFilter
 from .models import Order, LineItem, Material, Sponsor
 from teams.models import Season
+from .forms import OrderLineItemFormSet
 
 
 class SponsorListView(PermissionRequiredMixin, ListView):
@@ -188,7 +190,50 @@ class OrderListView(PermissionRequiredMixin, FilterView):
         return context
 
 
-class OrderAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView): ...
+class OrderAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
+    model = Order
+    fields = ["status", "season"]
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    success_message = _("Registration <strong>%(name)s</strong> added succesfully")
+    permission_required = "finance"
+    permission_denied_message = _("You do not have sufficient access righs to access the registration list")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.uuid)
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super(OrderAddView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            print(self.request.POST)
+            context["lineitems"] = OrderLineItemFormSet(self.request.POST)
+        else:
+            context["lineitems"] = OrderLineItemFormSet()
+
+        return context
+
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        context = self.get_context_data()
+
+        lineitems = context["lineitems"]
+        with transaction.atomic():
+            self.object = form.save()
+
+            print(self.object)
+
+            if lineitems.is_valid():
+                lineitems.instance = self.object
+
+                print(lineitems)
+                print(lineitems.instance)
+
+                lineitems.save()
+
+        return super(OrderAddView, self).form_valid(form)
 
 
 class OrderEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView): ...

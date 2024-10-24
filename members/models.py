@@ -131,5 +131,4 @@ class Member(RulesModel):
         return member
 
 
-# Log both models into the audit log to maintain track of changes and who made them.
 auditlog.register(Member)

@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.models import RulesModel
+from auditlog.registry import auditlog
 
 from members.models import Member
 from teams.models import Season, Team, TeamRole
@@ -165,12 +166,23 @@ class LineItem(RulesModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("order"))
     member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("member"))
     material = models.ForeignKey(Material, on_delete=models.CASCADE, verbose_name=_("item"))
-    number = models.IntegerField(default=10)
+    number = models.IntegerField(blank=True, null=True)
 
     objects = LineItemManager()
 
     def __str__(self):
         return self.material.description
+
+    def save(self, *args, **kwargs):
+        if self.number is None or self.number == 0:
+            current_max_number = self.order.lineitem_set.aggregate(Max("number"))["number__max"]
+
+            if current_max_number is None:
+                current_max_number = 0
+
+            self.number = current_max_number + 10
+
+        super(LineItem, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = _("line item")
@@ -182,3 +194,6 @@ class LineItem(RulesModel):
         unit = "&percnt;" if self.material.price_type == Material.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
 
         return mark_safe("{price} {unit}".format(price=self.material.price, unit=unit))
+
+
+auditlog.register(Order)

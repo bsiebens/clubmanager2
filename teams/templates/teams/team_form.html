@@ -61,28 +61,26 @@
             {% form_field form.logo %}
         </div>
 
-        <div class="mt-2">
-            {{ pictures.management_form }}
+        {{ pictures.management_form }}
 
-            <div class="m-2">
-                <div class="mb-2 formset-row">
-                    <div class="grid grid-cols-1 mb-2 lg:grid-cols-3 lg:mb-0">
-                        {% for form in pictures.forms %}
-                            {% for field in form.visible_fields %}
-                                {% if forloop.first %}
-                                    {% for hidden in form.hidden_fields %}
-                                        {{ hidden }}
-                                    {% endfor %}
-                                {% endif %}
-    
-                                <div>
-                                    {% form_field field size="small" %}
-                                </div>
-                            {% endfor %}
+        <div class="flex flex-col gap-2 p-2 m-2">
+            {% for form in pictures.forms %}
+                <div class="formset-row">
+                    <div class="grid items-center grid-cols-1 gap-2 lg:grid-cols-4">
+                        {% for field in form.hidden_fields %}
+                            {{ hidden }}
                         {% endfor %}
+
+                        {% for field in form.visible_fields %}
+                            <div>
+                                {% form_field field size="small" %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="deletelink"></div>
                     </div>
                 </div>
-            </div>
+            {% endfor %}
         </div>
 
         <button class="w-full mt-8 btn btn-neutral" type="submit">
@@ -95,11 +93,12 @@
     <script type="text/javascript">
         $(".formset-row").formset({
             addText: "{% translate "Add row" %}",
-            deleteText: "{% translate "Remove" %}",
+            deleteText: "{% translate "Remove row" %}",
             prefix: "pictures",
-            addCssClass: "btn btn-sm btn-outline",
-            deleteCssClass: "btn btn-sm btn-outline btn-error",
-            hideLastAddForm: true
+            addCssClass: "btn btn-sm btn-outline max-w-fit",
+            deleteCssClass: "btn btn-error btn-outline btn-sm",
+            hideLastAddForm: true,
+            deleteContainerClass: "deletelink"
         });
     </script>
 {% endblock content %}

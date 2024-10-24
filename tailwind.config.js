@@ -13,6 +13,7 @@ module.exports = {
     "file-input-xs",
     "input-xs",
     "select-xs",
+    "input-sm",
   ],
   theme: {
     extend: {
