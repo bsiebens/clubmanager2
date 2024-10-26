@@ -7309,6 +7309,10 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
+  .lg\:grid-cols-6{
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
   .lg\:flex-row{
     flex-direction: row;
   }

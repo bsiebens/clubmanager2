@@ -192,7 +192,7 @@ class OrderListView(PermissionRequiredMixin, FilterView):
 
 class OrderAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     model = Order
-    fields = ["status", "season"]
+    fields = ["season"]
     success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
     success_message = _("Registration <strong>%(name)s</strong> added succesfully")
     permission_required = "finance"
@@ -236,7 +236,43 @@ class OrderAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
         return super(OrderAddView, self).form_valid(form)
 
 
-class OrderEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView): ...
+class OrderEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
+    model = Order
+    fields = ["season"]
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    success_message = _("Registration <strong>%(name)s</strong> updated succesfully")
+    permission_required = "finance"
+    permission_denied_message = _("You do not have sufficient access righs to access the registration list")
+
+    def get_success_message(self, cleaned_data: dict[str, str]) -> str:
+        return self.success_message % dict(cleaned_data, name=self.object.uuid)
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+        return HttpResponseRedirect(redirect_to=reverse_lazy("clubmanager_admin:index"))
+
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super(OrderEditView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            print(self.request.POST)
+            context["lineitems"] = OrderLineItemFormSet(self.request.POST, instance=self.object)
+        else:
+            context["lineitems"] = OrderLineItemFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        context = self.get_context_data()
+
+        lineitems = context["lineitems"]
+        with transaction.atomic():
+            self.object = form.save()
+
+            if lineitems.is_valid():
+                lineitems.save()
+
+        return super(OrderEditView, self).form_valid(form)
 
 
 class OrderDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView):
