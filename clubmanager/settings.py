@@ -183,11 +183,15 @@ STATICFILES_FINDERS = [
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
+# ClubManager mandatory settings
 SITE_NAME = env("CLUB_SITE_NAME")
 SITE_LOGO = env("CLUB_SITE_LOGO")
+
+# ClubManager optional settings
 CLUB_ENFORCE_LICENSE = env("CLUB_ENFORCE_LICENSE", default=False)
 CLUB_DEFAULT_CURRENCY = env("CLUB_DEFAULT_CURRENCY", default="EUR")
 CLUB_DEFAULT_CURRENCY_ENTITY = env("CLUB_DEFAULT_CURRENCY_ENTITY", default="&euro;")
+CLUB_DEFAULT_HOME_LOCATION = env("CLUB_DEFAULT_HOME_LOCATION", default="Ice Skating Center Mechelen")
 
 INTERNAL_IPS = ["127.0.0.1"]
 

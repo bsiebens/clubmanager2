@@ -1,11 +1,13 @@
+from datetime import timedelta
+
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework import viewsets
 
+from teams.models import Season
+
 from .models import Game
 from .serializers import GameSerializer
-from teams.models import Season
-from datetime import timedelta
 
 
 class GameViewSet(viewsets.ReadOnlyModelViewSet):
@@ -15,6 +17,7 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
         queryset = Game.objects.all()
         team = self.request.query_params.get("team", "all")
         count = int(self.request.query_params.get("count", 5))
+
         home_games_only = False if self.request.query_params.get("home_games_only", "false") == "false" else True
         all_games_for_season = False if self.request.query_params.get("all_games_for_season", "false") == "false" else True
 
@@ -31,5 +34,8 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
 
         if all_games_for_season:
             return queryset
+
+        live_count = queryset.filter(live=True).count()
+        count = count + live_count
 
         return queryset[:count]

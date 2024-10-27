@@ -1,10 +1,10 @@
-from activities.models import Game
-from .base import CompetitionBaseClass, GameInformation
 from urllib.parse import urljoin
-from bs4 import BeautifulSoup
+
 import requests
-import json
-from requests.adapters import HTTPAdapter
+
+from activities.models import Game
+
+from .base import CompetitionBaseClass
 
 
 class RBIHF(CompetitionBaseClass):

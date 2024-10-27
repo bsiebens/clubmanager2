@@ -7,7 +7,7 @@ import datetime
 
 
 class Command(BaseCommand):
-    help = "Fetches updates for games with a start date in the last 3 hours based on their competition parameters"
+    help = "Fetches updates for games with a start date in the last X hours based on their competition parameters [default X = 3]"
 
     def add_arguments(self, parser: CommandParser) -> None:
         parser.add_argument("--hours", action="store", default=3, type=int, help="Change the hour limit to the specified number of hours")

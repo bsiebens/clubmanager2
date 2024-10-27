@@ -1,5 +1,6 @@
 import importlib
 
+from django.conf import settings
 from django.contrib import admin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -14,11 +15,17 @@ from .rules import is_team_admin
 
 class GameManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
-        return super(GameManager, self).get_queryset().select_related("team", "opponent", "competition", "season", "game_type")
+        return super(GameManager, self).get_queryset().select_related("team", "opponent", "season", "game_type")
 
 
 class Opponent(RulesModel):
-    """A class holding data on opponents"""
+    """
+    Opponents can be used by games and other activities to highlight the opposing team(s). It's basically a lightweight version of a team containing following fields:
+    * name - CharField
+    * logo - ImageField
+
+    Both fields are mandatory.
+    """
 
     name = models.CharField(_("name"), max_length=250)
     logo = models.ImageField(_("logo"), upload_to="opponent/logo/")
@@ -37,9 +44,20 @@ class Opponent(RulesModel):
 
 
 class GameType(RulesModel):
-    """Can hold different types of games"""
+    """
+    A game type defines a few parameters that can influence how games are displayed. For now we only store 2 fields:
+    * name - CharField
+    * opponent_count - IntegerField
+
+    The opponent count defines how many opponents can participate in a given game. Based on this number a frontend can decide how to render a given game.
+    """
 
     name = models.CharField(_("name"), max_length=250)
+    opponent_count = models.IntegerField(
+        _("opponent count"),
+        default=1,
+        help_text=_("Number of opponents for this game type, does not have any influence on the working of clubmanager but is passed along in the API."),
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -55,16 +73,35 @@ class GameType(RulesModel):
 
 
 class Game(RulesModel):
-    """A game"""
+    """
+    A game activity is defined by it's game type. It has a defined place and timestamp. It optionally allows for storing the end result. Following fields are available:
+    * team - ForeignKey to Team
+    * opponent - ForeignKey to Opponent
+    * season - ForeignKey to Season it belongs to - defaults to the season for the current date, but will be calculated based on the date of the game
+    * date - DateTimeField
+    * location - CharField, if you defined CLUB_DEFAULT_HOME_LOCATION in settings it will use this as the default
+    * game_type - ForeignKey to GameType
+    * competition - ForeignKey to Competition
+    * game_id - CharField, in case this game has an unique id for the given competition
+    * live - BooleanField, if game is happening live or not
+    * score_team - IntegerField
+    * score_opponent - IntegerField
+    """
+
+    COMPETITIONS = {"RBIHF": "activities.competition.hockey", "CEHL": "activities.competition.hockey"}
+
+    def get_competition_choices():
+        """Returns a choices object for the competitions specified in Game.COMPETITIONS"""
+        return {i: i for i in Game.COMPETITIONS.keys()}
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"), related_name="games", default=Season.get_season_id, blank=True, null=True)
     opponent = models.ForeignKey(Opponent, on_delete=models.CASCADE, verbose_name=_("opponent"), related_name="games", blank=True, null=True)
     date = models.DateTimeField()
-    location = models.CharField(_("location"), max_length=250, default="Ice Skating Center Mechelen")
+    location = models.CharField(_("location"), max_length=250)
     game_type = models.ForeignKey(GameType, on_delete=models.PROTECT, verbose_name=_("game type"), related_name="games")
 
-    competition = models.ForeignKey("Competition", on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("competition"))
+    competition = models.CharField(_("competition"), max_length=20, choices=get_competition_choices, blank=True, null=True)
     game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
     live = models.BooleanField(_("live"), default=False)
     score_team = models.IntegerField(_("score team"), default=0, blank=True, null=True)
@@ -97,21 +134,13 @@ class Game(RulesModel):
     @property
     @admin.display(description=_("Home game?"), boolean=True)
     def is_home_game(self) -> bool:
-        return self.location.lower() == "ice skating center mechelen" or self.location.lower() == "iscm"
+        return self.location.lower() == settings.CLUB_DEFAULT_HOME_LOCATION.lower()
 
-    def update_game_information(self):
+    def update_game_information(self) -> None:
+        """Checks if this games belongs to a given competition. If yes, will try to import the competition module and run it's update_game_information() function."""
+
         if self.competition is not None:
-            module = importlib.import_module(self.competition.module)
-            competition = getattr(module, self.competition.name)
+            module = importlib.import_module(self.COMPETITIONS[self.competition])
+            competition = getattr(module, self.competition)
 
             competition().update_game_information(game=self)
-
-
-class Competition(models.Model):
-    """A competition has a name with a specific URL to fetch data from. These are managed centrally."""
-
-    name = models.CharField(max_length=250)
-    module = models.CharField(max_length=250)
-
-    def __str__(self):
-        return self.name

@@ -51,7 +51,7 @@
     .action-bar > .action-bar-filter > form {
         @apply flex flex-col lg:flex-row;
         @apply gap-2;
-        @apply items-center;
+        @apply items-end;
     }
 
     .action-bar > .action-bar-filter > form > button {

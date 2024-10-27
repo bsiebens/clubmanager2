@@ -10,23 +10,12 @@
 {% endblock pagetitle %}
 
 {% block content %}
-    <div class="justify-end action-bar">
-        <form class="add-form" method="post" action="{% url "clubmanager_admin:activities:gametypes_add" %}">
-            {% csrf_token %}
-
-            <div class="form-label">
-                {% translate "Add a new game type" %}
-            </div>
-
-            <div class="form">
-                {% form_field form.name show_label=False %}
-
-                <button type="submit">
-                    <i class="fa-solid fa-add"></i>
-                    {% translate "Add" %}
-                </button>
-            </div>
-        </form>
+    <div class="action-bar">
+        <div class="flex justify-end action-bar-add grow">
+            <a class="add-btn" href="{% url "clubmanager_admin:activities:gametypes_add" %}">
+                <i class="fa-solid fa-plus"></i>{% translate "Add" %}
+            </a>
+        </div>
     </div>
 
     <div class="hidden mt-2 lg:block">
@@ -39,6 +28,7 @@
                         </label>
                     </th> {% endcomment %}
                     <th>{% translate "Game Type" %}</th>
+                    <th>{% translate "Number of opponents" %}</th>
                     <th></th>
                 </tr>
             </thead>
@@ -52,8 +42,14 @@
                 {% else %}
                     {% for game_type in object_list %}
                         <tr class="hover">
-                            <td class="font-bold">{{ game_type.name }}</td>
+                            <td class="font-bold">
+                                <a href="{% url "clubmanager_admin:activities:gametypes_edit" game_type.id %}">{{ game_type.name }}</a>
+                            </td>
+                            <td>{{ game_type.opponent_count|default:"-" }}</td>
                             <td>
+                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:activities:gametypes_edit" game_type.id %}">
+                                    <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                                </a>
                                 <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:activities:gametypes_delete" game_type.id %}">
                                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                                 </a>

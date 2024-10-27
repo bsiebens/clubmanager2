@@ -6,6 +6,26 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required, permission_required
 from django_otp.decorators import otp_required
 
+from django.http import HttpResponseRedirect
+from rules.contrib.views import PermissionRequiredMixin
+from django.utils.translation import gettext_lazy as _
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
+
+
+class MessagesDeniedMixin(PermissionRequiredMixin):
+    """An updated version of the PermissionRequiredMixin class that sets the denied message in the messages queue and redirects to a given page."""
+
+    permission_denied_message = _("You do not have access to the requested page")
+    redirect_to = reverse_lazy("clubmanager_admin:index")
+
+    def handle_no_permission(self) -> HttpResponseRedirect:
+        messages.error(self.request, self.get_permission_denied_message())
+
+        return HttpResponseRedirect(redirect_to=self.redirect_to)
+
+
 
 def index(request: HttpRequest) -> HttpResponse:
     """The main index page. For now only renders a template, but will be enhanced later on."""

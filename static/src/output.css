@@ -4133,55 +4133,7 @@ body > div.action-bar > .action-bar-filter > form.grow.justify-center.items-cent
 
 .action-bar > .action-bar-filter > form{
   gap: 0.5rem;
-  align-items: center;
-}
-
-body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > h1{
-  display: none;
-}
-
-body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > p{
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 600;
-  margin-left: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-@supports not (color: oklch(0% 0 0)){
-  body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > form > button.btn.btn-primary{
-    --btn-color: var(--fallback-n);
-  }
-}
-
-@supports (color: oklch(0% 0 0)){
-  body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > form > button.btn.btn-primary{
-    --btn-color: var(--n);
-  }
-}
-
-body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > form > button.btn.btn-primary{
-  --tw-text-opacity: 1;
-  color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-n,oklch(var(--n)/1));
-}
-
-@supports not (color: oklch(0% 0 0)){
-  body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > p:nth-child(3) > a{
-    --btn-color: var(--fallback-n);
-  }
-}
-
-@supports (color: oklch(0% 0 0)){
-  body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > p:nth-child(3) > a{
-    --btn-color: var(--n);
-  }
-}
-
-body > div.flex.grow.justify-center.action-bar > .action-bar-filter > form > div > div:nth-child(2) > div.mt-8 > p:nth-child(3) > a{
-  --tw-text-opacity: 1;
-  color: var(--fallback-nc,oklch(var(--nc)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-n,oklch(var(--n)/1));
+  align-items: flex-end;
 }
 
 .action-bar > .action-bar-filter > form > button{
@@ -7307,10 +7259,6 @@ body > div.flex.grow.justify-center.choices__list--single .choices__item > div >
 
   .lg\:grid-cols-5{
     grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .lg\:grid-cols-6{
-    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
   .lg\:flex-row{

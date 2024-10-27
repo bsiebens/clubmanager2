@@ -1,20 +1,25 @@
+from typing import TYPE_CHECKING
+
 import rules
 from django.contrib.auth.models import AbstractUser
 
 from news.rules import is_admin
 
+if TYPE_CHECKING:
+    from .models import Game
+
 
 @rules.predicate
-def is_team_admin(user: AbstractUser | None, game) -> bool:
-    from teams.models import Season, TeamMembership
+def is_team_admin(user: AbstractUser | None, game: "Game | None") -> bool:
+    """Returns True if user is set and user has a team role that is flagged as admin for a the team linked to the given game. Otherwise returns False."""
 
-    season = Season.get_season()
+    from teams.models import Season, TeamMembership
 
     if user is not None:
         if game is not None:
-            return TeamMembership.objects.filter(member__user=user, team=game.team, season=season, role__admin_role=True).exists()
-
-        return TeamMembership.objects.filter(member__user=user, season=season, role__admin_role=True).exists()
+            return TeamMembership.objects.filter(member__user=user, team=game.team, season=game.season, role__admin_role=True).exists()
+        else:
+            return TeamMembership.objects.filter(member__user=user, role__admin_role=True, season=Season.get_season_id()).exists()
 
     return False
 

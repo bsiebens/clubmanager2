@@ -16,7 +16,7 @@
         <div class="action-bar-filter">
             <form>
                 {% for field in filter.form %}
-                    {% form_field field show_label=False size="extra-small" %}
+                    {% form_field field size="extra-small" %}
                 {% endfor %}
 
                 <button type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
@@ -77,7 +77,7 @@
                             <td>{{ game.opponent }}</td>
                             <td>{{ game.location }}</td>
                             <td>{{ game.game_type.name }}</td>
-                            <td>{{ game.competition.name|default:"-" }}</td>
+                            <td>{{ game.get_competition_display|default:"-" }}</td>
                             <td>{{ game.game_id|default:"-" }}</td>
                             <td>
                                 <a class="mr-2 btn btn-outline btn-sm" href="{% if has_team_rights %}{% url "clubmanager_admin:activities:games_edit" game.id %}{% else %}{% url "clubmanager_admin:activities:games_view" game.id %}{% endif %}">

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Competition, Opponent, Game, GameType
+from .models import Opponent, Game, GameType
 
 
 @admin.register(Opponent)
@@ -25,5 +25,4 @@ class GameAdmin(admin.ModelAdmin):
     list_editable = ["competition", "game_id"]
 
 
-admin.site.register(Competition)
 admin.site.register(GameType)
