@@ -1,0 +1,406 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-10-28 08:52+0100\n"
+"PO-Revision-Date: 2024-10-28 09:07+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.5\n"
+
+#: filters.py:8 templates/activities/game_detail.html:30
+#: templates/activities/game_filter.html:43
+msgid "Date"
+msgstr "Datum"
+
+#: models.py:30 models.py:55
+msgid "name"
+msgstr "naam"
+
+#: models.py:31
+msgid "logo"
+msgstr "logo"
+
+#: models.py:40 models.py:102
+msgid "opponent"
+msgstr "tegenstander"
+
+#: models.py:41
+msgid "opponents"
+msgstr "tegenstanders"
+
+#: models.py:57
+msgid "opponent count"
+msgstr "aantal tegenstanders"
+
+#: models.py:59
+msgid ""
+"Number of opponents for this game type, does not have any influence on the working of "
+"clubmanager but is passed along in the API."
+msgstr ""
+"Aantal tegenstanders voor dit wedstrijd type, heeft geen invloed op hoe clubmanager werkt "
+"maar wordt enkel doorgegeven via de API."
+
+#: models.py:69 models.py:105
+msgid "game type"
+msgstr "wedstrijd type"
+
+#: models.py:70
+msgid "game types"
+msgstr "wedstrijd types"
+
+#: models.py:100
+msgid "team"
+msgstr "team"
+
+#: models.py:101
+msgid "season"
+msgstr "seizoen"
+
+#: models.py:104
+msgid "location"
+msgstr "locatie"
+
+#: models.py:107
+msgid "competition"
+msgstr "competitie"
+
+#: models.py:108
+msgid "game ID"
+msgstr "wedstrijd nummer"
+
+#: models.py:109
+msgid "live"
+msgstr "live"
+
+#: models.py:110
+msgid "score team"
+msgstr "score team"
+
+#: models.py:111
+msgid "score opponent"
+msgstr "score tegenstander"
+
+#: models.py:122
+msgid "game"
+msgstr "wedstrijd"
+
+#: models.py:123
+msgid "games"
+msgstr "wedstrijden"
+
+#: models.py:138
+msgid "Home game?"
+msgstr "Thuiswedstrijd?"
+
+#: templates/activities/game_confirm_delete.html:5
+#: templates/activities/game_confirm_delete.html:8 templates/activities/game_detail.html:6
+#: templates/activities/game_detail.html:9 templates/activities/game_filter.html:8
+#: templates/activities/game_filter.html:11 templates/activities/game_form.html:7
+#: templates/activities/game_form.html:10
+msgid "Games"
+msgstr "Wedstrijden"
+
+#: templates/activities/game_confirm_delete.html:13
+#, python-format
+msgid ""
+"    \n"
+"            Are you sure you want to remove game <span class=\"font-bold\">%(team)s</"
+"span> vs <span class=\"font-bold\">%(opponent)s</span> (%(date)s)?\n"
+"        "
+msgstr ""
+"    \n"
+"            Bent u zeker dat u wedstrijd <span class=\"font-bold\">%(team)s</span> vs "
+"<span class=\"font-bold\">%(opponent)s</span> (%(date)s) wilt verwijderen?\n"
+"        "
+
+#: templates/activities/game_confirm_delete.html:22
+#: templates/activities/gametype_confirm_delete.html:22
+#: templates/activities/opponent_confirm_delete.html:22
+msgid "Cancel"
+msgstr "Annuleren"
+
+#: templates/activities/game_confirm_delete.html:23 templates/activities/game_filter.html:90
+#: templates/activities/game_form.html:24 templates/activities/game_form.html:35
+#: templates/activities/gametype_confirm_delete.html:23
+#: templates/activities/gametype_form.html:20 templates/activities/gametype_form.html:27
+#: templates/activities/gametype_list.html:55
+#: templates/activities/opponent_confirm_delete.html:23
+#: templates/activities/opponent_form.html:20 templates/activities/opponent_form.html:27
+#: templates/activities/opponent_list.html:60
+msgid "Delete"
+msgstr "Verwijderen"
+
+#: templates/activities/game_detail.html:17 templates/activities/game_form.html:49
+msgid "Game information"
+msgstr "Wedstrijd"
+
+#: templates/activities/game_detail.html:20 templates/activities/game_filter.html:44
+msgid "Team"
+msgstr "Team"
+
+#: templates/activities/game_detail.html:25 templates/activities/game_filter.html:45
+msgid "Opponent"
+msgstr "Tegenstander"
+
+#: templates/activities/game_detail.html:35 templates/activities/game_filter.html:46
+msgid "Location"
+msgstr "Locatie"
+
+#: templates/activities/game_detail.html:40 templates/activities/game_form.html:57
+msgid "Competition information"
+msgstr "Competitie"
+
+#: templates/activities/game_detail.html:43 templates/activities/game_filter.html:48
+msgid "Competition"
+msgstr "Competitie"
+
+#: templates/activities/game_detail.html:48 templates/activities/game_filter.html:49
+msgid "Game ID"
+msgstr "Wedstrijd nummer"
+
+#: templates/activities/game_detail.html:53 templates/activities/game_filter.html:47
+#: templates/activities/gametype_list.html:31
+msgid "Game Type"
+msgstr "Wedstrijd Type"
+
+#: templates/activities/game_detail.html:58 templates/activities/game_form.html:65
+msgid "Scoring information"
+msgstr "Scores"
+
+#: templates/activities/game_detail.html:61
+msgid "Score Team"
+msgstr "Score Team"
+
+#: templates/activities/game_detail.html:66
+msgid "Score Opponent"
+msgstr "Score tegenstander"
+
+#: templates/activities/game_filter.html:22
+msgid "Filter"
+msgstr "Filter"
+
+#: templates/activities/game_filter.html:28 templates/activities/gametype_list.html:16
+#: templates/activities/opponent_list.html:16
+msgid "Add"
+msgstr "Nieuw"
+
+#: templates/activities/game_filter.html:57 templates/activities/game_filter.html:103
+msgid "No games found"
+msgstr "Geen wedstrijden gevonden"
+
+#: templates/activities/game_filter.html:85 templates/activities/gametype_list.html:52
+#: templates/activities/opponent_list.html:57
+msgid "Details"
+msgstr "Details"
+
+#: templates/activities/game_filter.html:133 templates/activities/opponent_list.html:96
+msgid "first"
+msgstr "eerste"
+
+#: templates/activities/game_filter.html:134 templates/activities/opponent_list.html:97
+msgid "previous"
+msgstr "vorige"
+
+#: templates/activities/game_filter.html:137 templates/activities/opponent_list.html:100
+#, python-format
+msgid "page %(page)s of %(num_pages)s"
+msgstr "pagina %(page)s van %(num_pages)s"
+
+#: templates/activities/game_filter.html:140 templates/activities/opponent_list.html:103
+msgid "next"
+msgstr "volgende"
+
+#: templates/activities/game_filter.html:141 templates/activities/opponent_list.html:104
+msgid "last"
+msgstr "laatste"
+
+#: templates/activities/game_form.html:20 templates/activities/game_form.html:31
+msgid "Refresh game information"
+msgstr "Ververs scores met competitie info"
+
+#: templates/activities/game_form.html:39
+msgid "Create new game"
+msgstr "Maak nieuwe wedstrijd"
+
+#: templates/activities/game_form.html:43 templates/activities/gametype_form.html:35
+#: templates/activities/opponent_form.html:35
+msgid "Errors found - please update the errors below before continuing"
+msgstr "Fouten gevonden - gelieve onderstaande fouten te verbeteren alvorens verder te gaan"
+
+#: templates/activities/game_form.html:70
+msgid "Tick if current game is live right now"
+msgstr "Selecteer als de huidige wedstrijd op dit moment bezig is"
+
+#: templates/activities/game_form.html:76 templates/activities/gametype_form.html:48
+#: templates/activities/opponent_form.html:47
+msgid "Save"
+msgstr "Opslaan"
+
+#: templates/activities/game_form.html:84
+msgid "Add row"
+msgstr "Rij toevoegen"
+
+#: templates/activities/game_form.html:85
+msgid "Remove"
+msgstr "Verwijderen"
+
+#: templates/activities/gametype_confirm_delete.html:5
+#: templates/activities/gametype_confirm_delete.html:8
+#: templates/activities/gametype_form.html:7 templates/activities/gametype_form.html:10
+#: templates/activities/gametype_list.html:6 templates/activities/gametype_list.html:9
+msgid "Game Types"
+msgstr "Game Types"
+
+#: templates/activities/gametype_confirm_delete.html:13
+#, python-format
+msgid ""
+"    \n"
+"            Are you sure you want to remove game type <span class=\"font-bold\">%(name)s</"
+"span>?\n"
+"        "
+msgstr ""
+"    \n"
+"            Bent u zeker dat u wedstrijd type <span class=\"font-bold\">%(name)s</span> "
+"wilt verwijderen?\n"
+"        "
+
+#: templates/activities/gametype_form.html:31
+msgid "Create new game type"
+msgstr "Maak nieuw wedstrijd type"
+
+#: templates/activities/gametype_form.html:41
+msgid "Game type information"
+msgstr "Wedstrijd type"
+
+#: templates/activities/gametype_list.html:32
+msgid "Number of opponents"
+msgstr "Aantal tegenstanders"
+
+#: templates/activities/gametype_list.html:40
+msgid "No game types found"
+msgstr "Geen wedstrijd types gevonden"
+
+#: templates/activities/opponent_confirm_delete.html:5
+#: templates/activities/opponent_confirm_delete.html:8
+#: templates/activities/opponent_form.html:7 templates/activities/opponent_form.html:10
+#: templates/activities/opponent_list.html:6 templates/activities/opponent_list.html:9
+msgid "Opponents"
+msgstr "Tegenstanders"
+
+#: templates/activities/opponent_confirm_delete.html:13
+#, python-format
+msgid ""
+"    \n"
+"            Are you sure you want to remove opponent <span class=\"font-bold\">%(name)s</"
+"span>?\n"
+"        "
+msgstr ""
+"    \n"
+"            Bent u zeker dat u tegenstander <span class=\"font-bold\">%(name)s</span> "
+"wilt verwijderen?\n"
+"        "
+
+#: templates/activities/opponent_form.html:31
+msgid "Create new opponent"
+msgstr "Maak nieuwe tegenstander"
+
+#: templates/activities/opponent_list.html:31
+msgid "Name"
+msgstr "Naam"
+
+#: templates/activities/opponent_list.html:39 templates/activities/opponent_list.html:72
+msgid "No opponents found"
+msgstr "Geen tegenstanders gevonden"
+
+#: views/admin.py:26
+msgid "You do not have sufficient access rights to access the game type list"
+msgstr ""
+"U hebt niet de juiste toegangsrechten om de lijst met wedstrijd types te kunnen raadplegen"
+
+#: views/admin.py:33
+#, python-format
+msgid "Game type <strong>%(name)s</strong> created succesfully"
+msgstr "Wedstrijd type <strong>%(name)s</strong> aangemaakt"
+
+#: views/admin.py:45
+#, python-format
+msgid "Game type <strong>%(name)s</strong> updated succesfully"
+msgstr "Wedstrijd type <strong>%(name)s</strong> aangepast"
+
+#: views/admin.py:56
+#, python-format
+msgid "Game type <strong>%(name)s</strong> deleted succesfully"
+msgstr "Wedstrijd type <strong>%(name)s</strong> verwijderd"
+
+#: views/admin.py:67
+msgid "You do not have sufficient access rights to access the opponent list"
+msgstr ""
+"U hebt niet de juiste toegangsrechten om de lijst met tegenstanders te kunnen raadplegen"
+
+#: views/admin.py:75
+#, python-format
+msgid "Opponent <strong>%(name)s</strong> created succesfully"
+msgstr "Tegenstander <strong>%(name)s</strong> aangemaakt"
+
+#: views/admin.py:87
+#, python-format
+msgid "Opponent <strong>%(name)s</strong> updated succesfully"
+msgstr "Tegenstander <strong>%(name)s</strong> aangepast"
+
+#: views/admin.py:98
+#, python-format
+msgid "Opponent <strong>%(name)s</strong> deleted succesfully"
+msgstr "Tegenstander <strong>%(name)s</strong> verwijderd"
+
+#: views/admin.py:110
+msgid "You do not have sufficient access rights to view the game list"
+msgstr ""
+"U hebt niet de juiste toegangsrechten om de lijst met wedstrijden te kunnen raadplegen"
+
+#: views/admin.py:129
+#, python-format
+msgid ""
+"Game <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> created succesfully"
+msgstr ""
+"Wedstrijd <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> aangemaakt"
+
+#: views/admin.py:152
+#, python-format
+msgid ""
+"Game <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> updated succesfully"
+msgstr ""
+"Wedstrijd <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> aangepast"
+
+#: views/admin.py:173
+#, python-format
+msgid ""
+"Game <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> deleted succesfully"
+msgstr ""
+"Wedstrijd <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> verwijderd"
+
+#: views/admin.py:192
+#, python-format
+msgid ""
+"Game <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> - new information fetched"
+msgstr ""
+"Wedstrijd <strong>%(team)s</strong> vs. <strong>%(opponent)s</strong> <strong>(%(date)s)</"
+"strong> - nieuwe informatie beschikbaar"
