@@ -88,7 +88,10 @@ class Game(RulesModel):
     * score_opponent - IntegerField
     """
 
-    COMPETITIONS = {"RBIHF": "activities.competition.hockey", "CEHL": "activities.competition.hockey"}
+    COMPETITIONS = {
+        "RBIHF": "activities.competition.hockey",
+        "CEHL": "activities.competition.hockey",
+    }
 
     def get_competition_choices():
         """Returns a choices object for the competitions specified in Game.COMPETITIONS"""

@@ -22,7 +22,7 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 from two_factor.urls import urlpatterns as two_factor_urls
 
-from .api import router
+from .api import router_v1, router_v2
 
 urlpatterns = [
     path("", include(two_factor_urls)),
@@ -36,7 +36,8 @@ urlpatterns = [
     path("initials-avatar/", include("django_initials_avatar.urls")),
     path("markdownx/", include("markdownx.urls")),
     path("admin/", admin.site.urls),
-    path("api/", include(router.urls)),
+    path("api/", include((router_v1.urls, "api"), namespace="v1")),
+    path("api/v2/", include((router_v2.urls, "api"), namespace="v2")),
     path("", RedirectView.as_view(pattern_name="clubmanager:index")),
 ]
 

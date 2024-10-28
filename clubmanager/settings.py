@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     "teams",
     "finance",
     "activities",
-    "api",
     "django_cleanup.apps.CleanupConfig",
     "django_rename_app",
 ]
@@ -205,10 +204,13 @@ CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["http://
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
 
-DJANGO_REST_FRAMEWORK = {
+REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
     ],
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
+    "DEFAULT_VERSION": "v1",
+    "ALLOWED_VERSIONS": ["v1", "v2"],
 }
 
 DJANGO_NOTIFICATIONS_CONFIG = {"USE_JSONFIELD": True}

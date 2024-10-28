@@ -7,11 +7,20 @@ from rest_framework import viewsets
 from teams.models import Season
 
 from .models import Game
-from .serializers import GameSerializer
+from .serializers import GameSerializer, GameSerializerV2
 
 
 class GameViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = GameSerializer
+    def get_serializer_class(self):
+        match self.request.version:
+            case "v1":
+                return GameSerializer
+
+            case "v2":
+                return GameSerializerV2
+
+            case _:
+                return GameSerializer
 
     def get_queryset(self):
         queryset = Game.objects.all()
