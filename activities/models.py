@@ -76,6 +76,7 @@ class GameType(RulesModel):
 class Game(RulesModel):
     """
     A game activity is defined by its game type. It has a defined place and timestamp. It optionally allows for storing the end result. Following fields are available:
+
     * team - ForeignKey to Team
     * opponent - ForeignKey to Opponent
     * season - ForeignKey to Season it belongs to - defaults to the season for the current date, but will be calculated based on the date of the game
@@ -146,7 +147,20 @@ class Game(RulesModel):
         """Checks if this games belongs to a given competition. If yes, will try to import the competition module and run its update_game_information() function."""
 
         if self.competition is not None:
-            module = importlib.import_module(self.COMPETITIONS[self.competition])
-            competition = getattr(module, self.competition)
+            try:
+                module_name = self.COMPETITIONS.get(self.competition)
 
-            competition().update_game_information(game=self)
+                if module_name is not None:
+                    module = importlib.import_module(module_name)
+                    competition_class = getattr(module, self.competition)
+
+                    if competition_class is not None:
+                        competition_instance = competition_class()
+                        competition_instance.update_game_information(game=self)
+                    else:
+                        print(f"Competition class '{self.competition}' not found in module '{module_name}'")
+                else:
+                    print(f"Competition '{self.competition}' not found in COMPETITIONS")
+
+            except (ModuleNotFoundError, AttributeError) as e:
+                print(f"Error importing module or accessing competition class: {e}")
