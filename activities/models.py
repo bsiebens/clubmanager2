@@ -94,11 +94,7 @@ class Game(RulesModel):
         "RBIHF": "activities.competition.hockey",
         "CEHL": "activities.competition.hockey",
     }
-
-    @staticmethod
-    def get_competition_choices():
-        """Returns a choices object for the competitions specified in `Game.COMPETITIONS`"""
-        return {i: i for i in Game.COMPETITIONS.keys()}
+    COMPETITION_CHOICES = {i: i for i in COMPETITIONS.keys()}
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games")
     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"), related_name="games", default=Season.get_season_id,
@@ -108,7 +104,7 @@ class Game(RulesModel):
     location = models.CharField(_("location"), max_length=250)
     game_type = models.ForeignKey(GameType, on_delete=models.PROTECT, verbose_name=_("game type"), related_name="games")
 
-    competition = models.CharField(_("competition"), max_length=20, choices=get_competition_choices, blank=True, null=True)
+    competition = models.CharField(_("competition"), max_length=20, choices=COMPETITION_CHOICES, blank=True, null=True)
     game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
     live = models.BooleanField(_("live"), default=False)
     score_team = models.IntegerField(_("score team"), default=0, blank=True, null=True)
