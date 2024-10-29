@@ -114,12 +114,20 @@ WSGI_APPLICATION = "clubmanager.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    "production": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+    },
+    "development": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DJANGO_DB_NAME", default="clubmanager"),
+        "USER": env("DJANGO_DB_USER", default=""),
+        "PASSWORD": env("DJANGO_DB_PASSWORD", default=""),
+        "HOST": env("DJANGO_DB_HOST", default="localhost"),
     }
 }
 
+DATABASES["default"] = DATABASES[env("DJANGO_DATABASE", default="production")]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

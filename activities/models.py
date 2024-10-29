@@ -9,7 +9,6 @@ from rules.contrib.models import RulesModel
 from members.rules import is_organization_admin
 from news.rules import is_admin
 from teams.models import Season, Team
-
 from .rules import is_team_admin
 
 
@@ -45,7 +44,7 @@ class Opponent(RulesModel):
 
 class GameType(RulesModel):
     """
-    A game type defines a few parameters that can influence how games are displayed. For now we only store 2 fields:
+    A game type defines a few parameters that can influence how games are displayed. For now, we only store 2 fields:
     * name - CharField
     * opponent_count - IntegerField
 
@@ -56,7 +55,8 @@ class GameType(RulesModel):
     opponent_count = models.IntegerField(
         _("opponent count"),
         default=1,
-        help_text=_("Number of opponents for this game type, does not have any influence on the working of clubmanager but is passed along in the API."),
+        help_text=_(
+            "Number of opponents for this game type, does not have any influence on the working of clubmanager but is passed along in the API."),
     )
 
     created = models.DateTimeField(auto_now_add=True)
@@ -69,12 +69,13 @@ class GameType(RulesModel):
         verbose_name = _("game type")
         verbose_name_plural = _("game types")
         ordering = ["name"]
-        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin, "delete": is_organization_admin}
+        rules_permissions = {"add": is_organization_admin, "view": is_organization_admin, "change": is_organization_admin,
+                             "delete": is_organization_admin}
 
 
 class Game(RulesModel):
     """
-    A game activity is defined by it's game type. It has a defined place and timestamp. It optionally allows for storing the end result. Following fields are available:
+    A game activity is defined by its game type. It has a defined place and timestamp. It optionally allows for storing the end result. Following fields are available:
     * team - ForeignKey to Team
     * opponent - ForeignKey to Opponent
     * season - ForeignKey to Season it belongs to - defaults to the season for the current date, but will be calculated based on the date of the game
@@ -82,7 +83,7 @@ class Game(RulesModel):
     * location - CharField, if you defined CLUB_DEFAULT_HOME_LOCATION in settings it will use this as the default
     * game_type - ForeignKey to GameType
     * competition - ForeignKey to Competition
-    * game_id - CharField, in case this game has an unique id for the given competition
+    * game_id - CharField, in case this game has a unique id for the given competition
     * live - BooleanField, if game is happening live or not
     * score_team - IntegerField
     * score_opponent - IntegerField
@@ -93,12 +94,14 @@ class Game(RulesModel):
         "CEHL": "activities.competition.hockey",
     }
 
+    @staticmethod
     def get_competition_choices():
-        """Returns a choices object for the competitions specified in Game.COMPETITIONS"""
+        """Returns a choices object for the competitions specified in `Game.COMPETITIONS`"""
         return {i: i for i in Game.COMPETITIONS.keys()}
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games")
-    season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"), related_name="games", default=Season.get_season_id, blank=True, null=True)
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"), related_name="games", default=Season.get_season_id,
+                               blank=True, null=True)
     opponent = models.ForeignKey(Opponent, on_delete=models.CASCADE, verbose_name=_("opponent"), related_name="games", blank=True, null=True)
     date = models.DateTimeField()
     location = models.CharField(_("location"), max_length=250)
@@ -140,7 +143,7 @@ class Game(RulesModel):
         return self.location.lower() == settings.CLUB_DEFAULT_HOME_LOCATION.lower()
 
     def update_game_information(self) -> None:
-        """Checks if this games belongs to a given competition. If yes, will try to import the competition module and run it's update_game_information() function."""
+        """Checks if this games belongs to a given competition. If yes, will try to import the competition module and run its update_game_information() function."""
 
         if self.competition is not None:
             module = importlib.import_module(self.COMPETITIONS[self.competition])

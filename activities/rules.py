@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from news.rules import is_admin
 
 if TYPE_CHECKING:
-    from .models import Game
+    pass
 
 
 @rules.predicate

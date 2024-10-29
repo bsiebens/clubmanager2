@@ -2,12 +2,6 @@ from typing import TypedDict
 from ..models import Game
 
 
-class GameInformation(TypedDict):
-    live: bool
-    scoreA: int
-    scoreB: int
-
-
 class CompetitionBaseClass:
     url: str
 

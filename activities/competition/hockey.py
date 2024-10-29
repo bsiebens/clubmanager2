@@ -3,12 +3,12 @@ from urllib.parse import urljoin
 import requests
 
 from activities.models import Game
-
 from .base import CompetitionBaseClass
 
 
 class RBIHF(CompetitionBaseClass):
     def __init__(self):
+        super().__init__()
         self.url = "https://rbihf.be/modules/league/ajax/time.php"
 
     def update_game_information(self, game: Game) -> None:
@@ -46,6 +46,7 @@ class RBIHF(CompetitionBaseClass):
 
 class CEHL(CompetitionBaseClass):
     def __init__(self):
+        super().__init__()
         self.url = "https://www.cehl.eu/ajax/"
 
     def update_game_information(self, game: Game) -> None:

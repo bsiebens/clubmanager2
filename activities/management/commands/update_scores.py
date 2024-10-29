@@ -1,9 +1,10 @@
-from django.core.management.base import BaseCommand, CommandError, CommandParser
+import datetime
 
-from activities.models import Game
+from django.core.management.base import BaseCommand, CommandParser
 from django.db.models import Q
 from django.utils import timezone
-import datetime
+
+from activities.models import Game
 
 
 class Command(BaseCommand):

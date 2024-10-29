@@ -1,7 +1,8 @@
 from django.test import TestCase
-from .models import Game, Opponent, GameType
 from django.utils import timezone
+
 from teams.models import Season, Team
+from .models import Game, Opponent, GameType
 
 
 class GameModelTestCase(TestCase):

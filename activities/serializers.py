@@ -2,7 +2,6 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from teams.serializers import TeamNameSerializer as TeamSerializer
-
 from .models import Game, GameType, Opponent
 
 

@@ -5,7 +5,6 @@ from django.utils import timezone
 from rest_framework import viewsets
 
 from teams.models import Season
-
 from .models import Game
 from .serializers import GameSerializer, GameSerializerV2
 
