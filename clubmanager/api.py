@@ -1,9 +1,9 @@
 from rest_framework import routers
 
-from finance.api import SponsorViewSet
-from teams.api import TeamsViewSet
 from activities.api import GameViewSet
+from finance.api import SponsorViewSet
 from news.api import NewsItemViewSet
+from teams.api import TeamsViewSet
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r"sponsors", SponsorViewSet)

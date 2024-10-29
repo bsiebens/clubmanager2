@@ -24,7 +24,7 @@ class MessagesDeniedMixin(PermissionRequiredMixin):
 def index(request: HttpRequest) -> HttpResponse:
     """The main index page. For now only renders a template, but will be enhanced later on."""
 
-    # TODO also include news items once that app is created/finalized
+    # todo also include news items once that app is created/finalized
 
     welcome_string = _("Good morning")
     if 12 < timezone.now().hour < 18:
