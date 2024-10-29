@@ -1,30 +1,19 @@
+import uuid
+from decimal import Decimal
+
+from auditlog.registry import auditlog
+from django.conf import settings
 from django.contrib import admin
-from django.db import models, transaction
+from django.core.exceptions import ValidationError
+from django.db import models
 from django.db.models import Max
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from rules.contrib.models import RulesModel
 
 from members.models import Member
 from teams.models import Season, Team, TeamRole
-
-
-class LineItemManager(models.Manager):
-    def create(self, **kwargs):
-        instance = self.model(**kwargs)
-
-        with transaction.atomic():
-            results = self.filter(order=instance.order).aggregate(Max("number"))
-
-            current_number = results["number__max"]
-            if current_number is None:
-                current_number = 0
-
-            value = current_number + 10
-            instance.number = value
-            instance.save()
-
-            return instance
 
 
 class Sponsor(models.Model):
@@ -70,139 +59,178 @@ class Sponsor(models.Model):
         verbose_name_plural = _("sponsors")
         ordering = ["name"]
 
-# class Material(models.Model):
-#     """A material is an item that is added to an order."""
-#
-#     class PriceType(models.IntegerChoices):
-#         AMOUNT = 0, _("amount")
-#         PERCENTAGE = 1, _("percentage")
-#
-#     description = models.CharField(_("description"), max_length=250, blank=True, null=True)
-#     price = models.DecimalField(_("price"), max_digits=7, decimal_places=2)
-#     price_type = models.IntegerField(_("price type"), choices=PriceType.choices, default=PriceType.AMOUNT)
-#
-#     team = models.ForeignKey(
-#         Team, on_delete=models.CASCADE, verbose_name=_("team"), blank=True, null=True,
-#         help_text=_("Optional. Select a team for which a price should be added.")
-#     )
-#     role = models.ForeignKey(
-#         TeamRole, on_delete=models.CASCADE, verbose_name=_("team role"), blank=True, null=True,
-#         help_text=_("Optional. Select a role for which a price should be added.")
-#     )
-#
-#     def __str__(self):
-#         return self.description
-#
-#     def save(self, *args, **kwargs):
-#         if self.team and self.role:
-#             self.description = "{team} | {team_role}".format(team=self.team.name, team_role=self.role.name)
-#
-#         elif self.team:
-#             self.description = self.team.name
-#
-#         elif self.role:
-#             self.description = self.role.name
-#
-#         super(Material, self).save(*args, **kwargs)
-#
-#     class Meta:
-#         verbose_name = _("material")
-#         verbose_name_plural = _("materials")
-#         ordering = ["description"]
-#
-#     @property
-#     def display_price(self) -> str:
-#         unit = "&percnt;" if self.price_type == Material.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
-#
-#         return mark_safe("{price} {unit}".format(price=self.price, unit=unit))
-#
-#
-# class Order(RulesModel):
-#     """Model containing the information related to an order"""
-#
-#     class OrderStatus(models.IntegerChoices):
-#         NEW = 0, _("New")
-#         SUBMITTED = 1, _("Submitted")
-#         INVOICED = 2, _("Invoiced")
-#         PAYED = 3, _("Payed")
-#
-#     status = models.IntegerField(_("status"), choices=OrderStatus.choices, default=OrderStatus.NEW)
-#     season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"))
-#     uuid = models.UUIDField(default=uuid.uuid4, editable=False)
-#
-#     created = models.DateTimeField(auto_now_add=True)
-#     modified = models.DateTimeField(auto_now=True)
-#
-#     def __str__(self):
-#         return _("Order {uuid}").format(uuid=self.uuid)
-#
-#     class Meta:
-#         verbose_name = _("order")
-#         verbose_name_plural = _("orders")
-#
-#     def total(self) -> Decimal:
-#         """Calculates the total for a given order. Each line is processed in order it's added to the order."""
-#         total = Decimal(0)
-#
-#         for line in self.lineitem_set.all().prefetch_related():
-#             if line.material.price_type == Material.PriceType.AMOUNT:
-#                 total = total + line.material.price
-#
-#             else:
-#                 total = total + (total / 100 * line.material.price)
-#
-#         return round(total, 2)
-#
-#     def currency(self) -> str:
-#         return mark_safe(settings.CLUB_DEFAULT_CURRENCY_ENTITY)
-#
-#     def display_total(self) -> str:
-#         return mark_safe("{price} {unit}".format(price=self.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
-#
-#     def members(self) -> list[Member]:
-#         members = []
-#
-#         for item in self.lineitem_set.exclude(member=None).prefetch_related().order_by("member__user__last_name", "member__user__first_name"):
-#             if item.member not in members:
-#                 members.append(item.member)
-#
-#         return members
-#
-#
-# class LineItem(RulesModel):
-#     """A line item on a given invoice"""
-#
-#     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("order"))
-#     member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("member"))
-#     material = models.ForeignKey(Material, on_delete=models.CASCADE, verbose_name=_("item"))
-#     number = models.IntegerField(blank=True, null=True)
-#
-#     objects = LineItemManager()
-#
-#     def __str__(self):
-#         return self.material.description
-#
-#     def save(self, *args, **kwargs):
-#         if self.number is None or self.number == 0:
-#             current_max_number = self.order.lineitem_set.aggregate(Max("number"))["number__max"]
-#
-#             if current_max_number is None:
-#                 current_max_number = 0
-#
-#             self.number = current_max_number + 10
-#
-#         super(LineItem, self).save(*args, **kwargs)
-#
-#     class Meta:
-#         verbose_name = _("line item")
-#         verbose_name_plural = _("line items")
-#         ordering = ["number"]
-#
-#     @property
-#     def price(self) -> str:
-#         unit = "&percnt;" if self.material.price_type == Material.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
-#
-#         return mark_safe("{price} {unit}".format(price=self.material.price, unit=unit))
+
+class OrderForm(models.Model):
+    """An order form is the form that defines what people can order"""
+    name = models.CharField(_("name"), max_length=250)
+    start_date = models.DateField(_("start date"), default=timezone.now, help_text=_("Date on which this form becomes available"))
+    end_date = models.DateField(_("end date"), blank=True, null=True, help_text=_("Final due data for this form, standard will be 30 days from the "
+                                                                                  "start date"))
+
+    allow_only_one_per_member = models.BooleanField(_("one per user"), default=False, help_text="Select to allow only one form to be submitted by "
+                                                                                                "each user")
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if self.end_date is None:
+            self.end_date = timezone.now().date() + timezone.timedelta(days=30)
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("order form")
+        verbose_name_plural = _("order forms")
+        ordering = ["-start_date", "name"]
+
+    @property
+    @admin.display(description=_("Active"), boolean=True)
+    def active(self) -> bool:
+        return self.start_date <= timezone.now().date() <= self.end_date
 
 
-# auditlog.register(Order)
+class OrderFormItem(models.Model):
+    """An item is each thing that can be included on a given order. Optionally associated with a member."""
+
+    class PriceType(models.IntegerChoices):
+        AMOUNT = 0, _("amount")
+        PERCENTAGE = 1, _("percentage")
+
+    order_form = models.ForeignKey(OrderForm, on_delete=models.CASCADE, verbose_name=_("order form"), related_name="items")
+    description = models.CharField(_("description"), max_length=250, blank=True, null=True)
+    unit_price = models.DecimalField(_("price"), max_digits=7, decimal_places=2)
+    unit_price_type = models.IntegerField(_("type"), default=PriceType.AMOUNT, choices=PriceType.choices)
+
+    member_required = models.BooleanField(_("member required"), default=False, help_text=_("Select if this item requires a member to be associated "
+                                                                                           "with it when creating an order"))
+
+    team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, verbose_name=_("team"), blank=True, null=True,
+        help_text=_("Optional, select a team for which an item should be created")
+    )
+    role = models.ForeignKey(
+        TeamRole, on_delete=models.CASCADE, verbose_name=_("team role"), blank=True, null=True,
+        help_text=_("Optional, select a role for which an item should be created")
+    )
+
+    def __str__(self):
+        return self.description
+
+    def save(self, *args, **kwargs):
+        if self.team and self.role:
+            self.description = "{team} | {team_role}".format(team=self.team.name, team_role=self.role.name)
+
+        elif self.team:
+            self.description = self.team.name
+
+        elif self.role:
+            self.description = self.role.name
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("item")
+        verbose_name_plural = _("items")
+        ordering = ["description"]
+
+    @property
+    def display_unit_price(self):
+        unit = "&percnt;" if self.unit_price_type == OrderFormItem.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
+
+        return mark_safe("{price} {unit}".format(price=self.unit_price, unit=unit))
+
+
+class Order(models.Model):
+    """An order is a submitted version of an order form"""
+
+    class OrderStatus(models.IntegerChoices):
+        NEW = 0, _("New")
+        SUBMITTED = 1, _("Submitted")
+        INVOICED = 2, _("Invoiced")
+        PAYED = 3, _("Payed")
+
+    order_form = models.ForeignKey(OrderForm, on_delete=models.CASCADE, verbose_name=_("order form"), related_name="orders")
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, verbose_name=_("member"), related_name="orders")
+
+    status = models.IntegerField(_("status"), choices=OrderStatus.choices, default=OrderStatus.NEW)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return _("Order {uuid}").format(uuid=self.uuid)
+
+    class Meta:
+        verbose_name = _("order")
+        verbose_name_plural = _("orders")
+
+    def total(self):
+        """Calculates the total amount for a given order. All lines are processed in order that they have been added to the order."""
+
+        total = Decimal(0)
+
+        for line in self.lineitems.all().prefetch_related():
+            if line.order_form_item.unit_price_type == OrderFormItem.PriceType.PERCENTAGE:
+                total = total + (total / 100 * line.order_form_item.unit_price)
+
+            else:
+                total = total + line.order_form_item.unit_price
+
+        return round(total, 2)
+
+    def members_in_order(self):
+        members = []
+
+        for line in self.lineitems.all().prefetch_related():
+            if line.member not in members and line.member is not None:
+                members.append(line.member)
+
+        return members
+
+    @property
+    def display_total(self):
+        return mark_safe("{price} {unit}".format(price=self.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
+
+
+class LineItem(models.Model):
+    """A line item on a given order"""
+
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name=_("order"), related_name="lineitems")
+    member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("member"))
+    order_form_item = models.ForeignKey(OrderFormItem, on_delete=models.CASCADE, verbose_name=_("item"), related_name="lineitems")
+    number = models.IntegerField(blank=True)
+
+    def __str__(self):
+        return self.order_form_item.description
+
+    def save(self, *args, **kwargs):
+        if self.number is None or self.number == 0:
+            current_max_number = self.order.lineitems.aggregate(Max("number"))["number__max"]
+
+            if current_max_number is None:
+                current_max_number = 0
+
+            self.number = current_max_number + 10
+
+        if self.order_form_item.member_required and self.member is None:
+            raise ValidationError(_("Member is required for this order item"))
+
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("line item")
+        verbose_name_plural = _("line items")
+        ordering = ["number"]
+
+    @property
+    @admin.display(description=_("Unit price"))
+    def display_unit_price(self):
+        return self.order_form_item.display_unit_price
+
+
+auditlog.register(Order)

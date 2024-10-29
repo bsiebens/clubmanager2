@@ -4,10 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="57d451a5-f9ec-4429-8824-9852cf945872" name="Changes" comment="Refactor: comment out unused models and views&#10;&#10;Commented out models, views, and URL routes related to 'Material' and 'Order' in the finance app that are no longer in use. This improves readability and maintainability by reducing clutter from the codebase without fully removing potentially reusable code.">
+    <list default="true" id="57d451a5-f9ec-4429-8824-9852cf945872" name="Changes" comment="Implement sponsor management views&#10;&#10;Added ListView, CreateView, UpdateView, and DeleteView for the Sponsor model with necessary permissions and success messages. Updated finance URLs to utilize new views from the &quot;admin&quot; module.">
+      <change afterPath="$PROJECT_DIR$/.idea/httpClient.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/finance/templates/finance/orderform_filter.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7e4de72f-877c-4db6-aa23-fb2e004845a4.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7e4de72f-877c-4db6-aa23-fb2e004845a4.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7e4de72f-877c-4db6-aa23-fb2e004845a4/storage_v2/_src_/database/clubmanager.N9KvXA/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7e4de72f-877c-4db6-aa23-fb2e004845a4/storage_v2/_src_/database/clubmanager.N9KvXA/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/templates/finance/order_confirm_delete.html" beforeDir="false" afterPath="$PROJECT_DIR$/finance/templates/finance/orderform_confirm_delete.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/finance/templates/finance/order_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/finance/templates/finance/orderform_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/finance/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/finance/views/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/finance/views/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/members/templates/templatetags/field.html" beforeDir="false" afterPath="$PROJECT_DIR$/members/templates/templatetags/field.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/src/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/src/output.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teams/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/teams/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/clubmanager/menu_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/clubmanager/menu_admin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,12 +47,27 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="SIGN_OFF_COMMIT" value="true" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;bsiebens&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "history": [
+    {
+      "state": "OPEN"
+    }
+  ],
+  "lastFilter": {
+    "state": "OPEN"
   }
-}</component>
+}]]></component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOMcvvws594VDN",
+        "number": 35
+      },
+      "lastSeen": 1730229028552
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/bsiebens/clubmanager.git&quot;,
@@ -61,12 +90,16 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Django Server.clubmanager.executor": "Run",
+    "Notification.DisplayName-DoNotAsk-Database detector": "Database detector",
+    "Notification.DoNotAsk-Database detector": "true",
     "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "django.template.preview.state": "SHOW_EDITOR",
     "git-widget-placeholder": "feature/code-reorg",
     "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/bernard/code/clubmanager",
+    "last_opened_file_path": "//wsl.localhost/Ubuntu/home/bernard/code/clubmanager/finance/templates/finance",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -81,6 +114,11 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="\\wsl.localhost\Ubuntu\home\bernard\code\clubmanager\finance\templates\finance" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="clubmanager" type="Python.DjangoServer" factoryName="Django server">
       <module name="clubmanager" />
@@ -89,6 +127,7 @@
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="clubmanager.settings" />
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -125,7 +164,7 @@
       <updated>1730188379801</updated>
       <workItem from="1730188380758" duration="75000" />
       <workItem from="1730188463171" duration="2761000" />
-      <workItem from="1730198534402" duration="2827000" />
+      <workItem from="1730198534402" duration="17278000" />
     </task>
     <task id="LOCAL-00001" summary="Update of a file with a todo in there">
       <option name="closed" value="true" />
@@ -175,11 +214,30 @@
       <option name="project" value="LOCAL" />
       <updated>1730200882892</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Implement sponsor management views&#10;&#10;Added ListView, CreateView, UpdateView, and DeleteView for the Sponsor model with necessary permissions and success messages. Updated finance URLs to utilize new views from the &quot;admin&quot; module.">
+      <option name="closed" value="true" />
+      <created>1730201466093</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1730201466093</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="true" />
@@ -197,7 +255,8 @@
     <MESSAGE value="Remove obsolete admin URLs and views from finance app&#10;&#10;Deleted outdated admin URLs and view files in the finance app. These changes streamline the codebase, ensuring only active and necessary components are retained. Updated model docstrings for better clarity and maintainability." />
     <MESSAGE value="Adding some extra files to the repository" />
     <MESSAGE value="Refactor: comment out unused models and views&#10;&#10;Commented out models, views, and URL routes related to 'Material' and 'Order' in the finance app that are no longer in use. This improves readability and maintainability by reducing clutter from the codebase without fully removing potentially reusable code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor: comment out unused models and views&#10;&#10;Commented out models, views, and URL routes related to 'Material' and 'Order' in the finance app that are no longer in use. This improves readability and maintainability by reducing clutter from the codebase without fully removing potentially reusable code." />
+    <MESSAGE value="Implement sponsor management views&#10;&#10;Added ListView, CreateView, UpdateView, and DeleteView for the Sponsor model with necessary permissions and success messages. Updated finance URLs to utilize new views from the &quot;admin&quot; module." />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement sponsor management views&#10;&#10;Added ListView, CreateView, UpdateView, and DeleteView for the Sponsor model with necessary permissions and success messages. Updated finance URLs to utilize new views from the &quot;admin&quot; module." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

@@ -105,16 +105,16 @@
             <span class="mt-1">{% translate "Sponsors" %}</span>
         </a>
 
-        {% url "clubmanager_admin:finance:materials_index" as materials_index %}
-        <a href="{{ materials_index }}" {% if materials_index in request.path %}class="active"{% endif %}>
+        {% url "clubmanager_admin:finance:forms_index" as forms_index %}
+        <a href="{{ forms_index }}" {% if forms_index in request.path %}class="active"{% endif %}>
             <i class="fa-solid fa-list-check min-w-5"></i>
-            <span class="mt-1">{% translate "Cost Items" %}</span>
+            <span class="mt-1">{% translate "Order Forms" %}</span>
         </a>
 
         {% url "clubmanager_admin:finance:orders_index" as orders_index %}
         <a href="{{ orders_index }}" {% if orders_index in request.path %}class="active"{% endif %}>
             <i class="fa-solid fa-file-invoice min-w-5"></i>
-            <span class="mt-1">{% translate "Registrations" %}</span>
+            <span class="mt-1">{% translate "Orders" %}</span>
         </a>
     {% endif %}
 </li>

@@ -1,14 +1,30 @@
+from django.conf import settings
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
-from .models import Sponsor
+from .models import Sponsor, OrderFormItem, LineItem, OrderForm, Order
 
 
-# class LineItemInlineAdmin(admin.TabularInline):
-#     model = LineItem
-#     extra = 0
-#     fields = ["number", "material", "member", "price"]
-#     raw_id_fields = ["member"]
-#     readonly_fields = ["price"]
+class OrderFormItemInlineAdmin(admin.TabularInline):
+    model = OrderFormItem
+    extra = 0
+    fields = ["description", "unit_price", "unit_price_type", "member_required", "team", "role"]
+
+
+class LineItemInlineAdmin(admin.TabularInline):
+    model = LineItem
+    extra = 0
+    fields = ["number", "order_form_item", "member", "display_unit_price"]
+    raw_id_fields = ["member"]
+    readonly_fields = ["display_unit_price"]
+
+    def get_formset(self, request, obj = None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+
+        if obj is not None:
+            formset.form.base_fields["order_form_item"].widget.queryset = OrderFormItem.objects.filter(order_form=obj.order_form)
+
+        return formset
 
 
 @admin.register(Sponsor)
@@ -19,46 +35,41 @@ class SponsorAdmin(admin.ModelAdmin):
         ["DATE INFORMATION", {"fields": ["start_date", "end_date"]}],
     ]
 
-# @admin.register(Material)
-# class MaterialAdmin(admin.ModelAdmin):
-#     def display_price(self, obj):
-#         unit = "&percnt;" if obj.price_type == Material.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
-#
-#         return mark_safe("{price} {unit}".format(price=obj.price, unit=unit))
-#
-#     display_price.short_description = "Price"
-#
-#     list_display = ["description", "display_price", "team", "role"]
-#     search_fields = ["description"]
-#     list_filter = ["team", "role"]
-#     fieldsets = [
-#         ["GENERAL INFORMATION", {"fields": ["description", "price", "price_type"]}],
-#         ["TEAM INFORMATION", {"fields": ["team", "role"]}],
-#     ]
-#
-#
-# @admin.register(Order)
-# class OrderAdmin(admin.ModelAdmin):
-#     def display_order(self, obj):
-#         return "Order {uuid}".format(uuid=obj.uuid)
-#
-#     display_order.short_description = "Order"
-#
-#     def display_members(self, obj):
-#         return mark_safe("<br />".join(["{first_name} {last_name}".format(first_name=member.first_name, last_name=member.last_name) for member in obj.members()]))
-#
-#     display_members.short_description = "Members"
-#
-#     def display_price(self, obj):
-#         return mark_safe("{total} {unit}".format(total=obj.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
-#
-#     display_price.short_description = "Price"
-#
-#     list_display = ["display_order", "display_members", "display_price", "status", "season", "created", "modified"]
-#     list_filter = ["status", "season"]
-#     readonly_fields = ["created", "modified"]
-#     search_fields = ["lineitem__member__user__first_name", "lineitem__member__user__last_name"]
-#     fieldsets = [
-#         ["GENERAL INFORMATION", {"fields": ["status", "season", ("created", "modified")]}],
-#     ]
-#     inlines = [LineItemInlineAdmin]
+
+@admin.register(OrderForm)
+class OrderFormAdmin(admin.ModelAdmin):
+    list_display = ["name", "start_date", "end_date", "allow_only_one_per_member", "active", "created", "modified"]
+    list_filter = ["allow_only_one_per_member"]
+    search_fields = ["name"]
+    fieldsets = [
+        ["GENERAL INFORMATION", {"fields": ["name", ("start_date", "end_date"), "allow_only_one_per_member"]}]
+    ]
+    inlines = [OrderFormItemInlineAdmin]
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    def display_order(self, obj: Order) -> str:
+        return "Order {uuid}".format(uuid=obj.uuid)
+
+    def display_members(self, obj: Order) -> str:
+        return mark_safe(
+            "<br />".join(
+                ["{first_name} {last_name}".format(first_name=member.first_name, last_name=member.last_name) for member in obj.members_in_order()]))
+
+    def display_price(self, obj: Order) -> str:
+        return mark_safe("{total} {unit}".format(total=obj.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
+
+    display_order.short_description = "Order"
+    display_members.short_description = "Members"
+    display_price.short_description = "Price"
+
+    list_display = ["display_order", "status", "member", "display_members", "display_price", "created", "modified"]
+    list_filter = ["status"]
+    search_fields = ["lineitems__order_form_item__description", "member__user__first_name", "member__user__last_name",
+                     "lineitems__member__user__first_name", "lineitems__member__user__last_name", "order_form__name"]
+    fieldsets = [
+        ["GENERAL INFORMATION", {"fields": ["status", "member", "order_form"]}],
+    ]
+    raw_id_fields = ["order_form", "member"]
+    inlines = [LineItemInlineAdmin]

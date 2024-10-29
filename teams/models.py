@@ -12,8 +12,8 @@ from rules.contrib.models import RulesModel
 
 from members.models import Member
 from members.rules import is_organization_admin
-from .rules import is_team_admin
 from news.rules import is_admin
+from .rules import is_team_admin
 
 
 def team_season_path(instance: "TeamPicture", filename: str) -> str:
@@ -68,7 +68,7 @@ class Season(RulesModel):
 
     @property
     @admin.display(description=_("Current Season"), boolean=True)
-    def current_season(self):
+    def current_season(self) -> bool:
         today = timezone.now().date()
 
         return self.start_date <= today and self.end_date >= today

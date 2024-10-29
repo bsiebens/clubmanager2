@@ -7,28 +7,30 @@
 {% block title %}{% translate "Registrations" %}{% endblock title %}
 
 {% block pagetitle %}
-    <h1 class="title"><i class="fa-solid fa-file-invoice"></i>{% translate "Registrations" %}</h1>
+    <h1 class="title"><i class="fa-solid fa-list-check"></i>{% translate "Order Forms" %}</h1>
 {% endblock pagetitle %}
 
 {% block content %}
-    {% if order %}
+    {% if orderform %}
         <div class="flex flex-row items-center gap-2 mt-8">
-            <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Registration" %}{{ order.uuid }}</h2>
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Form" %}{{ orderform.name }}</h2>
         
             <div class="flex justify-end grow">
-                <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}" class="hidden lg:flex btn btn-outline btn-error">
+                <a href="{% url "clubmanager_admin:finance:forms_delete" orderform.id %}"
+                   class="hidden lg:flex btn btn-outline btn-error">
                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
             </div>
         </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2">
-            <a href="{% url "clubmanager_admin:finance:orders_delete" order.id  %}" class="lg:hidden btn btn-outline btn-error">
+            <a href="{% url "clubmanager_admin:finance:forms_delete" orderform.id %}"
+               class="lg:hidden btn btn-outline btn-error">
                 <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
             </a>
         </div>
     {% else %}
-        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new registration" %}</h2>
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new order form" %}</h2>
     {% endif %}
 
     {% if form.errors %}
@@ -39,32 +41,36 @@
     <form method="post">
         {% csrf_token %}
 
-        <h2 class="subtitle">{% translate "Order Information" %}</h2>
+        <h2 class="subtitle">{% translate "Form Information" %}</h2>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% form_field form.season %}
+            {% form_field form.name %}
+            {% form_field form.allow_only_one_per_member %}
+            {% form_field form.start_date %}
+            {% form_field form.end_date %}
         </div>
 
-        <h2 class="subtitle">{% translate "Items" %}</h2>
-        {{ lineitems.management_form }}
+        <h2 class="subtitle">{% translate "Form Items" %}</h2>
+        {{ orderformitems.management_form }}
 
         <div class="flex flex-col gap-2 p-2 m-2">
-            {% for form in lineitems.forms %}
+            {% for form in orderformitems.forms %}
                 <div class="formset-row">
-                    <div class="grid items-center grid-cols-1 gap-2 lg:grid-cols-5">
+                    <div class="grid items-center grid-cols-1 gap-2 lg:grid-cols-8">
                         {% for field in form.hidden_fields %}
-                            {{ hidden }}
+                            {{ field }}
                         {% endfor %}
 
                         {% for field in form.visible_fields %}
-                            <div>
-                                {% form_field field size="small" %}
-                            </div>
+                            <div>{% form_field field size="small" show_help=False %}</div>
                         {% endfor %}
+
+                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
 
                         <div class="deletelink"></div>
                     </div>
                 </div>
             {% endfor %}
+            <div class="addlink"></div>
         </div>
 
         <button class="w-full mt-8 btn btn-neutral" type="submit">
@@ -78,10 +84,12 @@
         $(".formset-row").formset({
             addText: "{% translate "Add row" %}",
             deleteText: "{% translate "Remove row" %}",
-            prefix: "lineitem_set",
+            prefix: "items",
+            hideLastAddForm: true,
             addCssClass: "btn btn-sm btn-outline max-w-fit",
             deleteCssClass: "btn btn-error btn-outline btn-sm",
-            deleteContainerClass: "deletelink"
+            deleteContainerClass: "deletelink",
+            addContainerClass: "addlink",
         });
     </script>
 {% endblock content %}

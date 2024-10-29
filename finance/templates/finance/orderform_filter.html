@@ -1,0 +1,148 @@
+{% extends "_base.html" %}
+
+{% load i18n %}
+{% load pagination_tags %}
+{% load form_tags %}
+{% load l10n %}
+
+{% block title %}{% translate "Registrations" %}{% endblock title %}
+
+{% block pagetitle %}
+    <h1 class="title"><i class="fa-solid fa-list-check"></i>{% translate "Order Forms" %}</h1>
+{% endblock pagetitle %}
+
+{% block content %}
+    <div class="action-bar">
+        <div class="action-bar-filter">
+            <form>
+                {% for field in filter.form %}
+                    {% form_field field size="extra-small" %}
+                {% endfor %}
+
+                <button type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
+            </form>
+        </div>
+
+        <div class="action-bar-add">
+            <a class="add-btn" href="{% url "clubmanager_admin:finance:forms_add" %}">
+                <i class="fa-solid fa-plus"></i>{% translate "Add" %}
+            </a>
+        </div>
+    </div>
+
+    <div class="hidden mt-2 lg:block">
+        <table class="table table-zebra">
+            <thead>
+            <tr>
+                {% comment %} <th>
+                        <label>
+                            <input type="checkbox" class="checkbox checkbox-sm" />
+                        </label>
+                    </th> {% endcomment %}
+                <th>{% translate "Name" %}</th>
+                <th>{% translate "Start Date" %}</th>
+                <th>{% translate "End Date" %}</th>
+                <th>{% translate "Allow one per member?" %}</th>
+                <th>{% translate "Created" %}</th>
+                <th>{% translate "Modified" %}</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if object_list|length == 0 %}
+                <tr>
+                    <td colspan="7">
+                        {% translate "No forms found" %}
+                    </td>
+                </tr>
+            {% else %}
+                {% for form in object_list %}
+                    <tr class="hover border-l-4 {% if form.active %}border-l-success{% endif %}">
+                        <td class="font-bold">
+                            <a class="font-bold" href="{% url "clubmanager_admin:finance:forms_edit" form.id %}">
+                                {{ form.name }}
+                            </a>
+                        </td>
+                        <td>{{ form.start_date|date:"d M Y" }}</td>
+                        <td>{{ form.end_date|date:"d M Y" }}</td>
+                        <td>
+                            {% if form.allow_only_one_per_member %}
+                                <i class="fa-solid fa-circle-check text-success"></i>
+                            {% else %}
+                                <i class="fa-solid fa-circle-xmark text-error"></i>
+                            {% endif %}
+                        </td>
+                        <td>{{ form.created|date:"d M Y H:i" }}</td>
+                        <td>{{ form.modified|date:"d M Y H:i" }}</td>
+                        <td>
+                            <a class="mr-2 btn btn-outline btn-sm"
+                               href="{% url "clubmanager_admin:finance:forms_edit" form.id %}">
+                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                            </a>
+                            <a class="btn btn-outline btn-error btn-sm"
+                               href="{% url "clubmanager_admin:finance:forms_delete" form.id %}">
+                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="flex flex-col gap-2 mt-2 lg:hidden">
+        {% if object_list|length == 0 %}
+            <div>{% translate "No registrations found" %}</div>
+        {% else %}
+            {% for form in object_list %}
+                <a class="grow" href="{% url "clubmanager_admin:finance:forms_edit" form.id %}">
+                    <div class="data-card {% if form.active %}border-l-success{% endif %}">
+                        <div class="data">
+                            <div>{{ form.name }}</div>
+                            <div class="flex flex-row gap-2 mt-2">
+                                <div>{{ form.start_date|date:"d M Y" }}</div>
+                                <div>{% translate "to" %}</div>
+                                <div>{{ form.end_date|date:"d M Y" }}</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a class="btn btn-error btn-outline"
+                               href="{% url "clubmanager_admin:finance:forms_delete" form.id %}">
+                                <i class="fa-solid fa-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {% if is_paginated %}
+        <div class="flex justify-center mt-4">
+            <div class="join">
+                {% if page_obj.has_previous %}
+                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span
+                            class="hidden lg:inline"> {% translate "first" %}</span></a>
+                    <a class="join-item btn"
+                       href="?{% url_replace request "page" page_obj.previous_page_number %}"><span
+                            class="hidden lg:inline">{% translate "previous" %}</span><span
+                            class="lg:hidden">&lt;</span></a>
+                {% endif %}
+
+                <button class="join-item btn btn-disabled">
+                    {% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }}
+                        of {{ num_pages }}{% endblocktranslate %}</button>
+
+                {% if page_obj.has_next %}
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}"><span
+                            class="hidden lg:inline">{% translate "next" %}</span><span
+                            class="lg:hidden">&gt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}"><span
+                            class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}

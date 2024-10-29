@@ -73,7 +73,6 @@
                 class="input input-bordered {% if field.errors %}input-error text-error{% endif %} {% if size_modifier %}input-{{ size_modifier }}{% endif %}" 
                 name="{{ field.html_name }}"
                 value="{% if field.widget_type == "date" or field.widget_type == "datetime" %}{{ field.value|date:"c"|default:"" }}{% else %}{{ field.value|default:"" }}{% endif %}"
-                {% if field.field.required %}required="required"{% endif %}
                 {% if show_placeholder %}placeholder="{{ field.label }}"{% endif %}
             />
         {% endif %}
