@@ -1,13 +1,13 @@
 from django.urls import path
 
-from . import views_admin
+from .views import admin
 
 app_name = "finance"
 urlpatterns = [
-    path("sponsors", views_admin.SponsorListView.as_view(), name="sponsors_index"),
-    path("sponsors/add", views_admin.SponsorAddView.as_view(), name="sponsors_add"),
-    path("sponsors/edit/<int:pk>", views_admin.SponsorEditView.as_view(), name="sponsors_edit"),
-    path("sponsors/delete/<int:pk>", views_admin.SponsorDeleteView.as_view(), name="sponsors_delete"),
+    path("sponsors", admin.SponsorListView.as_view(), name="sponsors_index"),
+    path("sponsors/add", admin.SponsorAddView.as_view(), name="sponsors_add"),
+    path("sponsors/edit/<int:pk>", admin.SponsorEditView.as_view(), name="sponsors_edit"),
+    path("sponsors/delete/<int:pk>", admin.SponsorDeleteView.as_view(), name="sponsors_delete"),
     # path("materials", views_admin.MaterialListView.as_view(), name="materials_index"),
     # path("materials/add", views_admin.MaterialAddView.as_view(), name="materials_add"),
     # path("materials/edit/<int:pk>", views_admin.MaterialEditView.as_view(), name="materials_edit"),
