@@ -4,19 +4,19 @@
 {% load form_tags %}
 {% load static %}
 
-{% block title %}{% translate "Order Forms" %}{% endblock title %}
+{% block title %}{% translate "Orders" %}{% endblock title %}
 
 {% block pagetitle %}
-    <h1 class="title"><i class="fa-solid fa-list-check"></i>{% translate "Order Forms" %}</h1>
+    <h1 class="title"><i class="fa-solid fa-file-invoice"></i>{% translate "Orders" %}</h1>
 {% endblock pagetitle %}
 
 {% block content %}
-    {% if orderform %}
+    {% if order %}
         <div class="flex flex-row items-center gap-2 mt-8">
-            <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Form" %}{{ orderform.name }}</h2>
-        
+            <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Order" %}{{ order.uuid }}</h2>
+
             <div class="flex justify-end grow">
-                <a href="{% url "clubmanager_admin:finance:forms_delete" orderform.id %}"
+                <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
                    class="hidden lg:flex btn btn-outline btn-error">
                     <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
                 </a>
@@ -24,17 +24,18 @@
         </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2">
-            <a href="{% url "clubmanager_admin:finance:forms_delete" orderform.id %}"
+            <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
                class="lg:hidden btn btn-outline btn-error">
                 <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
             </a>
         </div>
     {% else %}
-        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new order form" %}</h2>
+        <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new order" %}</h2>
     {% endif %}
 
     {% if form.errors %}
-        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below before continuing{% endblocktranslate %}</div>
+        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below
+            before continuing{% endblocktranslate %}</div>
     {% endif %}
 
 
@@ -43,19 +44,17 @@
 
         <h2 class="subtitle">{% translate "Form Information" %}</h2>
         <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% form_field form.name %}
-            {% form_field form.allow_only_one_per_member %}
-            {% form_field form.start_date %}
-            {% form_field form.end_date %}
+            {% form_field form.order_form %}
+            {% form_field form.member %}
         </div>
 
         <h2 class="subtitle">{% translate "Form Items" %}</h2>
-        {{ orderformitems.management_form }}
+        {{ lineitems.management_form }}
 
         <div class="flex flex-col gap-2 p-2 m-2">
-            {% for form in orderformitems.forms %}
+            {% for form in lineitems.forms %}
                 <div class="formset-row">
-                    <div class="grid items-end grid-cols-1 gap-2 lg:grid-cols-8">
+                    <div class="grid items-end grid-cols-1 gap-2 lg:grid-cols-5">
                         {% for field in form.hidden_fields %}
                             {{ field }}
                         {% endfor %}
@@ -89,5 +88,8 @@
             deleteCssClass: "btn btn-error btn-outline btn-sm",
             deleteContainerClass: "deletelink",
         });
+
+        new Choices(document.querySelector("#id_member"));
+        new Choices(document.querySelector("#id_order_form"));
     </script>
 {% endblock content %}

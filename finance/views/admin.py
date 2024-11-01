@@ -1,5 +1,8 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.db.models import Count
 from django.forms import BaseForm
 from django.http import HttpResponse
 from django.urls import reverse_lazy
@@ -9,16 +12,19 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django_filters.views import FilterView
 
 from clubmanager.views import MessagesDeniedMixin
-from finance.filters import OrderFormFilter
-from finance.forms import OrderFormItemFormSet
-from finance.models import Sponsor, OrderForm
+from finance.filters import OrderFormFilter, OrderFilter
+from finance.forms import OrderFormItemFormSet, OrderLineItemFormSet
+from finance.models import Sponsor, OrderForm, Order
+from teams.models import Season
 
 
 class SponsorListView(MessagesDeniedMixin, ListView):
     model = Sponsor
     paginate_by = 25
     permission_required = "finance"
-    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
+    permission_denied_message = _(
+        "You do not have sufficient access rights to access the sponsor list"
+    )
 
 
 class SponsorAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
@@ -65,7 +71,9 @@ class OrderFormListView(MessagesDeniedMixin, FilterView):
     filterset_class = OrderFormFilter
     paginate_by = 25
     permission_required = "finance"
-    permission_denied_message = _("You do not have sufficient access rights to access the form list")
+    permission_denied_message = _(
+        "You do not have sufficient access rights to access the form list"
+    )
 
 
 class OrderFormAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
@@ -117,7 +125,9 @@ class OrderFormEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
 
         if self.request.POST:
-            context["orderformitems"] = OrderFormItemFormSet(self.request.POST, instance=self.object)
+            context["orderformitems"] = OrderFormItemFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
             context["orderformitems"] = OrderFormItemFormSet(instance=self.object)
 
@@ -146,10 +156,83 @@ class OrderFormDeleteView(MessagesDeniedMixin, SuccessMessageMixin, DeleteView):
         return self.success_message % dict(cleaned_data, name=self.object.name)
 
 
-class OrderListView(MessagesDeniedMixin, FilterView): ...
+class OrderListView(MessagesDeniedMixin, FilterView):
+    filterset_class = OrderFilter
+    paginate_by = 25
+    permission_required = "finance"
+    permission_denied_message = _(
+        "You do not have sufficient access rights to access the order list"
+    )
+
+    def get_filterset_kwargs(self, filterset_class: OrderFilter) -> dict:
+        current_season = Season.get_season()
+        filter_values = {
+            "start_date": current_season.start_date,
+            "end_date": current_season.end_date,
+        }
+        kwargs = super().get_filterset_kwargs(filterset_class)
+
+        if kwargs["data"] is not None:
+            filter_values = kwargs["data"].dict()
+
+        kwargs["data"] = filter_values
+        return kwargs
+
+    def get_context_data(self, **kwargs: dict) -> dict:
+        context = super().get_context_data(**kwargs)
+        current_season = Season.get_season()
+        status_choices = {}
+
+        for status in Order.OrderStatus.choices:
+            context[status[1]] = 0
+            context["choices"] = context.get("choices", []) + [status[1]]
+            status_choices[status[0]] = status[1]
+
+        counts = (
+            Order.objects.filter(
+                created__gte=current_season.start_date,
+                created__lte=current_season.end_date,
+            )
+            .values("status")
+            .annotate(Count("status"))
+        )
+        for count in counts:
+            context[status_choices[count["status"]]] = count["status__count"]
+
+        return context
 
 
-class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView): ...
+class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
+    model = Order
+    fields = ["order_form", "member"]
+    success_message = _("Order <strong>%(uuid)s</strong> added successfully")
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    permission_required = "finance"
+    permission_denied_message = OrderListView.permission_denied_message
+
+    def get_success_message(self, cleaned_data: dict) -> str:
+        return self.success_message % dict(cleaned_data, uuid=self.object.uuid)
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["lineitems"] = OrderLineItemFormSet(self.request.POST)
+        else:
+            context["lineitems"] = OrderLineItemFormSet()
+
+        return context
+
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        context = self.get_context_data()
+        line_items = context["lineitems"]
+
+        with transaction.atomic():
+            self.object = form.save()
+            if line_items.is_valid():
+                line_items.save()
+
+        return super().form_valid(form)
 
 
 class OrderEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView): ...

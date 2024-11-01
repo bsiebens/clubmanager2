@@ -5,29 +5,33 @@
 {% load form_tags %}
 {% load l10n %}
 
-{% block title %}{% translate "Registrations" %}{% endblock title %}
+{% block title %}{% translate "Orders" %}{% endblock title %}
 
 {% block pagetitle %}
-    <h1 class="title"><i class="fa-solid fa-file-invoice"></i>{% translate "Registrations" %}</h1>
+    <h1 class="title"><i class="fa-solid fa-file-invoice"></i>{% translate "Orders" %}</h1>
 {% endblock pagetitle %}
 
 {% block content %}
     <div class="grid grid-cols-1 gap-2 mb-6 lg:grid-cols-4">
-        <a class="btn btn-outline {% if request.GET.status == "0" %}btn-active{% endif %}" href="?{% url_replace_with_season request "status" 0 %}">
+        <a class="btn btn-outline {% if request.GET.status == "0" %}btn-active{% endif %}"
+           href="?{% url_replace_with_season_dates request "status" 0 %}">
             New
-            <div class="badge {% if new > 0 %}badge-neutral{% endif %}">{{ new }}</div>
+            <div class="badge {% if New > 0 %}badge-neutral{% endif %}">{{ New }}</div>
         </a>
-        <a class="btn btn-outline {% if request.GET.status == "1" %}btn-active{% endif %}" href="?{% url_replace_with_season request "status" 1 %}">
+        <a class="btn btn-outline {% if request.GET.status == "1" %}btn-active{% endif %}"
+           href="?{% url_replace_with_season_dates request "status" 1 %}">
             Submitted
-            <div class="badge {% if submitted > 0 %}badge-warning{% endif %}">{{ submitted }}</div>
+            <div class="badge {% if Submitted > 0 %}badge-warning{% endif %}">{{ Submitted }}</div>
         </a>
-        <a class="btn btn-outline {% if request.GET.status == "2" %}btn-active{% endif %}" href="?{% url_replace_with_season request "status" 2 %}">
+        <a class="btn btn-outline {% if request.GET.status == "2" %}btn-active{% endif %}"
+           href="?{% url_replace_with_season_dates request "status" 2 %}">
             Invoiced
-            <div class="badge {% if invoiced > 0 %}badge-error{% endif %}">{{ invoiced }}</div>
+            <div class="badge {% if Invoiced > 0 %}badge-error{% endif %}">{{ Invoiced }}</div>
         </a>
-        <a class="btn btn-outline {% if request.GET.status == "3" %}btn-active{% endif %}" href="?{% url_replace_with_season request "status" 3 %}">
+        <a class="btn btn-outline {% if request.GET.status == "3" %}btn-active{% endif %}"
+           href="?{% url_replace_with_season_dates request "status" 3 %}">
             Payed
-            <div class="badge {% if payed > 0 %}badge-success{% endif %}">{{ payed }}</div>
+            <div class="badge {% if Payed > 0 %}badge-success{% endif %}">{{ Payed }}</div>
         </a>
     </div>
 
@@ -35,7 +39,7 @@
         <div class="action-bar-filter">
             <form>
                 {% for field in filter.form %}
-                    {% form_field field show_label=False size="extra-small" %}
+                    {% form_field field size="extra-small" %}
                 {% endfor %}
 
                 <button type="submit"><i class="fa-solid fa-filter"></i>{% translate "Filter" %}</button>
@@ -52,69 +56,74 @@
     <div class="hidden mt-2 lg:block">
         <table class="table table-zebra">
             <thead>
-                <tr>
-                    {% comment %} <th>
+            <tr>
+                {% comment %} <th>
                         <label>
                             <input type="checkbox" class="checkbox checkbox-sm" />
                         </label>
                     </th> {% endcomment %}
-                    <th>{% translate "Registration" %}</th>
-                    <th>{% translate "Status" %}</th>
-                    <th>{% translate "Members" %}</th>
-                    <th>{% translate "Amount" %}</th>
-                    <th>{% translate "Created" %}</th>
-                    <th>{% translate "Modified" %}</th>
-                    <th></th>
-                </tr>
+                <th>{% translate "Order" %}</th>
+                <th>{% translate "Status" %}</th>
+                <th>{% translate "Members" %}</th>
+                <th>{% translate "Amount" %}</th>
+                <th>{% translate "Created" %}</th>
+                <th>{% translate "Modified" %}</th>
+                <th></th>
+            </tr>
             </thead>
             <tbody>
-                {% if object_list|length == 0 %}
-                    <tr>
-                        <td colspan="3">
-                            {% translate "No registrations found" %}
+            {% if object_list|length == 0 %}
+                <tr>
+                    <td colspan="3">
+                        {% translate "No orders found" %}
+                    </td>
+                </tr>
+            {% else %}
+                {% for order in object_list %}
+                    <tr class="border-l-4 hover {% if order.status == 0 %}border-l-neutral{% elif order.status == 1 %}border-l-warning{% elif order.status == 2 %}border-l-error{% else %}border-l-success{% endif %}">
+                        <td>
+                            <a href="{% url "clubmanager_admin:finance:orders_edit" order.id %}">
+                                <div class="flex flex-col grow">
+                                    <div class="font-bold">{% translate "Order" %} {{ order.uuid }}</div>
+                                    <div class="text-sm opacity-50">{{ order.order_form }}</div>
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            {% if order.status == 0 %}
+                                <div class="badge badge-neutral badge-sm">
+                            {% elif order.status == 1 %}
+                                <div class="badge badge-warning badge-sm">
+                            {% elif order.status == 2 %}
+                                <div class="badge badge-error badge-sm">
+                            {% else %}
+                                <div class="badge badge-success badge-sm">
+                            {% endif %}
+                            {{ order.get_status_display }}</div>
+                        </td>
+                        <td>
+                            <div class="flex-row flow-root max-w-sm gap-1">
+                                {% for member in order.members_in_order %}
+                                    <div class="badge badge-sm badge-outline badge-neutral">{{ member.first_name }} {{ member.last_name }}</div>
+                                {% endfor %}
+                            </div>
+                        </td>
+                        <td>{{ order.display_total }}</td>
+                        <td>{{ order.created|date:"d M Y H:i" }}</td>
+                        <td>{{ order.modified|date:"d M Y H:i" }}</td>
+                        <td>
+                            <a class="mr-2 btn btn-outline btn-sm"
+                               href="{% url "clubmanager_admin:finance:orders_edit" order.id %}">
+                                <i class="fa-solid fa-eye"></i>{% translate "Details" %}
+                            </a>
+                            <a class="btn btn-outline btn-error btn-sm"
+                               href="{% url "clubmanager_admin:finance:orders_delete" order.id %}">
+                                <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+                            </a>
                         </td>
                     </tr>
-                {% else %}
-                    {% for order in object_list %}
-                        <tr class="border-l-4 hover {% if order.status == 0 %}border-l-neutral{% elif order.status == 1 %}border-l-warning{% elif order.status == 2 %}border-l-error{% else %}border-l-success{% endif %}">
-                            <td class="font-bold">
-                                <a class="font-bold" href="{% url "clubmanager_admin:finance:orders_edit" order.id %}">
-                                    {{ order.uuid }}
-                                </a>
-                            </td>
-                            <td>
-                                {% if order.status == 0 %}
-                                    <div class="badge badge-neutral badge-sm">
-                                {% elif order.status == 1 %}
-                                    <div class="badge badge-warning badge-sm">
-                                {% elif order.status == 2 %}
-                                    <div class="badge badge-error badge-sm">
-                                {% else %}
-                                    <div class="badge badge-success badge-sm">
-                                {% endif %}
-                                {{ order.get_status_display }}</div>
-                            </td>
-                            <td>
-                                <div class="flex-row flow-root max-w-sm gap-1">
-                                    {% for member in order.members %}
-                                        <div class="badge badge-sm badge-outline badge-neutral">{{ member.first_name }} {{ member.last_name }}</div>
-                                    {% endfor %}
-                                </div>
-                            </td>
-                            <td>{{ order.total|localize }} {{ order.currency }}</td>
-                            <td>{{ order.created|timesince }} {% translate "ago" %}</td>
-                            <td>{{ order.modified|timesince }} {% translate "ago" %}</td>
-                            <td>
-                                <a class="mr-2 btn btn-outline btn-sm" href="{% url "clubmanager_admin:finance:orders_edit" order.id %}">
-                                    <i class="fa-solid fa-eye"></i>{% translate "Details" %}
-                                </a>
-                                <a class="btn btn-outline btn-error btn-sm" href="{% url "clubmanager_admin:finance:orders_delete" order.id %}">
-                                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                                </a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>
@@ -140,22 +149,24 @@
                                         <div class="badge badge-success badge-sm">
                                     {% endif %}
                                     {{ order.get_status_display }}</div>
-                                </div>
+                                    </div>
 
-                                <div class="flex-row items-center flow-root gap-1">
-                                    {% for member in order.members %}
-                                        <div class="badge badge-sm badge-outline badge-neutral">{{ member.first_name }} {{ member.last_name }}</div>
-                                    {% endfor %}
+                                    <div class="flex-row items-center flow-root gap-1">
+                                        {% for member in order.members_in_order %}
+                                            <div class="badge badge-sm badge-outline badge-neutral">{{ member.first_name }} {{ member.last_name }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    </div>
+                                    </div>
+
+                                    <div>
+                                        <a class="btn btn-error btn-outline"
+                                           href="{% url "clubmanager_admin:finance:orders_delete" order.id %}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div>
-                            <a class="btn btn-error btn-outline" href="{% url "clubmanager_admin:finance:orders_delete" order.id %}">
-                                <i class="fa-solid fa-trash"></i>
-                            </a>
-                        </div>
-                    </div>
                 </a>
             {% endfor %}
         {% endif %}
@@ -165,15 +176,24 @@
         <div class="flex justify-center mt-4">
             <div class="join">
                 {% if page_obj.has_previous %}
-                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span class="hidden lg:inline"> {% translate "first" %}</span></a>
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.previous_page_number %}"><span class="hidden lg:inline">{% translate "previous" %}</span><span class="lg:hidden">&lt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" 1 %}">&laquo;<span
+                            class="hidden lg:inline"> {% translate "first" %}</span></a>
+                    <a class="join-item btn"
+                       href="?{% url_replace request "page" page_obj.previous_page_number %}"><span
+                            class="hidden lg:inline">{% translate "previous" %}</span><span
+                            class="lg:hidden">&lt;</span></a>
                 {% endif %}
 
-                <button class="join-item btn btn-disabled">{% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }} of {{ num_pages }}{% endblocktranslate %}</button>
+                <button class="join-item btn btn-disabled">
+                    {% blocktranslate with page=page_obj.number num_pages=page_obj.paginator.num_pages %}page {{ page }}
+                        of {{ num_pages }}{% endblocktranslate %}</button>
 
                 {% if page_obj.has_next %}
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}"><span class="hidden lg:inline">{% translate "next" %}</span><span class="lg:hidden">&gt;</span></a>
-                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}"><span class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.next_page_number %}"><span
+                            class="hidden lg:inline">{% translate "next" %}</span><span
+                            class="lg:hidden">&gt;</span></a>
+                    <a class="join-item btn" href="?{% url_replace request "page" page_obj.paginator.num_pages %}"><span
+                            class="hidden lg:inline"> {% translate "last" %}</span> &raquo;</a>
                 {% endif %}
             </div>
         </div>

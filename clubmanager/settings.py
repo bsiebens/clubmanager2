@@ -10,7 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from datetime import timedelta
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from pathlib import Path
 
 import environ
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "constance",
     "django_initials_avatar",
     "django_extensions",
     "django_filters",
@@ -124,7 +126,7 @@ DATABASES = {
         "USER": env("DJANGO_DB_USER", default=""),
         "PASSWORD": env("DJANGO_DB_PASSWORD", default=""),
         "HOST": env("DJANGO_DB_HOST", default="localhost"),
-    }
+    },
 }
 
 DATABASES["default"] = DATABASES[env("DJANGO_DATABASE", default="production")]
@@ -198,7 +200,9 @@ SITE_LOGO = env("CLUB_SITE_LOGO")
 CLUB_ENFORCE_LICENSE = env("CLUB_ENFORCE_LICENSE", default=False)
 CLUB_DEFAULT_CURRENCY = env("CLUB_DEFAULT_CURRENCY", default="EUR")
 CLUB_DEFAULT_CURRENCY_ENTITY = env("CLUB_DEFAULT_CURRENCY_ENTITY", default="&euro;")
-CLUB_DEFAULT_HOME_LOCATION = env("CLUB_DEFAULT_HOME_LOCATION", default="Ice Skating Center Mechelen")
+CLUB_DEFAULT_HOME_LOCATION = env(
+    "CLUB_DEFAULT_HOME_LOCATION", default="Ice Skating Center Mechelen"
+)
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -207,7 +211,9 @@ PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["http://localhost"])
+CORS_ALLOWED_ORIGINS = env.list(
+    "DJANGO_CORS_ALLOWED_ORIGINS", default=["http://localhost"]
+)
 
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
@@ -222,3 +228,9 @@ REST_FRAMEWORK = {
 }
 
 DJANGO_NOTIFICATIONS_CONFIG = {"USE_JSONFIELD": True}
+
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG = {
+    "CLUBMANAGER_NAME": env("CLUB_SITE_NAME", default=""),
+    "CLUBMANAGER_LOGO": env("CLUB_SITE_LOGO", default=""),
+}
