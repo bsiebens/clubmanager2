@@ -16,11 +16,7 @@ from .rules import is_team_admin
 
 class GameManager(models.Manager):
     def get_queryset(self) -> models.QuerySet:
-        return (
-            super(GameManager, self)
-            .get_queryset()
-            .select_related("team", "opponent", "season", "game_type")
-        )
+        return super(GameManager, self).get_queryset().select_related("team", "opponent", "season", "game_type")
 
 
 class Opponent(RulesModel):
@@ -47,13 +43,8 @@ class Opponent(RulesModel):
 
 class GameType(RulesModel):
     name = models.CharField(_("name"), max_length=250)
-    opponent_count = models.IntegerField(
-        _("opponent count"),
-        default=1,
-        help_text=_(
-            "Number of opponents for this game type, does not have any influence on the working of clubmanager but is passed along in the API."
-        ),
-    )
+    opponent_count = models.IntegerField(_("opponent count"), default=1, help_text=_(
+        "Number of opponents for this game type, does not have any influence on the working of clubmanager but is passed along in the API."))
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -80,48 +71,19 @@ class Game(RulesModel):
     }
     COMPETITION_CHOICES = {i: i for i in COMPETITIONS.keys()}
 
-    team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games"
-    )
-    season = models.ForeignKey(
-        Season,
-        on_delete=models.CASCADE,
-        verbose_name=_("season"),
-        related_name="games",
-        default=Season.get_season_id,
-        blank=True,
-        null=True,
-    )
-    opponent = models.ForeignKey(
-        Opponent,
-        on_delete=models.CASCADE,
-        verbose_name=_("opponent"),
-        related_name="games",
-        blank=True,
-        null=True,
-    )
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_("team"), related_name="games")
+    season = models.ForeignKey(Season, on_delete=models.CASCADE, verbose_name=_("season"), related_name="games", default=Season.get_season_id,
+                               blank=True, null=True)
+    opponent = models.ForeignKey(Opponent, on_delete=models.CASCADE, verbose_name=_("opponent"), related_name="games", blank=True, null=True)
     date = models.DateTimeField()
     location = models.CharField(_("location"), max_length=250)
-    game_type = models.ForeignKey(
-        GameType,
-        on_delete=models.PROTECT,
-        verbose_name=_("game type"),
-        related_name="games",
-    )
+    game_type = models.ForeignKey(GameType, on_delete=models.PROTECT, verbose_name=_("game type"), related_name="games")
 
-    competition = models.CharField(
-        _("competition"),
-        max_length=20,
-        choices=COMPETITION_CHOICES,
-        blank=True,
-        null=True,
-    )
+    competition = models.CharField(_("competition"), max_length=20, choices=COMPETITION_CHOICES, blank=True, null=True)
     game_id = models.CharField(_("game ID"), max_length=250, blank=True, null=True)
     live = models.BooleanField(_("live"), default=False)
     score_team = models.IntegerField(_("score team"), default=0, blank=True, null=True)
-    score_opponent = models.IntegerField(
-        _("score opponent"), default=0, blank=True, null=True
-    )
+    score_opponent = models.IntegerField(_("score opponent"), default=0, blank=True, null=True)
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -167,9 +129,7 @@ class Game(RulesModel):
                         competition_instance = competition_class()
                         competition_instance.update_game_information(game=self)
                     else:
-                        print(
-                            f"Competition class '{self.competition}' not found in module '{module_name}'"
-                        )
+                        print(f"Competition class '{self.competition}' not found in module '{module_name}'")
                 else:
                     print(f"Competition '{self.competition}' not found in COMPETITIONS")
 

@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 import datetime
 
 from django.core.management.base import BaseCommand, CommandParser
@@ -14,9 +16,9 @@ class Command(BaseCommand):
         parser.add_argument("--hours", action="store", default=3, type=int, help="Change the hour limit to the specified number of hours")
 
     def handle(self, *args, **options) -> None:
-        hour_limit = options["hours"]
+        hours_limit = options["hours"]
 
-        games = Game.objects.filter(Q(live=True) | Q(date__lte=timezone.now(), date__gte=timezone.now() - datetime.timedelta(hours=hour_limit)))
+        games = Game.objects.filter(Q(live=True) | Q(date__lte=timezone.now(), date__gte=timezone.now() - datetime.timedelta(hours=hours_limit)))
         for game in games:
             game.update_game_information()
 

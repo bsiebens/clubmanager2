@@ -11,7 +11,6 @@ Django = "^5.1.1"
 django-phonenumber-field = {extras = ["phonenumbers"], version = "^8.0.0"}
 django-auditlog = "^3.0.0"
 django-compressor = "^4.5.1"
-django-initials-avatar = "^0.0.7"
 django-extensions = "^3.2.3"
 django-filter = "^24.3"
 django-debug-toolbar = "^4.4.6"

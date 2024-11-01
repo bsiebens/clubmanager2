@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -55,7 +57,15 @@ class GameSerializerV2(serializers.ModelSerializer):
         fields = ["id", "team", "opponent", "date", "location", "live", "score_team", "score_opponent", "game_type", "is_passed", "is_home_game"]
 
     def get_is_passed(self, obj: Game) -> bool:
-        return obj.date <= timezone.now()
+        if obj.date is None:
+            return False
+
+        if timezone.is_aware(obj.date):
+            return obj.date <= timezone.now()
+        else:
+            local_timezone = timezone.get_current_timezone()
+            obj_date_aware = local_timezone.localize(obj.date)
+            return obj_date_aware <= timezone.now()
 
     def get_is_home_game(self, obj: Game) -> bool:
         return obj.is_home_game
