@@ -105,6 +105,9 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
+            "libraries": {
+                "avatar": "clubmanager.templatetags.avatar",
+            },
         },
     },
 ]
@@ -233,4 +236,9 @@ CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = {
     "CLUBMANAGER_NAME": env("CLUB_SITE_NAME", default=""),
     "CLUBMANAGER_LOGO": env("CLUB_SITE_LOGO", default=""),
+    "CLUBMANAGER_DEFAULT_CURRENCY": env("CLUB_DEFAULT_CURRENCY", default="EUR"),
+    "CLUBMANAGER_DEFAULT_CURRENCY_ENTITY": env(
+        "CLUB_DEFAULT_CURRENCY_ENTITY", default="&euro;"
+    ),
+    "CLUBMANAGER_DEFAULT_HOME_LOCATION": env("CLUB_DEFAULT_HOME_LOCATION", default=""),
 }

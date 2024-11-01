@@ -1,255 +1,262 @@
 {% load compress %}
 {% load static %}
-{% load initials_avatar %}
 {% load i18n %}
 {% load notifications_tags %}
+{% load avatar %}
 
 <!DOCTYPE html>
 <html lang="en" data-theme="light" class="h-full">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-        <title>ClubManager - {% block title %}Dashboard{% endblock title %}</title>
+    <title>ClubManager - {% block title %}Dashboard{% endblock title %}</title>
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
 
-        {% compress css %}
-            <link rel="stylesheet" href="{% static 'src/output.css' %}" />
-        {% endcompress %}
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'src/output.css' %}"/>
+    {% endcompress %}
 
-        <script src="https://kit.fontawesome.com/8189f10079.js" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-        <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-    </head>
+    <script src="https://kit.fontawesome.com/8189f10079.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+</head>
 
-    <body>
-        <div class="drawer">
-            <input id="drawer-mobile-menu" type="checkbox" class="drawer-toggle" />
-            <div class="flex flex-col drawer-content">
-                <!-- Navbar -->
-                <div class="w-full bg-gray-200 navbar dark:bg-gray-200">
-                    <div class="navbar-start">
-                        <div class="flex-none lg:hidden">
-                            <label for="drawer-mobile-menu" aria-label="open sidebar" class="btn btn-square btn-ghost">
-                                <i class="text-xl fa-solid fa-bars"></i>
-                            </label>
-                        </div>
-
-                        <div class="flex-1 px-2 mx-2 text-xl font-bold">
-                            <a href="{% if "admin" in request.path %}{% url "clubmanager_admin:index" %}{% else %}{% url "clubmanager:index" %}{% endif %}">ClubManager</a>
-                        </div>
-                    </div>
-                    
-                    <div class="navbar-end">
-                        <div class="flex-none hidden lg:block">
-                            {% if "admin" in request.path %}
-                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
-                                    <a class="mr-2 btn btn-sm btn-scroll-m-7 btn-outline" href="{% url "clubmanager:index" %}">
-                                        <i class="fa-solid fa-user"></i>
-                                        {% translate "Member area" %}
-                                    </a>
-                                </div>
-                            {% else %}
-                                {% if request.user.is_staff %}
-                                    <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
-                                        <a class="mr-2 btn btn-sm btn-outline" href="{% url "clubmanager_admin:index" %}">
-                                            <i class="fa-solid fa-screwdriver-wrench"></i>
-                                            {% translate "Admin area" %}
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endif %}
-
-                            {% if request.user.is_superuser %}
-                                <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
-                                    <a class="mr-2 btn btn-sm btn-outline" href="{% url "admin:index" %}">
-                                        <i class="fa-solid fa-shield"></i>
-                                        {% translate "Django admin" %}
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        {% notifications_unread as unread_count %}
-                        
-                        <div class="dropdown dropdown-end">
-                            <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
-                                <i class="text-lg fa-solid fa-bell"></i>
-
-                                {% if unread_count %}
-                                    <span class="badge badge-sm badge-error">{{ unread_count }}</span>
-                                {% endif %}
-                            </div>
-                            <div tabindex="0" class="dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-6 w-96 p-2 shadow">
-                                <div class="flex flex-col">
-                                    <div class="flex flex-row justify-between p-2">
-                                        <div class="font-semibold">{% translate "Notifications" %}</div>
-                                        <div class="text-xs text-opacity-50">
-                                            {% if unread_count %}
-                                                <a href="{% url "notifications:mark_all_as_read" %}?next={{ request.path}}" class="hover:underline">
-                                                    {% translate "mark all as read" %}
-                                                </a>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col divide-y">
-                                        {% if unread_count %}
-                                            {% for notification in request.user.notifications.unread %}
-                                                <div class="flex flex-col gap-1 p-2">
-                                                    <div class="text-sm">
-                                                        <a href="{% url "notifications:mark_as_read" notification.slug %}?next={{ notification.data.url }}">
-                                                            {{ notification.description|safe }}
-                                                        </a>
-                                                    </div>
-                                                    <div class="text-xs text-opacity-50">
-                                                        {{ notification.timesince }} {% translate "ago" %}
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <div class="p-2 text-sm">{% translate "No notifications" %}</div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="dropdown dropdown-end">
-                            <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                                <div class="w-10 rounded-full">
-                                    <img alt="{{ request.user.get_full_name }} avatar" src="{% render_initials_avatar request.user.get_full_name %}" />
-                                </div>
-                            </div>
-                            <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                <li>
-                                    <a href="{% url "password_change" %}">
-                                        <i class="fa-solid fa-lock"></i>{% translate "Change password" %}
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a href="{% url "two_factor:profile" %}">
-                                        <i class="fa-solid fa-key"></i>{% translate "Manage MFA" %}
-                                    </a>
-                                </li>
-                                
-                                <li>
-                                    <form action="{% url 'logout' %}?next={% url "clubmanager:index" %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit">
-                                            <i class="mr-2 fa-solid fa-right-from-bracket"></i>Log out
-                                        </button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+<body>
+<div class="drawer">
+    <input id="drawer-mobile-menu" type="checkbox" class="drawer-toggle"/>
+    <div class="flex flex-col drawer-content">
+        <!-- Navbar -->
+        <div class="w-full bg-gray-200 navbar dark:bg-gray-200">
+            <div class="navbar-start">
+                <div class="flex-none lg:hidden">
+                    <label for="drawer-mobile-menu" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                        <i class="text-xl fa-solid fa-bars"></i>
+                    </label>
                 </div>
 
-                <!-- Page content here -->
-                <div class="flex flex-row">
-                    <div class="hidden lg:flex min-w-fit">
-                        <div class="p-4 bg-base-200 text-base-content w-80">
-                            <div class="mb-2 text-lg font-bold">{% translate "Admin Applications" %}</div>
+                <div class="flex-1 px-2 mx-2 text-xl font-bold">
+                    <a href="
 
-                            <ul class="menu">
-                                {% if "admin" in request.path %}
-                                    {% include "clubmanager/menu_admin.html" %}
-                                {% else %}
-                                    {% include "clubmanager/menu_user.html" %}
-                                {% endif %}
-                            </ul>
-                        </div>
-                    </div>
 
-                    <div class="p-6 grow">
-                        {% block pagetitle %}{% endblock pagetitle %}
 
-                        {% if messages %}
-                            <div class="flex flex-col p-2 m-4 gap-y-2">      
-                                {% for message in messages %}
-                                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                                        <div role="alert" class="alert alert-success">
-                                            <i class="text-lg fa-solid fa-check"></i>
-                                            <span>{{ message|safe }}</span>
-                                        </div>
-                                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
-                                        <div role="alert" class="alert alert-warning">
-                                            <i class="text-lg fa-solid fa-ban"></i>
-                                            <span>{{ message|safe }}</span>
-                                        </div>
-                                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                                        <div role="alert" class="alert alert-error">
-                                            <i class="text-lg fa-solid fa-exclamation"></i>
-                                            <span>{{ message|safe }}</span>
-                                        </div>
-                                    {% else %}
-                                        <div role="alert" class="alert alert-info">
-                                            <i class="text-lg fa-solid fa-info"></i>
-                                            <span>{{ message|safe }}</span>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
 
-                        {% block content %}_base.html content block{% endblock content %}
-                    </div>
+
+                            {% if "admin" in request.path %}{% url "clubmanager_admin:index" %}{% else %}{% url "clubmanager:index" %}{% endif %}">ClubManager</a>
                 </div>
             </div>
 
-            <div class="drawer-side">
-                <label for="drawer-mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
-                <div class="flex flex-col min-h-full p-4 bg-base-200 w-84">
+            <div class="navbar-end">
+                <div class="flex-none hidden lg:block">
+                    {% if "admin" in request.path %}
+                        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
+                            <a class="mr-2 btn btn-sm btn-scroll-m-7 btn-outline" href="{% url "clubmanager:index" %}">
+                                <i class="fa-solid fa-user"></i>
+                                {% translate "Member area" %}
+                            </a>
+                        </div>
+                    {% else %}
+                        {% if request.user.is_staff %}
+                            <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
+                                <a class="mr-2 btn btn-sm btn-outline" href="{% url "clubmanager_admin:index" %}">
+                                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                                    {% translate "Admin area" %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if request.user.is_superuser %}
+                        <div class="tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
+                            <a class="mr-2 btn btn-sm btn-outline" href="{% url "admin:index" %}">
+                                <i class="fa-solid fa-shield"></i>
+                                {% translate "Django admin" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {% notifications_unread as unread_count %}
+
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
+                        <i class="text-lg fa-solid fa-bell"></i>
+
+                        {% if unread_count %}
+                            <span class="badge badge-sm badge-error">{{ unread_count }}</span>
+                        {% endif %}
+                    </div>
+                    <div tabindex="0"
+                         class="dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-6 w-96 p-2 shadow">
+                        <div class="flex flex-col">
+                            <div class="flex flex-row justify-between p-2">
+                                <div class="font-semibold">{% translate "Notifications" %}</div>
+                                <div class="text-xs text-opacity-50">
+                                    {% if unread_count %}
+                                        <a href="{% url "notifications:mark_all_as_read" %}?next={{ request.path }}"
+                                           class="hover:underline">
+                                            {% translate "mark all as read" %}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="flex flex-col divide-y">
+                                {% if unread_count %}
+                                    {% for notification in request.user.notifications.unread %}
+                                        <div class="flex flex-col gap-1 p-2">
+                                            <div class="text-sm">
+                                                <a href="{% url "notifications:mark_as_read" notification.slug %}?next={{ notification.data.url }}">
+                                                    {{ notification.description|safe }}
+                                                </a>
+                                            </div>
+                                            <div class="text-xs text-opacity-50">
+                                                {{ notification.timesince }} {% translate "ago" %}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="p-2 text-sm">{% translate "No notifications" %}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown dropdown-end">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                        {% avatar first_name=request.user.first_name last_name=request.user.last_name width=10 %}
+                    </div>
+                    <ul tabindex="0"
+                        class="menu menu-sm dropdown-content bg-base-100 border border-base-content/20 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>
+                            <a href="{% url "password_change" %}">
+                                <i class="fa-solid fa-lock"></i>{% translate "Change password" %}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url "two_factor:profile" %}">
+                                <i class="fa-solid fa-key"></i>{% translate "Manage MFA" %}
+                            </a>
+                        </li>
+
+                        <li>
+                            <form action="{% url 'logout' %}?next={% url "clubmanager:index" %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit">
+                                    <i class="mr-2 fa-solid fa-right-from-bracket"></i>Log out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page content here -->
+        <div class="flex flex-row">
+            <div class="hidden lg:flex min-w-fit">
+                <div class="p-4 bg-base-200 text-base-content w-80">
                     <div class="mb-2 text-lg font-bold">{% translate "Admin Applications" %}</div>
 
                     <ul class="menu">
-                        <!-- Sidebar content here -->
                         {% if "admin" in request.path %}
                             {% include "clubmanager/menu_admin.html" %}
                         {% else %}
                             {% include "clubmanager/menu_user.html" %}
                         {% endif %}
                     </ul>
-
-                    <div class="mt-4">
-                        {% if "admin" in request.path %}
-                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
-                                <a class="mr-2 btn btn-sm btn-scroll-m-7 btn-outline" href="{% url "clubmanager:index" %}">
-                                    <i class="fa-solid fa-user"></i>
-                                    {% translate "Member area" %}
-                                </a>
-                            </div>
-                        {% else %}
-                            {% if request.user.is_staff %}
-                                <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
-                                    <a class="mr-2 btn btn-sm btn-outline" href="{% url "clubmanager_admin:index" %}">
-                                        <i class="fa-solid fa-screwdriver-wrench"></i>
-                                        {% translate "Admin area" %}
-                                    </a>
-                                </div>
-                            {% endif %}
-                        {% endif %}
-
-                        {% if request.user.is_superuser %}
-                            <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
-                                <a class="mr-2 btn btn-sm btn-outline" href="{% url "admin:index" %}">
-                                    <i class="fa-solid fa-shield"></i>
-                                    {% translate "Django admin" %}
-                                </a>
-                            </div>
-                        {% endif %}
-                    </div>
                 </div>
             </div>
-        </div>
 
-        <footer class="p-4 bg-gray-200 footer footer-center dark:bg-gray-200 text-base-content">
-            <aside>
-                <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - MIT License - Version 0.4.6</p>
-            </aside>
-        </footer>
-    </body>
+            <div class="p-6 grow">
+                {% block pagetitle %}{% endblock pagetitle %}
+
+                {% if messages %}
+                    <div class="flex flex-col p-2 m-4 gap-y-2">
+                        {% for message in messages %}
+                            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                                <div role="alert" class="alert alert-success">
+                                    <i class="text-lg fa-solid fa-check"></i>
+                                    <span>{{ message|safe }}</span>
+                                </div>
+                            {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+                                <div role="alert" class="alert alert-warning">
+                                    <i class="text-lg fa-solid fa-ban"></i>
+                                    <span>{{ message|safe }}</span>
+                                </div>
+                            {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                                <div role="alert" class="alert alert-error">
+                                    <i class="text-lg fa-solid fa-exclamation"></i>
+                                    <span>{{ message|safe }}</span>
+                                </div>
+                            {% else %}
+                                <div role="alert" class="alert alert-info">
+                                    <i class="text-lg fa-solid fa-info"></i>
+                                    <span>{{ message|safe }}</span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% block content %}_base.html content block{% endblock content %}
+            </div>
+        </div>
+    </div>
+
+    <div class="drawer-side">
+        <label for="drawer-mobile-menu" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="flex flex-col min-h-full p-4 bg-base-200 w-84">
+            <div class="mb-2 text-lg font-bold">{% translate "Admin Applications" %}</div>
+
+            <ul class="menu">
+                <!-- Sidebar content here -->
+                {% if "admin" in request.path %}
+                    {% include "clubmanager/menu_admin.html" %}
+                {% else %}
+                    {% include "clubmanager/menu_user.html" %}
+                {% endif %}
+            </ul>
+
+            <div class="mt-4">
+                {% if "admin" in request.path %}
+                    <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to member area" %}">
+                        <a class="mr-2 btn btn-sm btn-scroll-m-7 btn-outline" href="{% url "clubmanager:index" %}">
+                            <i class="fa-solid fa-user"></i>
+                            {% translate "Member area" %}
+                        </a>
+                    </div>
+                {% else %}
+                    {% if request.user.is_staff %}
+                        <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to admin area" %}">
+                            <a class="mr-2 btn btn-sm btn-outline" href="{% url "clubmanager_admin:index" %}">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                                {% translate "Admin area" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if request.user.is_superuser %}
+                    <div class="grow tooltip tooltip-bottom" data-tip="{% translate "Switch to Django admin" %}">
+                        <a class="mr-2 btn btn-sm btn-outline" href="{% url "admin:index" %}">
+                            <i class="fa-solid fa-shield"></i>
+                            {% translate "Django admin" %}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="p-4 bg-gray-200 footer footer-center dark:bg-gray-200 text-base-content">
+    <aside>
+        <p>Copyright &copy; Bernard Siebens ({% now "Y" %}) - MIT License - Version 0.4.6</p>
+    </aside>
+</footer>
+</body>
 </html>

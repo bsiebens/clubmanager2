@@ -1,0 +1,11 @@
+<div class="avatar placeholder">
+    <div class="w-{{ width }} rounded-full font-semibold"
+         style="background-color: {{ background }}; color: {{ foreground }};">
+
+        {% if width >= 12 %}
+            <span class="text-2xl">{{ name }}</span>
+        {% else %}
+            <span class="text-xl">{{ name }}</span>
+        {% endif %}
+    </div>
+</div>
