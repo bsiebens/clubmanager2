@@ -4,10 +4,11 @@
 
 {% block content %}
     <div class="w-full flex flex-col lg:flex-row items-center justify-center mt-2 mb-4 gap-x-4">
-        <img class="w-48 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ site_name }}" src="{% static site_logo %}" />
+        <img class="w-48 tranform-gpu mask mask-circle bg-neutral" alt="logo {{ config.CLUBMANAGER_NAME }}"
+             src="{% static config.CLUBMANAGER_LOGO %}"/>
 
         <div class="flex flex-col items-center lg:items-start">
-            <h1 class="text-3xl lg:text-5xl font-bold">{{ site_name }}</h1>
+            <h1 class="text-3xl lg:text-5xl font-bold">{{ config.CLUBMANAGER_NAME }}</h1>
             <div class="badge badge-lg badge-primary mt-1">
                 <i class="fa-solid fa-lock mr-2"></i>Admin area
             </div>

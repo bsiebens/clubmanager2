@@ -8,7 +8,7 @@
 {% has_perm 'teams' request.user as has_team_rights %}
 {% has_perm 'teams.view_team' request.user as has_team_admin_rights %}
 {% has_perm 'teams.view_teammembership' request.user as has_teammembership_admin_rights %}
-{% has_perm 'activities.view_gametype' request.user as has_gametype_rigths %}
+{% has_perm 'activities.view_gametype' request.user as has_gametype_rights %}
 
 <li>
     {% if has_member_rights %}
@@ -66,7 +66,7 @@
                 <span class="mt-1">{% translate "Teams" %}</span>
             </a>
         {% endif %}
-        
+
         {% if has_teammembership_admin_rights %}
             {% url "clubmanager_admin:teams:teammembers_index" as teammembers_index %}
             <a href="{{ teammembers_index }}" {% if teammembers_index in request.path %}class="active"{% endif %}>
@@ -83,7 +83,7 @@
         <span class="mt-1">{% translate "Opponents" %}</span>
     </a>
 
-    {% if has_gametype_rigths%}
+    {% if has_gametype_rights %}
         {% url "clubmanager_admin:activities:gametypes_index" as gametypes_index %}
         <a href="{{ gametypes_index }}" {% if gametypes_index in request.path %}class="active"{% endif %}>
             <i class="fa-solid fa-list min-w-5"></i>

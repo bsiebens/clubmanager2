@@ -15,17 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import include, path
 from django.views.generic import RedirectView
-from two_factor.urls import urlpatterns as two_factor_urls
+from two_factor.urls import urlpatterns as two_factor_auth_urls
 
 from .api import router_v1, router_v2
 
 urlpatterns = [
-    path("", include(two_factor_urls)),
+    path("", include(two_factor_auth_urls)),
     path("notifications/", include("notifications.urls", namespace="notifications")),
     path("accounts/logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("accounts/profile/", RedirectView.as_view(pattern_name="clubmanager:index"), name="profile"),
@@ -33,7 +35,6 @@ urlpatterns = [
     path("accounts/password_change/done/", auth_views.PasswordChangeDoneView.as_view(), name="password_change_done"),
     path("clubmanager/admin/", include("clubmanager.clubmanager_admin_urls")),
     path("clubmanager/", include("clubmanager.clubmanager_urls")),
-    path("initials-avatar/", include("django_initials_avatar.urls")),
     path("markdownx/", include("markdownx.urls")),
     path("admin/", admin.site.urls),
     path("api/", include((router_v1.urls, "api"), namespace="v1")),

@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 
 import environ
+from django.utils.translation import gettext_lazy as _
 
 env = environ.Env(DEBUG=(bool, False))
 
@@ -29,7 +30,7 @@ environ.Env.read_env(Path(BASE_DIR, ".env"))
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env("DJANGO_DEBUG")
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["localhost"])
 
@@ -63,11 +64,7 @@ INSTALLED_APPS = [
     "finance",
     "activities",
     "django_cleanup.apps.CleanupConfig",
-    "django_rename_app",
 ]
-
-if DEBUG:
-    INSTALLED_APPS.append("debug_toolbar")
 
 AUTHENTICATION_BACKENDS = [
     "rules.permissions.ObjectPermissionBackend",
@@ -75,7 +72,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -88,6 +84,10 @@ MIDDLEWARE = [
     "auditlog.middleware.AuditlogMiddleware",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
 ROOT_URLCONF = "clubmanager.urls"
 
 TEMPLATES = [
@@ -99,6 +99,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "constance.context_processors.config",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
@@ -207,12 +208,10 @@ INTERNAL_IPS = ["127.0.0.1"]
 
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 
+CORS_ALLOWED_ORIGINS = env.list("DJANGO_CORS_ALLOWED_ORIGINS", default=["http://localhost"])
+
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = env.list(
-    "DJANGO_CORS_ALLOWED_ORIGINS", default=["http://localhost"]
-)
 
 LOGIN_URL = "two_factor:login"
 TWO_FACTOR_WEBAUTHN_RP_NAME = env("CLUB_SITE_NAME")
@@ -230,11 +229,11 @@ DJANGO_NOTIFICATIONS_CONFIG = {"USE_JSONFIELD": True}
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = {
-    "CLUBMANAGER_NAME": env("CLUB_SITE_NAME", default=""),
-    "CLUBMANAGER_LOGO": env("CLUB_SITE_LOGO", default=""),
-    "CLUBMANAGER_DEFAULT_CURRENCY": env("CLUB_DEFAULT_CURRENCY", default="EUR"),
-    "CLUBMANAGER_DEFAULT_CURRENCY_ENTITY": env(
+    "CLUBMANAGER_NAME": (env("CLUB_SITE_NAME", default=""), _("The name of the club"), str),
+    "CLUBMANAGER_LOGO": (env("CLUB_SITE_LOGO", default=""), _("The path to the logo of the club"), str),
+    "CLUBMANAGER_DEFAULT_CURRENCY": (env("CLUB_DEFAULT_CURRENCY", default="EUR"), _("Currency used when displaying amounts"), str),
+    "CLUBMANAGER_DEFAULT_CURRENCY_ENTITY": (env(
         "CLUB_DEFAULT_CURRENCY_ENTITY", default="&euro;"
-    ),
-    "CLUBMANAGER_DEFAULT_HOME_LOCATION": env("CLUB_DEFAULT_HOME_LOCATION", default=""),
+    ), _("HTML entity representing the default currency"), str),
+    "CLUBMANAGER_DEFAULT_HOME_LOCATION": (env("CLUB_DEFAULT_HOME_LOCATION", default=""), _("Home location of the club"), str),
 }

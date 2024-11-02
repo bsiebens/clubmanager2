@@ -1,6 +1,8 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.contrib import admin
 from rules.contrib.admin import ObjectPermissionsModelAdmin
-from markdownx.admin import MarkdownxModelAdmin
+
 from .models import NewsItem, Picture
 
 
@@ -10,7 +12,7 @@ class PictureInlineAdmin(admin.TabularInline):
 
 
 @admin.register(NewsItem)
-class NewsAdmin(ObjectPermissionsModelAdmin, MarkdownxModelAdmin):
+class NewsAdmin(ObjectPermissionsModelAdmin, admin.ModelAdmin):
     list_display = ["title", "author_name", "status", "type", "publish_on", "modified"]
     date_hierarchy = "publish_on"
     list_filter = ["status", "type", "modified"]

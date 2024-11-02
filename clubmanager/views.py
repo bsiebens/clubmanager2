@@ -1,4 +1,5 @@
-from django.conf import settings
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -22,8 +23,6 @@ class MessagesDeniedMixin(PermissionRequiredMixin):
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    """The main index page. For now only renders a template, but will be enhanced later on."""
-
     # todo also include news items once that app is created/finalized
 
     welcome_string = _("Good morning")
@@ -32,19 +31,16 @@ def index(request: HttpRequest) -> HttpResponse:
     elif timezone.now().hour > 18:
         welcome_string = _("Good evening")
 
-    return render(request, "clubmanager/index.html", {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO})
+    return render(request, "clubmanager/index.html", {"welcome": welcome_string})
 
 
 @login_required
-@permission_required("teams")
+@permission_required("news.add_newsitem")
 def index_admin(request: HttpRequest) -> HttpResponse:
-    """The main admin index page."""
-
     welcome_string = _("Good morning")
     if 12 < timezone.now().hour < 18:
         welcome_string = _("Good afternoon")
     elif timezone.now().hour > 18:
         welcome_string = _("Good evening")
 
-    return render(request, "clubmanager/index_admin.html",
-                  {"welcome": welcome_string, "site_name": settings.SITE_NAME, "site_logo": settings.SITE_LOGO})
+    return render(request, "clubmanager/index_admin.html", {"welcome": welcome_string})
