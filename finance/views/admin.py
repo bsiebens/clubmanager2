@@ -235,7 +235,37 @@ class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 
-class OrderEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView): ...
+class OrderEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
+    model = Order
+    fields = ["order_form", "member"]
+    success_message = _("Order <strong>%(uuid)s</strong> updated successfully")
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    permission_required = "finance"
+    permission_denied_message = OrderListView.permission_denied_message
+
+    def get_success_message(self, cleaned_data: dict) -> str:
+        return self.success_message % dict(cleaned_data, uuid=self.object.uuid)
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+
+        if self.request.POST:
+            context["lineitems"] = OrderLineItemFormSet(self.request.POST, instance=self.object)
+        else:
+            context["lineitems"] = OrderLineItemFormSet(instance=self.object)
+
+        return context
+
+    def form_valid(self, form: BaseForm) -> HttpResponse:
+        context = self.get_context_data()
+        line_items = context["lineitems"]
+
+        with transaction.atomic():
+            self.object = form.save()
+            if line_items.is_valid():
+                line_items.save()
+
+        return super().form_valid(form)
 
 
 class OrderDeleteView(MessagesDeniedMixin, SuccessMessageMixin, DeleteView): ...

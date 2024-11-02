@@ -13,15 +13,25 @@
 {% block content %}
     {% if order %}
         <div class="flex flex-row items-center gap-2 mt-8">
-            <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Order" %}{{ order.uuid }}</h2>
+        {% if order.status == 0 %}
+            <div class="badge badge-neutral min-w-fit">
+        {% elif order.status == 1 %}
+            <div class="badge badge-warning min-w-fit">
+        {% elif order.status == 2 %}
+            <div class="badge badge-error min-w-fit">
+        {% else %}
+            <div class="badge badge-success min-w-fit">
+        {% endif %}
+    {{ order.get_status_display }}</div>
+    <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Order" %} {{ order.uuid }}</h2>
 
-            <div class="flex justify-end grow">
-                <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
-                   class="hidden lg:flex btn btn-outline btn-error">
-                    <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
-                </a>
-            </div>
-        </div>
+    <div class="flex justify-end grow">
+        <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
+           class="hidden lg:flex btn btn-outline btn-error">
+            <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
+        </a>
+    </div>
+    </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2">
             <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
@@ -33,63 +43,63 @@
         <h2 class="text-2xl border-b-0 subtitle">{% translate "Create new order" %}</h2>
     {% endif %}
 
-    {% if form.errors %}
-        <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below
-            before continuing{% endblocktranslate %}</div>
-    {% endif %}
+{% if form.errors %}
+    <div class="mt-4 font-semibold text-error">{% blocktranslate %}Errors found - please update the errors below
+        before continuing{% endblocktranslate %}</div>
+{% endif %}
 
 
-    <form method="post">
-        {% csrf_token %}
+<form method="post">
+    {% csrf_token %}
 
-        <h2 class="subtitle">{% translate "Form Information" %}</h2>
-        <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-            {% form_field form.order_form %}
-            {% form_field form.member %}
-        </div>
+    <h2 class="subtitle">{% translate "Form Information" %}</h2>
+    <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
+        {% form_field form.order_form %}
+        {% form_field form.member %}
+    </div>
 
-        <h2 class="subtitle">{% translate "Form Items" %}</h2>
-        {{ lineitems.management_form }}
+    <h2 class="subtitle">{% translate "Form Items" %}</h2>
+    {{ lineitems.management_form }}
 
-        <div class="flex flex-col gap-2 p-2 m-2">
-            {% for form in lineitems.forms %}
-                <div class="formset-row">
-                    <div class="grid items-end grid-cols-1 gap-2 lg:grid-cols-5">
-                        {% for field in form.hidden_fields %}
-                            {{ field }}
-                        {% endfor %}
+    <div class="flex flex-col gap-2 p-2 m-2">
+        {% for form in lineitems.forms %}
+            <div class="formset-row">
+                <div class="grid items-end grid-cols-1 gap-2 lg:grid-cols-5">
+                    {% for field in form.hidden_fields %}
+                        {{ field }}
+                    {% endfor %}
 
-                        {% for field in form.visible_fields %}
-                            <div>{% form_field field size="small" show_help=False %}</div>
-                        {% endfor %}
+                    {% for field in form.visible_fields %}
+                        <div>{% form_field field size="small" show_help=False %}</div>
+                    {% endfor %}
 
-                        {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                    {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
 
-                        <div class="deletelink"></div>
-                    </div>
+                    <div class="deletelink"></div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
+    </div>
 
-        <button class="w-full mt-8 btn btn-neutral" type="submit">
-            <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
-        </button>
-    </form>
+    <button class="w-full mt-8 btn btn-neutral" type="submit">
+        <i class="fa-solid fa-floppy-disk"></i>{% translate "Save" %}
+    </button>
+</form>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="{% static "src/jquery.formset.js" %}"></script>
-    <script type="text/javascript">
-        $(".formset-row").formset({
-            addText: "{% translate "Add row" %}",
-            deleteText: "{% translate "Remove row" %}",
-            prefix: "items",
-            hideLastAddForm: true,
-            addCssClass: "btn btn-sm btn-outline max-w-fit",
-            deleteCssClass: "btn btn-error btn-outline btn-sm",
-            deleteContainerClass: "deletelink",
-        });
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="{% static "src/jquery.formset.js" %}"></script>
+<script type="text/javascript">
+    $(".formset-row").formset({
+        addText: "{% translate "Add row" %}",
+        deleteText: "{% translate "Remove row" %}",
+        prefix: "items",
+        hideLastAddForm: true,
+        addCssClass: "btn btn-sm btn-outline max-w-fit",
+        deleteCssClass: "btn btn-error btn-outline btn-sm",
+        deleteContainerClass: "deletelink",
+    });
 
-        new Choices(document.querySelector("#id_member"));
-        new Choices(document.querySelector("#id_order_form"));
-    </script>
+    new Choices(document.querySelector("#id_member"));
+    new Choices(document.querySelector("#id_order_form"));
+</script>
 {% endblock content %}
