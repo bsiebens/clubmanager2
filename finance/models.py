@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 import uuid
 from decimal import Decimal
 
@@ -118,6 +120,9 @@ class OrderFormItem(models.Model):
     )
 
     def __str__(self):
+        if not self.description.startswith("{form} | ".format(form=self.order_form.name)):
+            return "{form} | {description}".format(form=self.order_form.name, description=self.description)
+
         return self.description
 
     def save(self, *args, **kwargs):

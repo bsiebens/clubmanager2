@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Catamaran:wght@100..900&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
 *, ::before, ::after{
@@ -2157,6 +2161,20 @@ html{
   height: auto;
 }
 
+.stat {
+    display: inline-grid;
+    width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+    -moz-column-gap: 1rem;
+    column-gap: 1rem;
+    border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
+    --tw-border-opacity: 0.1;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
 .table{
   position: relative;
   width: 100%;
@@ -2399,6 +2417,10 @@ html{
     --btn-color: var(--fallback-in);
   }
 
+    .btn-success {
+        --btn-color: var(--fallback-su);
+    }
+
   .btn-warning{
     --btn-color: var(--fallback-wa);
   }
@@ -2481,6 +2503,10 @@ html{
     --btn-color: var(--in);
   }
 
+    .btn-success {
+        --btn-color: var(--su);
+    }
+
   .btn-warning{
     --btn-color: var(--wa);
   }
@@ -2506,6 +2532,12 @@ html{
   --tw-text-opacity: 1;
   color: var(--fallback-inc,oklch(var(--inc)/var(--tw-text-opacity)));
   outline-color: var(--fallback-in,oklch(var(--in)/1));
+}
+
+.btn-success {
+    --tw-text-opacity: 1;
+    color: var(--fallback-suc, oklch(var(--suc)/var(--tw-text-opacity)));
+    outline-color: var(--fallback-su, oklch(var(--su)/1));
 }
 
 .btn-warning{
@@ -5896,6 +5928,10 @@ body > div.flex.data-card .data.justify-center.items-center > div > div:nth-chil
 
 .mt-8{
   margin-top: 2rem;
+}
+
+.-mr-1 {
+    margin-right: -0.25rem;
 }
 
 .block{

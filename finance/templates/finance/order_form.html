@@ -25,7 +25,23 @@
     {{ order.get_status_display }}</div>
     <h2 class="mt-0 text-2xl border-b-0 subtitle">{% translate "Order" %} {{ order.uuid }}</h2>
 
-    <div class="flex justify-end grow">
+    <div class="flex flex-row justify-end gap-2 grow">
+        {% if order.status == 1 %}
+            <a href="#" class="hidden lg:flex btn btn-neutral">
+                <i class="mr-1 fa-solid fa-arrow-right"></i>{% translate "Create Invoice" %}
+            </a>
+        {% elif order.status == 2 %}
+            <a href="#" class="hidden lg:flex btn btn-success">
+                <i class="mr-1 fa-solid fa-check"></i>{% translate "Mark as payed" %}
+            </a>
+        {% endif %}
+
+        {% if order.status >= 2 %}
+            <a href="#" class="hidden lg:flex btn btn-neutral btn-outline">
+                <i class="mr-1 fa-solid fa-file-invoice"></i>{% translate "Download Invoice" %}
+            </a>
+        {% endif %}
+
         <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
            class="hidden lg:flex btn btn-outline btn-error">
             <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
@@ -34,6 +50,22 @@
     </div>
 
         <div class="grid grid-cols-1 gap-2 mt-2">
+            {% if order.status == 1 %}
+                <a href="#" class="lg:hidden btn btn-neutral">
+                    <i class="mr-1 fa-solid fa-arrow-right"></i>{% translate "Create Invoice" %}
+                </a>
+            {% elif order.status == 2 %}
+                <a href="#" class="lg:hidden btn btn-success">
+                    <i class="mr-1 fa-solid fa-check"></i>{% translate "Mark as payed" %}
+                </a>
+            {% endif %}
+
+            {% if order.status >= 2 %}
+                <a href="#" class="lg:hidden btn btn-neutral btn-outline">
+                    <i class="mr-1 fa-solid fa-file-invoice"></i>{% translate "Download Invoice" %}
+                </a>
+            {% endif %}
+
             <a href="{% url "clubmanager_admin:finance:orders_delete" order.id %}"
                class="lg:hidden btn btn-outline btn-error">
                 <i class="fa-solid fa-trash"></i>{% translate "Delete" %}
@@ -92,7 +124,7 @@
     $(".formset-row").formset({
         addText: "{% translate "Add row" %}",
         deleteText: "{% translate "Remove row" %}",
-        prefix: "items",
+        prefix: "lineitems",
         hideLastAddForm: true,
         addCssClass: "btn btn-sm btn-outline max-w-fit",
         deleteCssClass: "btn btn-error btn-outline btn-sm",

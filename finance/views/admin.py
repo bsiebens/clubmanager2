@@ -230,6 +230,7 @@ class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
         with transaction.atomic():
             self.object = form.save()
             if line_items.is_valid():
+                line_items.instance = self.object
                 line_items.save()
 
         return super().form_valid(form)
