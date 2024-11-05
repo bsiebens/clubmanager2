@@ -217,23 +217,25 @@ class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
+        context["lineitems"] = OrderLineItemFormSet()
 
         if self.request.POST:
             context["lineitems"] = OrderLineItemFormSet(self.request.POST)
-        else:
-            context["lineitems"] = OrderLineItemFormSet()
 
         return context
 
-    def form_valid(self, form: BaseForm) -> HttpResponse:
+    def form_valid(self, form: ModelForm) -> HttpResponse:
         context = self.get_context_data()
         line_items = context["lineitems"]
 
         with transaction.atomic():
             self.object = form.save()
+            line_items.instance = self.object
+
             if line_items.is_valid():
-                line_items.instance = self.object
                 line_items.save()
+            else:
+                return self.form_invalid(form)
 
         return super().form_valid(form)
 
@@ -265,10 +267,60 @@ class OrderEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
 
         with transaction.atomic():
             self.object = form.save()
+
             if line_items.is_valid():
                 line_items.save()
+            else:
+                return self.form_invalid(form)
 
         return super().form_valid(form)
 
 
-class OrderDeleteView(MessagesDeniedMixin, SuccessMessageMixin, DeleteView): ...
+class OrderDeleteView(MessagesDeniedMixin, SuccessMessageMixin, DeleteView):
+    model = Order
+    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
+    success_message = _("Order <strong>%(uuid)s</strong> deleted successfully")
+    permission_required = "finance"
+    permission_denied_message = OrderListView.permission_denied_message
+
+    def get_success_message(self, cleaned_data: dict) -> str:
+        return self.success_message % dict(cleaned_data, uuid=self.object.uuid)
+
+
+@permission_required("finance")
+def order_invoiced(request, pk: int) -> HttpResponse:
+    order = Order.objects.get(pk=pk)
+    order.status = Order.OrderStatus.INVOICED
+    order.save(update_fields=["status"])
+
+    messages.success(request, _("Invoice created for order <strong>%(name)s</strong>" % ({"name": order.uuid})))
+    notify.send(request.user, recipient=order.member.user, action_object=order, verb="invoiced", description=_("New invoice is now available"),
+                url=reverse_lazy("clubmanager_admin:index"))
+
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))
+
+
+@permission_required("finance")
+def order_payed(request, pk: int) -> HttpResponse:
+    order = Order.objects.get(pk=pk)
+    order.status = Order.OrderStatus.PAYED
+    order.save(update_fields=["status"])
+
+    messages.success(request, _("Order <strong>%(name)s</strong> marked as payed" % ({"name": order.uuid})))
+    notify.send(request.user, recipient=order.member.user, action_object=order, verb="payed", description=_("Invoice has been marked as payed"),
+                url=reverse_lazy("clubmanager_admin:index"))
+
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))
+
+
+@permission_required("finance")
+def order_submitted(request, pk: int) -> HttpResponse:
+    order = Order.objects.get(pk=pk)
+    order.status = Order.OrderStatus.SUBMITTED
+    order.save(update_fields=["status"])
+
+    messages.success(request, _("Order <strong>%(name)s</strong> returned to submitted state" % ({"name": order.uuid})))
+    notify.send(request.user, recipient=order.member.user, action_object=order, verb="invoiced", description=_("Invoice cancelled"),
+                url=reverse_lazy("clubmanager_admin:index"))
+
+    return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))

@@ -130,13 +130,13 @@
 
     <div class="flex flex-col gap-2 mt-2 lg:hidden">
         {% if object_list|length == 0 %}
-            <div>{% translate "No registrations found" %}</div>
+            <div>{% translate "No orders found" %}</div>
         {% else %}
             {% for order in object_list %}
                 <a class="grow" href="{% url "clubmanager_admin:finance:orders_edit" order.id %}">
                     <div class="data-card {% if order.status == 0 %}border-l-neutral{% elif order.status == 1 %}border-l-warning{% elif order.status == 2 %}border-l-error{% else %}border-l-success{% endif %}">
                         <div class="data">
-                            <div>{% translate "Registration" %}</div>
+                            <div>{% translate "Order" %}</div>
                             <div class="flex flex-col gap-2 mt-2">
                                 <div class="flex flex-row items-center gap-2">
                                     {% if order.status == 0 %}
@@ -166,7 +166,6 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
                 </a>
             {% endfor %}
         {% endif %}

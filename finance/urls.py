@@ -18,4 +18,7 @@ urlpatterns = [
     path("orders/add", admin.OrderAddView.as_view(), name="orders_add"),
     path("orders/edit/<int:pk>", admin.OrderEditView.as_view(), name="orders_edit"),
     path("orders/delete/<int:pk>", admin.OrderDeleteView.as_view(), name="orders_delete"),
+    path("orders/invoice/<int:pk>", admin.order_invoiced, name="orders_invoice"),
+    path("orders/payed/<int:pk>", admin.order_payed, name="orders_payed"),
+    path("orders/submitted/<int:pk>", admin.order_submitted, name="orders_submitted"),
 ]
