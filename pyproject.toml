@@ -19,7 +19,7 @@ rules = "^3.5"
 django-markdownx = "^4.0.7"
 django-cleanup = "^9.0.0"
 python-dateutil = "^2.9.0"
-django-cors-headers = "^4.5.0"
+django-cors-headers = "^4.6.0"
 beautifulsoup4 = "^4.12.3"
 django-model-utils = "^5.0.0"
 django-two-factor-auth = {extras = ["webauthn"], version = "^1.17.0"}
