@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.urls import path
 
 from .views import admin
