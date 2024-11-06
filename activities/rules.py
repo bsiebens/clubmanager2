@@ -7,7 +7,7 @@ from news.rules import is_admin
 
 
 @rules.predicate
-def is_team_admin(user: AbstractUser | None, game: "Game | None") -> bool:
+def is_team_admin(user: AbstractUser | None, game: "Game | None") -> bool:  # noqa: F821
     """Returns True if user is set and user has a team role that is flagged as admin for a team linked to the given game. Otherwise, returns False."""
 
     from teams.models import Season, TeamMembership

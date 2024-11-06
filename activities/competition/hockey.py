@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from urllib.parse import urljoin
 
 import requests
@@ -23,7 +25,7 @@ class RBIHF(CompetitionBaseClass):
             "Accept": "application/json",
             "Accept-Encoding": "gzip,deflate,br",
             "Connection": "keep-alive",
-            "Referer": "https://rbihf.be/game/{gameNr}".format(gameNr=game.game_id),
+            "Referer": f"https://rbihf.be/game/{game.game_id}",
             "X-Requested-With": "XMLHttpRequest",
         }
 
@@ -52,7 +54,7 @@ class CEHL(CompetitionBaseClass):
     def update_game_information(self, game: Game) -> None:
         season = "{start}{end}".format(start=game.season.start_date.strftime("%y"), end=game.season.end_date.strftime("%y"))
 
-        referer_url = urljoin("https://www.cehl.eu", "game/%s/%s" % (season, game.game_id))
+        referer_url = urljoin("https://www.cehl.eu", f"game/{season}/{game.game_id}")
         timeline_url = urljoin(self.url, "timeline.php")
         score_url = urljoin(self.url, "score.php")
 

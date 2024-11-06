@@ -41,7 +41,7 @@ class GameSerializer(serializers.ModelSerializer):
     def get_passed(self, obj: Game) -> bool:
         return obj.date <= timezone.now()
 
-    def is_home_game(self, obj: Game) -> bool:
+    def get_is_home_game(self, obj: Game) -> bool:
         return obj.is_home_game
 
 

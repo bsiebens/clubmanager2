@@ -23,6 +23,6 @@ class Command(BaseCommand):
             game.update_game_information()
 
             if game.competition is not None:
-                self.stdout.write(self.style.SUCCESS('Game information updated for "%s"' % game))
+                self.stdout.write(self.style.SUCCESS(f'Game information updated for "{game}"'))
             else:
-                self.stdout.write(self.style.WARNING('Skipped "%s" - no competition set' % game))
+                self.stdout.write(self.style.WARNING(f'Skipped "{game}" - no competition set'))

@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from datetime import timedelta
 
 from django.db.models import Q
@@ -26,8 +28,8 @@ class GameViewSet(viewsets.ReadOnlyModelViewSet):
         team = self.request.query_params.get("team", "all")
         count = int(self.request.query_params.get("count", 5))
 
-        home_games_only = False if self.request.query_params.get("home_games_only", "false") == "false" else True
-        all_games_for_season = False if self.request.query_params.get("all_games_for_season", "false") == "false" else True
+        home_games_only = self.request.query_params.get("home_games_only", "false") != "false"
+        all_games_for_season = self.request.query_params.get("all_games_for_season", "false") != "false"
 
         queryset = queryset.filter(season=Season.get_season())
 

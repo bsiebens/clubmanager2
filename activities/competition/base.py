@@ -1,4 +1,5 @@
-from typing import TypedDict
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from ..models import Game
 
 

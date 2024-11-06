@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from typing import Any
 
 from django.conf import settings
@@ -15,7 +17,6 @@ from rules.contrib.views import permission_required
 
 from clubmanager.views import MessagesDeniedMixin
 from teams.models import Season, Team
-
 from ..filters import GameFilter
 from ..models import Game, GameType, Opponent
 
@@ -131,7 +132,9 @@ class GameAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
     permission_denied_message = GameListView.permission_denied_message
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+        return self.success_message % dict(
+            cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M")
+        )
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         # Sets the default location for the game and restricts the list of teams to those the user is an admin for
@@ -154,7 +157,9 @@ class GameEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
     permission_denied_message = GameListView.permission_denied_message
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+        return self.success_message % dict(
+            cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M")
+        )
 
     def get_form(self, form_class: BaseModelForm | None = None) -> BaseModelForm:
         # Restricts the list of teams to those the user is an admin for
@@ -175,7 +180,9 @@ class GameDeleteView(MessagesDeniedMixin, SuccessMessageMixin, DeleteView):
     permission_denied_message = GameListView.permission_denied_message
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
-        return self.success_message % dict(cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M"))
+        return self.success_message % dict(
+            cleaned_data, team=self.object.team, opponent=self.object.opponent, date=self.object.date.strftime("%d %b %Y %H:%M")
+        )
 
 
 class GamePreviewView(MessagesDeniedMixin, DetailView):
