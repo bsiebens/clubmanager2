@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.db.models import Count
-from django.forms import BaseForm, ModelForm
+from django.forms import BaseForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -202,42 +202,6 @@ class OrderListView(MessagesDeniedMixin, FilterView):
             context[status_choices[count["status"]]] = count["status__count"]
 
         return context
-
-
-class OrderAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
-    model = Order
-    fields = ["order_form", "member"]
-    success_message = _("Order <strong>%(uuid)s</strong> added successfully")
-    success_url = reverse_lazy("clubmanager_admin:finance:orders_index")
-    permission_required = "finance"
-    permission_denied_message = OrderListView.permission_denied_message
-
-    def get_success_message(self, cleaned_data: dict) -> str:
-        return self.success_message % dict(cleaned_data, uuid=self.object.uuid)
-
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["lineitems"] = OrderLineItemFormSet()
-
-        if self.request.POST:
-            context["lineitems"] = OrderLineItemFormSet(self.request.POST)
-
-        return context
-
-    def form_valid(self, form: ModelForm) -> HttpResponse:
-        context = self.get_context_data()
-        line_items = context["lineitems"]
-
-        with transaction.atomic():
-            self.object = form.save()
-            line_items.instance = self.object
-
-            if line_items.is_valid():
-                line_items.save()
-            else:
-                return self.form_invalid(form)
-
-        return super().form_valid(form)
 
 
 class OrderEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
