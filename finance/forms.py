@@ -10,14 +10,14 @@ from .models import LineItem, Order, OrderFormItem, OrderForm
 class OrderFormItemForm(forms.ModelForm):
     class Meta:
         model = OrderFormItem
-        fields = "__all__"
+        fields = ["order_form", "description", "unit_price", "unit_price_type", "member_required", "team", "role"]
         localized_fields = fields
 
 
 class LineItemForm(forms.ModelForm):
     class Meta:
         model = LineItem
-        fields = "__all__"
+        fields = ["order", "member", "order_form_item", "number"]
         localized_fields = fields
 
     def clean(self):
@@ -32,8 +32,21 @@ class LineItemForm(forms.ModelForm):
         return cleaned_data
 
 
-OrderFormItemFormSet = inlineformset_factory(OrderForm, OrderFormItem, form=OrderFormItemForm,
-                                             fields=["description", "unit_price", "unit_price_type", "member_required", "team", "role", ], extra=1,
-                                             can_delete=True)
-OrderLineItemFormSet = inlineformset_factory(Order, LineItem, form=LineItemForm, fields=["number", "order_form_item", "member"], extra=1,
-                                             can_delete=True)
+OrderFormItemFormSet = inlineformset_factory(
+    OrderForm,
+    OrderFormItem,
+    form=OrderFormItemForm,
+    fields=[
+        "description",
+        "unit_price",
+        "unit_price_type",
+        "member_required",
+        "team",
+        "role",
+    ],
+    extra=1,
+    can_delete=True,
+)
+OrderLineItemFormSet = inlineformset_factory(
+    Order, LineItem, form=LineItemForm, fields=["number", "order_form_item", "member"], extra=1, can_delete=True
+)

@@ -19,9 +19,7 @@ class SponsorListView(PermissionRequiredMixin, ListView):
     model = Sponsor
     paginate_by = 50
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the sponsor list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         messages.error(self.request, self.get_permission_denied_message())
@@ -34,9 +32,7 @@ class SponsorAddView(PermissionRequiredMixin, SuccessMessageMixin, CreateView):
     success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> added succesfully")
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the sponsor list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         messages.error(self.request, self.get_permission_denied_message())
@@ -59,9 +55,7 @@ class SponsorEditView(PermissionRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> updated succesfully")
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the sponsor list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         messages.error(self.request, self.get_permission_denied_message())
@@ -76,9 +70,7 @@ class SponsorDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView
     success_url = reverse_lazy("clubmanager_admin:finance:sponsors_index")
     success_message = _("Sponsor <strong>%(name)s</strong> deleted succesfully")
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the sponsor list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
     def handle_no_permission(self) -> HttpResponseRedirect:
         messages.error(self.request, self.get_permission_denied_message())
@@ -86,7 +78,6 @@ class SponsorDeleteView(PermissionRequiredMixin, SuccessMessageMixin, DeleteView
 
     def get_success_message(self, cleaned_data: dict[str, str]) -> str:
         return self.success_message % dict(cleaned_data, name=self.object.name)
-
 
 # class MaterialListView(PermissionRequiredMixin, ListView):
 #     model = Material

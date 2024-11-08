@@ -24,9 +24,7 @@ class SponsorListView(MessagesDeniedMixin, ListView):
     model = Sponsor
     paginate_by = 25
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the sponsor list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the sponsor list")
 
 
 class SponsorAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
@@ -73,9 +71,7 @@ class OrderFormListView(MessagesDeniedMixin, FilterView):
     filterset_class = OrderFormFilter
     paginate_by = 25
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the form list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the form list")
 
 
 class OrderFormAddView(MessagesDeniedMixin, SuccessMessageMixin, CreateView):
@@ -127,9 +123,7 @@ class OrderFormEditView(MessagesDeniedMixin, SuccessMessageMixin, UpdateView):
         context = super().get_context_data(**kwargs)
 
         if self.request.POST:
-            context["orderformitems"] = OrderFormItemFormSet(
-                self.request.POST, instance=self.object
-            )
+            context["orderformitems"] = OrderFormItemFormSet(self.request.POST, instance=self.object)
         else:
             context["orderformitems"] = OrderFormItemFormSet(instance=self.object)
 
@@ -162,9 +156,7 @@ class OrderListView(MessagesDeniedMixin, FilterView):
     filterset_class = OrderFilter
     paginate_by = 25
     permission_required = "finance"
-    permission_denied_message = _(
-        "You do not have sufficient access rights to access the order list"
-    )
+    permission_denied_message = _("You do not have sufficient access rights to access the order list")
 
     def get_filterset_kwargs(self, filterset_class: OrderFilter) -> dict:
         current_season = Season.get_season()
@@ -257,9 +249,15 @@ def order_invoiced(request, pk: int) -> HttpResponse:
     order.status = Order.OrderStatus.INVOICED
     order.save(update_fields=["status"])
 
-    messages.success(request, _("Invoice created for order <strong>%(name)s</strong>" % ({"name": order.uuid})))
-    notify.send(request.user, recipient=order.member.user, action_object=order, verb="invoiced", description=_("New invoice is now available"),
-                url=reverse_lazy("clubmanager_admin:index"))
+    messages.success(request, _("Invoice created for order <strong>{name}</strong>").format(name=order.uuid))
+    notify.send(
+        request.user,
+        recipient=order.member.user,
+        action_object=order,
+        verb="invoiced",
+        description=_("New invoice is now available"),
+        url=reverse_lazy("clubmanager_admin:index"),
+    )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))
 
@@ -270,9 +268,15 @@ def order_payed(request, pk: int) -> HttpResponse:
     order.status = Order.OrderStatus.PAYED
     order.save(update_fields=["status"])
 
-    messages.success(request, _("Order <strong>%(name)s</strong> marked as payed" % ({"name": order.uuid})))
-    notify.send(request.user, recipient=order.member.user, action_object=order, verb="payed", description=_("Invoice has been marked as payed"),
-                url=reverse_lazy("clubmanager_admin:index"))
+    messages.success(request, _("Order <strong>{name}</strong> marked as payed").format(name=order.uuid))
+    notify.send(
+        request.user,
+        recipient=order.member.user,
+        action_object=order,
+        verb="payed",
+        description=_("Invoice has been marked as payed"),
+        url=reverse_lazy("clubmanager_admin:index"),
+    )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))
 
@@ -283,8 +287,14 @@ def order_submitted(request, pk: int) -> HttpResponse:
     order.status = Order.OrderStatus.SUBMITTED
     order.save(update_fields=["status"])
 
-    messages.success(request, _("Order <strong>%(name)s</strong> returned to submitted state" % ({"name": order.uuid})))
-    notify.send(request.user, recipient=order.member.user, action_object=order, verb="invoiced", description=_("Invoice cancelled"),
-                url=reverse_lazy("clubmanager_admin:index"))
+    messages.success(request, _("Order <strong>{name}</strong> returned to submitted state").format(name=order.uuid))
+    notify.send(
+        request.user,
+        recipient=order.member.user,
+        action_object=order,
+        verb="invoiced",
+        description=_("Invoice cancelled"),
+        url=reverse_lazy("clubmanager_admin:index"),
+    )
 
     return HttpResponseRedirect(reverse_lazy("clubmanager_admin:finance:orders_index"))

@@ -12,10 +12,9 @@ from django.db.models import Max
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from rules.contrib.models import RulesModel
 
 from members.models import Member
-from teams.models import Season, Team, TeamRole
+from teams.models import Team, TeamRole
 
 
 class Sponsor(models.Model):
@@ -35,15 +34,25 @@ class Sponsor(models.Model):
     Methods:
         active (): Returns a boolean indicating if the sponsor is currently active, based on start and end dates.
     """
+
     name = models.CharField(_("name"), max_length=250)
     start_date = models.DateField(_("start date"), default=timezone.now, help_text=_("Logo will be visible as of this day"))
-    end_date = models.DateField(_("end date"), blank=True, null=True,
-                                help_text=_("Logo will no longer be visible as of this date, leave empty to display indefinitely"))
-    url = models.URLField(blank=True, null=True)
+    end_date = models.DateField(
+        _("end date"), blank=True, null=True, help_text=_("Logo will no longer be visible as of this date, leave empty to display indefinitely")
+    )
+    url = models.URLField(blank=True)
     logo = models.ImageField(upload_to="sponsors/logo/")
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("sponsor")
+        verbose_name_plural = _("sponsors")
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
 
     @property
     @admin.display(description=_("Active"), boolean=True)
@@ -53,27 +62,27 @@ class Sponsor(models.Model):
 
         return self.start_date <= timezone.now().date()
 
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = _("sponsor")
-        verbose_name_plural = _("sponsors")
-        ordering = ["name"]
-
 
 class OrderForm(models.Model):
     """An order form is the form that defines what people can order"""
+
     name = models.CharField(_("name"), max_length=250)
     start_date = models.DateField(_("start date"), default=timezone.now, help_text=_("Date on which this form becomes available"))
-    end_date = models.DateField(_("end date"), blank=True, null=True, help_text=_("Final due data for this form, standard will be 30 days from the "
-                                                                                  "start date"))
+    end_date = models.DateField(
+        _("end date"), blank=True, null=True, help_text=_("Final due data for this form, standard will be 30 days from the " "start date")
+    )
 
-    allow_only_one_per_member = models.BooleanField(_("one per user"), default=False, help_text="Select to allow only one form to be submitted by "
-                                                                                                "each user")
+    allow_only_one_per_member = models.BooleanField(
+        _("one per user"), default=False, help_text="Select to allow only one form to be submitted by " "each user"
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = _("order form")
+        verbose_name_plural = _("order forms")
+        ordering = ["-start_date", "name"]
 
     def __str__(self):
         return self.name
@@ -83,11 +92,6 @@ class OrderForm(models.Model):
             self.end_date = timezone.now().date() + timezone.timedelta(days=30)
 
         super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = _("order form")
-        verbose_name_plural = _("order forms")
-        ordering = ["-start_date", "name"]
 
     @property
     @admin.display(description=_("Active"), boolean=True)
@@ -103,31 +107,45 @@ class OrderFormItem(models.Model):
         PERCENTAGE = 1, _("percentage")
 
     order_form = models.ForeignKey(OrderForm, on_delete=models.CASCADE, verbose_name=_("order form"), related_name="items")
-    description = models.CharField(_("description"), max_length=250, blank=True, null=True)
+    description = models.CharField(_("description"), max_length=250, blank=True)
     unit_price = models.DecimalField(_("price"), max_digits=7, decimal_places=2)
     unit_price_type = models.IntegerField(_("type"), default=PriceType.AMOUNT, choices=PriceType.choices)
 
-    member_required = models.BooleanField(_("member required"), default=False, help_text=_("Select if this item requires a member to be associated "
-                                                                                           "with it when creating an order"))
+    member_required = models.BooleanField(
+        _("member required"), default=False, help_text=_("Select if this item requires a member to be associated " "with it when creating an order")
+    )
 
     team = models.ForeignKey(
-        Team, on_delete=models.CASCADE, verbose_name=_("team"), blank=True, null=True,
-        help_text=_("Optional, select a team for which an item should be created")
+        Team,
+        on_delete=models.CASCADE,
+        verbose_name=_("team"),
+        blank=True,
+        null=True,
+        help_text=_("Optional, select a team for which an item should be created"),
     )
     role = models.ForeignKey(
-        TeamRole, on_delete=models.CASCADE, verbose_name=_("team role"), blank=True, null=True,
-        help_text=_("Optional, select a role for which an item should be created")
+        TeamRole,
+        on_delete=models.CASCADE,
+        verbose_name=_("team role"),
+        blank=True,
+        null=True,
+        help_text=_("Optional, select a role for which an item should be created"),
     )
 
+    class Meta:
+        verbose_name = _("item")
+        verbose_name_plural = _("items")
+        ordering = ["description"]
+
     def __str__(self):
-        if not self.description.startswith("{form} | ".format(form=self.order_form.name)):
-            return "{form} | {description}".format(form=self.order_form.name, description=self.description)
+        if not self.description.startswith(f"{self.order_form.name} | "):
+            return f"{self.order_form.name} | {self.description}"
 
         return self.description
 
     def save(self, *args, **kwargs):
         if self.team and self.role:
-            self.description = "{team} | {team_role}".format(team=self.team.name, team_role=self.role.name)
+            self.description = f"{self.team.name} | {self.role.name}"
 
         elif self.team:
             self.description = self.team.name
@@ -137,16 +155,11 @@ class OrderFormItem(models.Model):
 
         super().save(*args, **kwargs)
 
-    class Meta:
-        verbose_name = _("item")
-        verbose_name_plural = _("items")
-        ordering = ["description"]
-
     @property
     def display_unit_price(self):
         unit = "&percnt;" if self.unit_price_type == OrderFormItem.PriceType.PERCENTAGE else settings.CLUB_DEFAULT_CURRENCY_ENTITY
 
-        return mark_safe("{price} {unit}".format(price=self.unit_price, unit=unit))
+        return mark_safe(f"{self.unit_price} {unit}")
 
 
 class Order(models.Model):
@@ -167,12 +180,12 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return _("Order {uuid}").format(uuid=self.uuid)
-
     class Meta:
         verbose_name = _("order")
         verbose_name_plural = _("orders")
+
+    def __str__(self):
+        return _("Order {uuid}").format(uuid=self.uuid)
 
     def total(self):
         """Calculates the total amount for a given order. All lines are processed in order that they have been added to the order."""
@@ -199,7 +212,7 @@ class Order(models.Model):
 
     @property
     def display_total(self):
-        return mark_safe("{price} {unit}".format(price=self.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
+        return mark_safe(f"{self.total()} {settings.CLUB_DEFAULT_CURRENCY_ENTITY}")
 
 
 class LineItem(models.Model):
@@ -209,6 +222,11 @@ class LineItem(models.Model):
     member = models.ForeignKey(Member, blank=True, null=True, on_delete=models.CASCADE, verbose_name=_("member"))
     order_form_item = models.ForeignKey(OrderFormItem, on_delete=models.CASCADE, verbose_name=_("item"), related_name="lineitems")
     number = models.IntegerField(blank=True)
+
+    class Meta:
+        verbose_name = _("line item")
+        verbose_name_plural = _("line items")
+        ordering = ["number"]
 
     def __str__(self):
         return self.order_form_item.description
@@ -226,11 +244,6 @@ class LineItem(models.Model):
             raise ValidationError(_("Member is required for this order item"))
 
         super().save(*args, **kwargs)
-
-    class Meta:
-        verbose_name = _("line item")
-        verbose_name_plural = _("line items")
-        ordering = ["number"]
 
     @property
     @admin.display(description=_("Unit price"))

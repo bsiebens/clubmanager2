@@ -1,3 +1,5 @@
+#  Copyright (c) 2024. https://github.com/bsiebens/ClubManager
+
 from django.conf import settings
 from django.contrib import admin
 from django.utils.safestring import mark_safe
@@ -41,24 +43,20 @@ class OrderFormAdmin(admin.ModelAdmin):
     list_display = ["name", "start_date", "end_date", "allow_only_one_per_member", "active", "created", "modified"]
     list_filter = ["allow_only_one_per_member"]
     search_fields = ["name"]
-    fieldsets = [
-        ["GENERAL INFORMATION", {"fields": ["name", ("start_date", "end_date"), "allow_only_one_per_member"]}]
-    ]
+    fieldsets = [["GENERAL INFORMATION", {"fields": ["name", ("start_date", "end_date"), "allow_only_one_per_member"]}]]
     inlines = [OrderFormItemInlineAdmin]
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     def display_order(self, obj: Order) -> str:
-        return "Order {uuid}".format(uuid=obj.uuid)
+        return f"Order {obj.uuid}"
 
     def display_members(self, obj: Order) -> str:
-        return mark_safe(
-            "<br />".join(
-                ["{first_name} {last_name}".format(first_name=member.first_name, last_name=member.last_name) for member in obj.members_in_order()]))
+        return mark_safe("<br />".join([f"{member.first_name} {member.last_name}" for member in obj.members_in_order()]))
 
     def display_price(self, obj: Order) -> str:
-        return mark_safe("{total} {unit}".format(total=obj.total(), unit=settings.CLUB_DEFAULT_CURRENCY_ENTITY))
+        return mark_safe(f"{obj.total()} {settings.CLUB_DEFAULT_CURRENCY_ENTITY}")
 
     display_order.short_description = "Order"
     display_members.short_description = "Members"
@@ -66,8 +64,15 @@ class OrderAdmin(admin.ModelAdmin):
 
     list_display = ["display_order", "status", "member", "display_members", "display_price", "created", "modified"]
     list_filter = ["status"]
-    search_fields = ["lineitems__order_form_item__description", "member__user__first_name", "member__user__last_name",
-                     "lineitems__member__user__first_name", "lineitems__member__user__last_name", "order_form__name"]
+    # noinspection PyUnresolvedReferences
+    search_fields = [
+        "lineitems__order_form_item__description",
+        "member__user__first_name",
+        "member__user__last_name",
+        "lineitems__member__user__first_name",
+        "lineitems__member__user__last_name",
+        "order_form__name",
+    ]
     fieldsets = [
         ["GENERAL INFORMATION", {"fields": ["status", "member", "order_form"]}],
     ]
