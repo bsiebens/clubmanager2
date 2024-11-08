@@ -243,6 +243,9 @@ class LineItem(models.Model):
         if self.order_form_item.member_required and self.member is None:
             raise ValidationError(_("Member is required for this order item"))
 
+        if self.order_form_item.order_form != self.order.order_form:
+            raise ValidationError(_("Order form for item does not match order form for order"))
+
         super().save(*args, **kwargs)
 
     @property

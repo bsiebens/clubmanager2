@@ -236,4 +236,5 @@ CONSTANCE_CONFIG = {
         "CLUB_DEFAULT_CURRENCY_ENTITY", default="&euro;"
     ), _("HTML entity representing the default currency"), str),
     "CLUBMANAGER_DEFAULT_HOME_LOCATION": (env("CLUB_DEFAULT_HOME_LOCATION", default=""), _("Home location of the club"), str),
+    "CLUBMANAGER_ENABLE_ORDERS": (False, _("Enable order feature - EXPERIMENTAL"), bool),
 }

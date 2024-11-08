@@ -105,16 +105,18 @@
             <span class="mt-1">{% translate "Sponsors" %}</span>
         </a>
 
-        {% url "clubmanager_admin:finance:forms_index" as forms_index %}
-        <a href="{{ forms_index }}" {% if forms_index in request.path %}class="active"{% endif %}>
-            <i class="fa-solid fa-list-check min-w-5"></i>
-            <span class="mt-1">{% translate "Order Forms" %}</span>
-        </a>
+        {% if config.CLUBMANAGER_ENABLE_ORDERS %}
+            {% url "clubmanager_admin:finance:forms_index" as forms_index %}
+            <a href="{{ forms_index }}" {% if forms_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-list-check min-w-5"></i>
+                <span class="mt-1">{% translate "Order Forms" %}</span>
+            </a>
 
-        {% url "clubmanager_admin:finance:orders_index" as orders_index %}
-        <a href="{{ orders_index }}" {% if orders_index in request.path %}class="active"{% endif %}>
-            <i class="fa-solid fa-file-invoice min-w-5"></i>
-            <span class="mt-1">{% translate "Orders" %}</span>
-        </a>
+            {% url "clubmanager_admin:finance:orders_index" as orders_index %}
+            <a href="{{ orders_index }}" {% if orders_index in request.path %}class="active"{% endif %}>
+                <i class="fa-solid fa-file-invoice min-w-5"></i>
+                <span class="mt-1">{% translate "Orders" %}</span>
+            </a>
+        {% endif %}
     {% endif %}
 </li>
